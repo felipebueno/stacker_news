@@ -9,6 +9,7 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const GenericPageScaffold(
+      title: 'Profile',
       body: Text('Profile Not Implemented Yet'),
     );
   }

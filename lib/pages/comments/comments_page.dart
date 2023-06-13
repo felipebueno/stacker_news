@@ -14,10 +14,11 @@ class PostComments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Item post = ModalRoute.of(context)?.settings.arguments as Item;
     return GenericPageScaffold(
       title: 'Comments',
-      body: CommentList(post: post),
+      body: CommentList(
+        item: ModalRoute.of(context)?.settings.arguments as Item,
+      ),
     );
   }
 }
@@ -25,10 +26,10 @@ class PostComments extends StatelessWidget {
 class CommentList extends StatefulWidget {
   const CommentList({
     Key? key,
-    required this.post,
+    required this.item,
   }) : super(key: key);
 
-  final Item post;
+  final Item item;
 
   @override
   State<CommentList> createState() => _CommentListState();
@@ -38,7 +39,7 @@ class _CommentListState extends State<CommentList> {
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ItemBloc>(context).add(GetItem(widget.post));
+    BlocProvider.of<ItemBloc>(context).add(GetItem(widget.item));
   }
 
   @override
@@ -51,7 +52,7 @@ class _CommentListState extends State<CommentList> {
           return PostListUtils.buildLoadingState(context);
         } else if (state is ItemLoaded) {
           final comments = [
-            widget.post,
+            widget.item,
             ...(state.item.comments ?? []),
           ];
 
