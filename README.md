@@ -22,48 +22,66 @@ Not implemented yet.
 
 ## TODO
 
-- Code
+- [ ] Code
 
-  - Find a way to solve/circumvent the issue with the changing `_next/data/xyz` endpoint (see `lib/src/data/post_repository.dart`)
+  - [ ] Solve/circumvent the issue with the changing `_next/data/xyz` endpoint (see `lib/src/data/post_repository.dart`)
 
-  - Move away from the bloc pattern to something more simple
+  - [ ] Move away from the bloc pattern to something more simple
 
-  - Refactor the code
+  - [ ] Refactor the code
 
-  - Add tests
+  - [ ] Add tests
 
-- App
+- [ ] App
 
-  - Fix mardown rendering issues
+  - [ ] Fix mardown rendering issues
 
-  - About
+  - [ ] Light theme
 
-    - Add link to source code
+  - [ ] About
 
-    - Donations
+    - [ ] Add link to source code
 
-  - Login / Logout
+    - [ ] Donations
 
-    - Profile (show, edit)
+  - [ ] Login / Logout
 
-    - Bookmarks
+    - [ ] Profile (show, edit)
 
-    - Post
+    - [ ] Bookmarks
 
-    - Commenting
+    - [ ] Post
 
-    - Zaps
+    - [ ] Commenting
 
-  - Search
+    - [ ] Zaps
 
-  - More subs / filters (tech, hot, recent, etc)
+  - [ ] Search
 
-  - iOS release
+  - [ ] More subs / filters (tech, hot, recent, etc)
 
-  - Linux release
+- [ ] Releases
 
-  - Windows release
+  - [ ] Android release
 
-  - macOS release
+    - [ ] Google Play
 
-  - Web (pwa) release (is this necessary?)
+    - [ ] F-Droid
+
+    - [ ] Etc?
+
+  - [ ] iOS release
+
+  - [ ] Linux release
+
+    - [ ] Snap
+
+    - [ ] Flatpak
+
+    - [ ] deb
+
+  - [ ] Windows release
+
+  - [ ] macOS release
+
+  - [ ] Web (pwa) release (is this necessary?)
