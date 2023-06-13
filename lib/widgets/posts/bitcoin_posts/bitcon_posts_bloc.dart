@@ -4,63 +4,63 @@ import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/item.dart';
 import 'package:stacker_news/data/post_repository.dart';
 
-part 'ask_posts_event.dart';
-part 'ask_posts_state.dart';
+part 'bitcon_posts_event.dart';
+part 'bitcon_posts_state.dart';
 
-class AskPostsBloc extends Bloc<AskPostsEvent, AskPostsState> {
+class BitcoinPostsBloc extends Bloc<BitcoinPostsEvent, BitcoinPostsState> {
   final PostRepository postRepository;
   List<Item> posts = [];
   int from = 30;
   int to = 60;
 
-  AskPostsBloc(AskPostsState initialState, this.postRepository)
+  BitcoinPostsBloc(BitcoinPostsState initialState, this.postRepository)
       : super(initialState) {
-    on<GetAskPosts>((event, emit) async {
-      emit(const AskPostsLoading());
+    on<GetBitcoinPosts>((event, emit) async {
+      emit(const BitcoinPostsLoading());
 
       from = 30;
       to = 60;
 
       try {
         posts = await postRepository.fetchPosts(PostType.bitcoin);
-        emit(AskPostsLoaded(posts));
+        emit(BitcoinPostsLoaded(posts));
       } on NetworkError {
         emit(
-          const AskPostsError(
-            "Couldn't fetch ask posts. Make sure your device is connected to the internet.",
+          const BitcoinPostsError(
+            "Couldn't fetch bitcoin posts. Make sure your device is connected to the internet.",
           ),
         );
       } catch (e, st) {
         debugPrintStack(stackTrace: st);
-        emit(AskPostsError(e.toString()));
+        emit(BitcoinPostsError(e.toString()));
       }
     });
 
-    on<GetMoreAskPosts>((event, emit) async {
-      emit(const AskPostsLoadingMore());
+    on<GetMoreBitcoinPosts>((event, emit) async {
+      emit(const BitcoinPostsLoadingMore());
 
       try {
         final List<Item> newPosts =
             await postRepository.fetchMorePosts(PostType.bitcoin, from, to);
 
         final List<Item> morePosts =
-            List<Item>.from(AskPostsLoaded(posts).posts)..addAll(newPosts);
+            List<Item>.from(BitcoinPostsLoaded(posts).posts)..addAll(newPosts);
 
         posts = morePosts;
 
         from += 30;
         to += 30;
 
-        emit(AskPostsLoaded(posts));
+        emit(BitcoinPostsLoaded(posts));
       } on NetworkError {
         emit(
-          const AskPostsError(
-            "Couldn't fetch more ask posts. Make sure your device is connected to the internet.",
+          const BitcoinPostsError(
+            "Couldn't fetch more bitcoin posts. Make sure your device is connected to the internet.",
           ),
         );
       } catch (e, st) {
         debugPrintStack(stackTrace: st);
-        emit(AskPostsError(e.toString()));
+        emit(BitcoinPostsError(e.toString()));
       }
     });
   }

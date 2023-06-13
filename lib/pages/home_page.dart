@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stacker_news/data/post_repository.dart';
 import 'package:stacker_news/widgets/base_tab.dart';
 import 'package:stacker_news/widgets/generic_page_scaffold.dart';
-import 'package:stacker_news/widgets/posts/ask_posts/ask_posts.dart';
-import 'package:stacker_news/widgets/posts/ask_posts/ask_posts_bloc.dart';
+import 'package:stacker_news/widgets/posts/bitcoin_posts/bitcon_posts.dart';
+import 'package:stacker_news/widgets/posts/bitcoin_posts/bitcon_posts_bloc.dart';
 import 'package:stacker_news/widgets/posts/job_posts/job_posts.dart';
 import 'package:stacker_news/widgets/posts/job_posts/job_posts_bloc.dart';
 import 'package:stacker_news/widgets/posts/show_posts/show_posts.dart';
@@ -29,10 +29,10 @@ class HomePage extends StatelessWidget {
       onRefresh: GetTopPosts(),
       onMoreTap: GetMoreTopPosts(),
     ),
-    BaseTab<AskPostsBloc>(
-      body: AskPosts(),
-      onRefresh: GetAskPosts(),
-      onMoreTap: GetMoreAskPosts(),
+    BaseTab<BitcoinPostsBloc>(
+      body: BitcoinPosts(),
+      onRefresh: GetBitcoinPosts(),
+      onMoreTap: GetMoreBitcoinPosts(),
     ),
     BaseTab<ShowPostsBloc>(
       body: ShowPosts(),
@@ -67,8 +67,8 @@ class HomePage extends StatelessWidget {
               ),
             ),
             BlocProvider(
-              create: (context) => AskPostsBloc(
-                AskPostsInitial(),
+              create: (context) => BitcoinPostsBloc(
+                BitcoinPostsInitial(),
                 PostRepository(),
               ),
             ),
