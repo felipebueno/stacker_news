@@ -2,7 +2,7 @@
 
 Unofficial cross-platform Stacker News app written in Flutter.
 
-This project started as a Hacker News app I developed in the begining of 2020 to learn the Bloc pattern. I still maintain the HN app but I'm now focusing on Stacker News.
+I started this project as a Hacker News app in the begining of 2020 to learn the Bloc pattern. I still maintain the HN app but I'm now focusing on Stacker News.
 
 ## Screenshots
 
@@ -22,34 +22,48 @@ Not implemented yet.
 
 ## TODO
 
-- About
+- Code
 
-  - Add link to source code
+  - Find a way to solve/circumvent the issue with the changing `_next/data/xyz` endpoint (see `lib/src/data/post_repository.dart`)
 
-  - Donations
+  - Move away from the bloc pattern to something more simple
 
-- Login / Logout
+  - Refactor the code
 
-  - Profile (show, edit)
+  - Add tests
 
-  - Bookmarks
+- App
 
-  - Post
+  - Fix mardown rendering issues
 
-  - Commenting
+  - About
 
-  - Zaps
+    - Add link to source code
 
-- Search
+    - Donations
 
-- More subs / filters (tech, hot, recent, etc)
+  - Login / Logout
 
-- iOS release
+    - Profile (show, edit)
 
-- Linux release
+    - Bookmarks
 
-- Windows release
+    - Post
 
-- macOS release
+    - Commenting
 
-- Web (pwa) release (is this necessary?)
+    - Zaps
+
+  - Search
+
+  - More subs / filters (tech, hot, recent, etc)
+
+  - iOS release
+
+  - Linux release
+
+  - Windows release
+
+  - macOS release
+
+  - Web (pwa) release (is this necessary?)

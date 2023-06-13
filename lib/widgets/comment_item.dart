@@ -66,16 +66,7 @@ class CommentItem extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
-              child: MarkdownBody(
-                data: post.text ?? '',
-                // extensionSet: md.ExtensionSet(
-                //   md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-                //   [
-                //     md.EmojiSyntax(),
-                //     ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes
-                //   ],
-                // ),
-              ),
+              child: MarkdownBody(data: post.text ?? ''),
             ),
           ],
         ),
