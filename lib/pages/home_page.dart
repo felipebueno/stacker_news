@@ -7,8 +7,8 @@ import 'package:stacker_news/widgets/posts/bitcoin_posts/bitcon_posts.dart';
 import 'package:stacker_news/widgets/posts/bitcoin_posts/bitcon_posts_bloc.dart';
 import 'package:stacker_news/widgets/posts/job_posts/job_posts.dart';
 import 'package:stacker_news/widgets/posts/job_posts/job_posts_bloc.dart';
-import 'package:stacker_news/widgets/posts/show_posts/show_posts.dart';
-import 'package:stacker_news/widgets/posts/show_posts/show_posts_bloc.dart';
+import 'package:stacker_news/widgets/posts/nostr_posts/nostr_posts.dart';
+import 'package:stacker_news/widgets/posts/nostr_posts/nostr_posts_bloc.dart';
 import 'package:stacker_news/widgets/posts/top_posts/top_posts.dart';
 import 'package:stacker_news/widgets/posts/top_posts/top_posts_bloc.dart';
 import 'package:stacker_news/widgets/sn_logo.dart';
@@ -34,10 +34,10 @@ class HomePage extends StatelessWidget {
       onRefresh: GetBitcoinPosts(),
       onMoreTap: GetMoreBitcoinPosts(),
     ),
-    BaseTab<ShowPostsBloc>(
-      body: ShowPosts(),
-      onRefresh: GetShowPosts(),
-      onMoreTap: GetMoreShowPosts(),
+    BaseTab<NostrPostsBloc>(
+      body: NostrPosts(),
+      onRefresh: GetNostrPosts(),
+      onMoreTap: GetMoreNostrPosts(),
     ),
     BaseTab<JobPostsBloc>(
       body: JobPosts(),
@@ -73,8 +73,8 @@ class HomePage extends StatelessWidget {
               ),
             ),
             BlocProvider(
-              create: (context) => ShowPostsBloc(
-                ShowPostsInitial(),
+              create: (context) => NostrPostsBloc(
+                NostrPostsInitial(),
                 PostRepository(),
               ),
             ),

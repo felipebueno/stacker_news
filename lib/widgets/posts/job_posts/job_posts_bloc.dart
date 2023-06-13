@@ -55,7 +55,7 @@ class JobPostsBloc extends Bloc<JobPostsEvent, JobPostsState> {
       } on NetworkError {
         emit(
           const JobPostsError(
-            "Couldn't fetch more show posts. Make sure your device is connected to the internet.",
+            "Couldn't fetch more job posts. Make sure your device is connected to the internet.",
           ),
         );
       } catch (e, st) {
