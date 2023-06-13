@@ -63,25 +63,25 @@ class Home extends StatelessWidget {
             BlocProvider(
               create: (context) => TopPostsBloc(
                 TopPostsInitial(),
-                PostRepositoryImpl(),
+                PostRepository(),
               ),
             ),
             BlocProvider(
               create: (context) => AskPostsBloc(
                 AskPostsInitial(),
-                PostRepositoryImpl(),
+                PostRepository(),
               ),
             ),
             BlocProvider(
               create: (context) => ShowPostsBloc(
                 ShowPostsInitial(),
-                PostRepositoryImpl(),
+                PostRepository(),
               ),
             ),
             BlocProvider(
               create: (context) => JobPostsBloc(
                 JobPostsInitial(),
-                PostRepositoryImpl(),
+                PostRepository(),
               ),
             ),
           ],

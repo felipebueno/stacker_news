@@ -40,9 +40,9 @@ class GenericPageScaffold extends StatelessWidget {
           BlocProvider(
             create: (context) => ItemBloc(
               ItemInitial(),
-              PostRepositoryImpl(),
+              PostRepository(),
             ),
-            child: body ?? const SizedBox.shrink(),
+            child: body,
           ),
     );
   }

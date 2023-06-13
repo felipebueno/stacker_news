@@ -33,7 +33,7 @@ final class Item {
   final String? location;
   final bool? remote;
   final String? subName;
-  final String? pollCost;
+  final int? pollCost;
   final String? status;
   final int? uploadId;
   final bool? mine;

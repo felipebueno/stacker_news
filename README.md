@@ -4,6 +4,8 @@ Unofficial cross-platform Stacker News app written in Flutter.
 
 I started this project as a Hacker News app in the begining of 2020 to learn the Bloc pattern. I still maintain the HN app but I'm now focusing on Stacker News.
 
+The code is really hacky and fragile but it works. I'll be slowly refactoring the code to make it more robust and easier to work maintain.
+
 ## Screenshots
 
 ### Dark Theme
@@ -34,7 +36,7 @@ Not implemented yet.
 
 - [ ] Code
 
-  - [ ] Solve/circumvent the issue with the changing `_next/data/xyz` endpoint (see `lib/src/data/post_repository.dart`)
+  - [x] Solve/circumvent the issue with the changing `_next/data/xyz` endpoint (see `lib/src/data/post_repository.dart`)
 
   - [ ] Move away from the bloc pattern to something more simple
 
