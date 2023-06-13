@@ -36,7 +36,11 @@ Not implemented yet.
 
   - [ ] Fix mardown rendering issues
 
-  - [ ] Light theme
+  - [ ] Better light theme
+
+  - [ ] Theme switcher
+
+  - [ ] More themes
 
   - [ ] About
 

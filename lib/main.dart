@@ -15,7 +15,28 @@ class StackerNewsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Stacker News',
+      themeMode: ThemeMode.system,
       theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: snYellow,
+          brightness: Brightness.light,
+          background: Colors.white,
+        ),
+        useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.white,
+          foregroundColor: snYellow,
+        ),
+        tabBarTheme: const TabBarTheme(
+          labelColor: snYellow,
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: snYellow,
+          ),
+        ),
+      ),
+      darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           seedColor: snYellow,
           brightness: Brightness.dark,
@@ -31,7 +52,7 @@ class StackerNewsApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.black,
+            foregroundColor: Colors.white,
             backgroundColor: snYellow,
           ),
         ),

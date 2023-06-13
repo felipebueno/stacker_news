@@ -18,7 +18,7 @@ abstract class PostRepository {
 
 final class PostRepositoryImpl implements PostRepository {
   static const apiUrl =
-      'https://stacker.news/_next/data/ef533'; // TODO: This endpoint changes every day
+      'https://stacker.news/_next/data/73bb'; // TODO: This endpoint changes every day
   final Dio dio = Dio();
 
   @override
