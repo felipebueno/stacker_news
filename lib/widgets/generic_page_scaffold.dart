@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stacker_news/data/post_repository.dart';
 import 'package:stacker_news/pages/comments/comments_bloc.dart';
+import 'package:stacker_news/pages/comments/comments_page.dart';
 import 'package:stacker_news/pages/home_page.dart';
 import 'package:stacker_news/pages/profile/profile_page.dart';
 import 'package:stacker_news/pages/settings/settings_page.dart';
@@ -40,6 +41,12 @@ class GenericPageScaffold extends StatelessWidget {
       appBar: appBar ??
           AppBar(
             centerTitle: true,
+            leading: route != PostComments.id
+                ? null
+                : IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () => Navigator.pop(context),
+                  ),
             title: SNLogo(
               text: title,
               heroTag: _getHeroTag(route),
@@ -96,14 +103,16 @@ class GenericPageScaffold extends StatelessWidget {
           ],
         ),
       ),
-      body: mainBody ??
-          BlocProvider(
-            create: (context) => ItemBloc(
-              ItemInitial(),
-              PostRepository(),
+      body: Center(
+        child: mainBody ??
+            BlocProvider(
+              create: (context) => ItemBloc(
+                ItemInitial(),
+                PostRepository(),
+              ),
+              child: body,
             ),
-            child: body,
-          ),
+      ),
     );
   }
 }
