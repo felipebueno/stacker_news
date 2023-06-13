@@ -70,6 +70,7 @@ class GenericPageScaffold extends StatelessWidget {
                   size: 80,
                   blurRadius: 96,
                   heroTag: 'drawer_logo',
+                  showVersion: true,
                 ),
               ),
             ),

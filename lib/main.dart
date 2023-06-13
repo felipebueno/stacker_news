@@ -17,6 +17,10 @@ class StackerNewsApp extends StatelessWidget {
       title: 'Stacker News',
       themeMode: ThemeMode.system,
       theme: ThemeData(
+        drawerTheme: const DrawerThemeData(
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.white,
+        ),
         colorScheme: ColorScheme.fromSeed(
           seedColor: snYellow,
           brightness: Brightness.light,
@@ -39,6 +43,7 @@ class StackerNewsApp extends StatelessWidget {
       darkTheme: ThemeData(
         drawerTheme: const DrawerThemeData(
           backgroundColor: Colors.black,
+          surfaceTintColor: Colors.black,
         ),
         colorScheme: ColorScheme.fromSeed(
           seedColor: snYellow,
