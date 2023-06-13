@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stacker_news/data/post_repository.dart';
 import 'package:stacker_news/pages/comments/comments_bloc.dart';
-import 'package:stacker_news/pages/home.dart';
+import 'package:stacker_news/pages/home_page.dart';
+import 'package:stacker_news/pages/profile/profile_page.dart';
+import 'package:stacker_news/pages/settings/settings_page.dart';
 import 'package:stacker_news/widgets/sn_logo.dart';
 
 class GenericPageScaffold extends StatelessWidget {
@@ -19,23 +21,81 @@ class GenericPageScaffold extends StatelessWidget {
     this.mainBody,
   }) : super(key: key);
 
+  String? _getHeroTag(String? route) {
+    switch (route) {
+      case ProfilePage.id:
+        return 'profile';
+      case SettingsPage.id:
+        return 'settings';
+      default:
+        return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final route = ModalRoute.of(context)?.settings.name;
+
     return Scaffold(
       appBar: appBar ??
           AppBar(
             centerTitle: true,
-            title: SNLogo(text: title),
+            title: SNLogo(
+              text: title,
+              heroTag: _getHeroTag(route),
+            ),
             actions: [
               IconButton(
                 icon: const Icon(Icons.home),
                 onPressed: () => Navigator.popUntil(
                   context,
-                  ModalRoute.withName(Home.id),
+                  ModalRoute.withName(HomePage.id),
                 ),
               ),
             ],
           ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            const DrawerHeader(
+              child: Center(
+                child: SNLogo(
+                  size: 80,
+                  blurRadius: 96,
+                  heroTag: 'drawer_logo',
+                ),
+              ),
+            ),
+            ListTile(
+              selected: route == HomePage.id,
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, HomePage.id);
+              },
+            ),
+            ListTile(
+              selected: route == ProfilePage.id,
+              leading: const Icon(Icons.person),
+              title: const Text('Profile'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, ProfilePage.id);
+              },
+            ),
+            ListTile(
+              selected: route == SettingsPage.id,
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, SettingsPage.id);
+              },
+            ),
+          ],
+        ),
+      ),
       body: mainBody ??
           BlocProvider(
             create: (context) => ItemBloc(

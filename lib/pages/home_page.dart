@@ -13,7 +13,7 @@ import 'package:stacker_news/widgets/posts/top_posts/top_posts.dart';
 import 'package:stacker_news/widgets/posts/top_posts/top_posts_bloc.dart';
 import 'package:stacker_news/widgets/sn_logo.dart';
 
-class Home extends StatelessWidget {
+class HomePage extends StatelessWidget {
   static const String id = 'home';
 
   final List<Tab> tabs = const [
@@ -46,7 +46,7 @@ class Home extends StatelessWidget {
     ),
   ];
 
-  const Home({super.key});
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

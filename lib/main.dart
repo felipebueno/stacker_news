@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/pages/home.dart';
+import 'package:stacker_news/pages/home_page.dart';
 import 'package:stacker_news/sn_router.dart';
 
 import 'colors.dart';
@@ -37,6 +37,9 @@ class StackerNewsApp extends StatelessWidget {
         ),
       ),
       darkTheme: ThemeData(
+        drawerTheme: const DrawerThemeData(
+          backgroundColor: Colors.black,
+        ),
         colorScheme: ColorScheme.fromSeed(
           seedColor: snYellow,
           brightness: Brightness.dark,
@@ -57,9 +60,9 @@ class StackerNewsApp extends StatelessWidget {
           ),
         ),
       ),
-      initialRoute: Home.id,
-      routes: HNRouter.routes,
-      home: const Home(),
+      initialRoute: HomePage.id,
+      routes: SNRouter.routes,
+      home: const HomePage(),
     );
   }
 }
