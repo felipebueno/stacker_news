@@ -36,7 +36,7 @@ Not implemented yet.
 
 - [ ] Code
 
-  - [x] Solve/circumvent the issue with the changing `_next/data/xyz` endpoint (see `lib/src/data/post_repository.dart`)
+  - [x] Solve/circumvent the issue with the changing `_next/data/xyz` endpoint
 
   - [ ] Move away from the bloc pattern to something more simple
 

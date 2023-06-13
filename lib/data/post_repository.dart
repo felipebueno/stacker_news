@@ -10,8 +10,6 @@ enum PostType {
 }
 
 final class PostRepository {
-  String? _currCommit;
-
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: 'https://stacker.news/_next/data',
@@ -64,9 +62,9 @@ final class PostRepository {
         break;
     }
 
-    _currCommit = await _getCurrBuildId();
+    String? currCommit = await _getCurrBuildId();
 
-    final response = await dio.get('/$_currCommit/$stories');
+    final response = await dio.get('/$currCommit/$stories');
 
     if (response.statusCode == 200) {
       return _parseItems(response.data);
@@ -75,9 +73,9 @@ final class PostRepository {
     if (response.statusCode == 404) {
       await _fetchAndSaveCurrBuildId();
 
-      _currCommit = await _getCurrBuildId();
+      currCommit = await _getCurrBuildId();
 
-      final retryResponse = await dio.get('/$_currCommit/$stories');
+      final retryResponse = await dio.get('/$currCommit/$stories');
 
       if (retryResponse.statusCode == 200) {
         return _parseItems(retryResponse.data);
@@ -106,7 +104,7 @@ final class PostRepository {
     final regex = RegExp(r'\/_next\/static\/(\w+)\/_buildManifest.js');
     final match = regex.firstMatch(response.data);
 
-    final buildId = match?.group(1) ?? _currCommit;
+    final buildId = match?.group(1);
     if (buildId == null) {
       throw Exception('Error parsing build id');
     }
@@ -130,8 +128,9 @@ final class PostRepository {
   }
 
   Future<Item> fetchItem(Item post) async {
-    final response = await dio.get('/$_currCommit/items/${post.id}.json');
-    if (response.statusCode == 200) {
+    String? currCommit = await _getCurrBuildId();
+    final response = await dio.get('/$currCommit/items/${post.id}.json');
+    if (response.statusCode != 200) {
       throw Exception('Error fetching comments');
     }
 
