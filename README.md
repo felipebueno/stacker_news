@@ -44,6 +44,8 @@ Not implemented yet.
 
 - [ ] App
 
+  - [ ] Load more posts
+
   - [ ] Fix mardown rendering issues
 
   - [ ] Better light theme
