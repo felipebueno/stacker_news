@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:stacker_news/widgets/generic_page_scaffold.dart';
 
 class ProfilePage extends StatelessWidget {

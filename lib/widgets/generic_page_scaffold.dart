@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stacker_news/data/post_repository.dart';
+import 'package:stacker_news/pages/about/about_page.dart';
 import 'package:stacker_news/pages/comments/comments_bloc.dart';
 import 'package:stacker_news/pages/comments/comments_page.dart';
 import 'package:stacker_news/pages/home_page.dart';
@@ -83,22 +84,31 @@ class GenericPageScaffold extends StatelessWidget {
                 Navigator.pushNamed(context, HomePage.id);
               },
             ),
+            // ListTile(
+            //   selected: route == ProfilePage.id,
+            //   leading: const Icon(Icons.person),
+            //   title: const Text('Profile'),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //     Navigator.pushNamed(context, ProfilePage.id);
+            //   },
+            // ),
+            // ListTile(
+            //   selected: route == SettingsPage.id,
+            //   leading: const Icon(Icons.settings),
+            //   title: const Text('Settings'),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //     Navigator.pushNamed(context, SettingsPage.id);
+            //   },
+            // ),
             ListTile(
-              selected: route == ProfilePage.id,
-              leading: const Icon(Icons.person),
-              title: const Text('Profile'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, ProfilePage.id);
-              },
-            ),
-            ListTile(
-              selected: route == SettingsPage.id,
+              selected: route == AboutPage.id,
               leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
+              title: const Text('About'),
               onTap: () {
                 Navigator.pop(context);
-                Navigator.pushNamed(context, SettingsPage.id);
+                Navigator.pushNamed(context, AboutPage.id);
               },
             ),
           ],

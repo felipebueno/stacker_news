@@ -30,6 +30,7 @@ class SNLogo extends StatelessWidget {
       children: [
         Row(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Hero(
               tag: _heroTag ?? 'sn_logo',
