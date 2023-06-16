@@ -17,6 +17,7 @@ The code is really hacky and fragile but it works. I'll be slowly refactoring th
   <img src="./screenshots/dark/jobs_dark1.jpeg" alt="drawing" width="200"/>
   <img src="./screenshots/dark/comments_dark1.jpeg" alt="drawing" width="200"/>
   <img src="./screenshots/dark/comments_dark2.jpeg" alt="drawing" width="200"/>
+  <img src="./screenshots/dark/about_dark1.jpeg" alt="drawing" width="200"/>
 </p>
 
 ### Light Theme
