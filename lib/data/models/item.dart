@@ -15,7 +15,7 @@ final class Item {
   final int? sats;
   final int? boost;
   final int? bounty;
-  final String? bountyPaidTo;
+  final List<dynamic>? bountyPaidTo;
   final String? path;
   final int? upvotes;
   final int? meSats;

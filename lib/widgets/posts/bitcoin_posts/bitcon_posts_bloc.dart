@@ -32,7 +32,7 @@ class BitcoinPostsBloc extends Bloc<BitcoinPostsEvent, BitcoinPostsState> {
         );
       } catch (e, st) {
         debugPrintStack(stackTrace: st);
-        emit(BitcoinPostsError(e.toString()));
+        emit(BitcoinPostsError('${e.toString()}\n$st'));
       }
     });
 
@@ -60,7 +60,7 @@ class BitcoinPostsBloc extends Bloc<BitcoinPostsEvent, BitcoinPostsState> {
         );
       } catch (e, st) {
         debugPrintStack(stackTrace: st);
-        emit(BitcoinPostsError(e.toString()));
+        emit(BitcoinPostsError('${e.toString()}\n$st'));
       }
     });
   }

@@ -32,7 +32,7 @@ class TopPostsBloc extends Bloc<TopPostsEvent, TopPostsState> {
         );
       } catch (e, st) {
         debugPrintStack(stackTrace: st);
-        emit(TopPostsError(e.toString()));
+        emit(TopPostsError('${e.toString()}\n$st'));
       }
     });
 
@@ -60,7 +60,7 @@ class TopPostsBloc extends Bloc<TopPostsEvent, TopPostsState> {
         );
       } catch (e, st) {
         debugPrintStack(stackTrace: st);
-        emit(TopPostsError(e.toString()));
+        emit(TopPostsError('${e.toString()}\n$st'));
       }
     });
   }

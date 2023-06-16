@@ -32,7 +32,7 @@ class JobPostsBloc extends Bloc<JobPostsEvent, JobPostsState> {
         );
       } catch (e, st) {
         debugPrintStack(stackTrace: st);
-        emit(JobPostsError(e.toString()));
+        emit(JobPostsError('${e.toString()}\n$st'));
       }
     });
 
@@ -60,7 +60,7 @@ class JobPostsBloc extends Bloc<JobPostsEvent, JobPostsState> {
         );
       } catch (e, st) {
         debugPrintStack(stackTrace: st);
-        emit(JobPostsError(e.toString()));
+        emit(JobPostsError('${e.toString()}\n$st'));
       }
     });
   }

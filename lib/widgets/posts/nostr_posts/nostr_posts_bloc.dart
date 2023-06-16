@@ -32,7 +32,7 @@ class NostrPostsBloc extends Bloc<NostrPostsEvent, NostrPostsState> {
         );
       } catch (e, st) {
         debugPrintStack(stackTrace: st);
-        emit(NostrPostsError(e.toString()));
+        emit(NostrPostsError('${e.toString()}\n$st'));
       }
     });
 
@@ -60,7 +60,7 @@ class NostrPostsBloc extends Bloc<NostrPostsEvent, NostrPostsState> {
         );
       } catch (e, st) {
         debugPrintStack(stackTrace: st);
-        emit(NostrPostsError(e.toString()));
+        emit(NostrPostsError('${e.toString()}\n$st'));
       }
     });
   }
