@@ -28,6 +28,7 @@ dependencies:
   dio: ^5.0.2+1
   flutter_markdown: ^0.6.15
   shared_preferences: ^2.1.2
+  qr_flutter: ^4.1.0
 
 dev_dependencies:
   flutter_test:
@@ -40,19 +41,19 @@ flutter_icons:
   android: "ic_launcher"
   ios: false
   remove_alpha_ios: true
-  image_path: "assets/icon/icon_512x_512.png"
+  image_path: "assets/icons/icon_512x_512.png"
   web:
     generate: true
-    image_path: "assets/icon/icon_512x_512.png"
+    image_path: "assets/icons/icon_512x_512.png"
     background_color: "#FFFFFF"
     theme_color: "#4181D6"
   windows:
     generate: false
-    image_path: "assets/icon/icon_512x_512.png"
+    image_path: "assets/icons/icon_512x_512.png"
     icon_size: 48
   macos:
     generate: false
-    image_path: "assets/icon/icon_512x_512.png"
+    image_path: "assets/icons/icon_512x_512.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -67,7 +68,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
-    - assets/icon/
+    - assets/icons/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see

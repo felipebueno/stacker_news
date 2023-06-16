@@ -34,6 +34,8 @@ Not implemented yet.
 
 ## TODO
 
+- [ ] Write a better TODO list
+
 - [ ] Code
 
   - [x] Solve/circumvent the issue with the changing `_next/data/xyz` endpoint
@@ -49,6 +51,8 @@ Not implemented yet.
   - [ ] Load more posts
 
   - [ ] Fix mardown rendering issues
+
+  - [ ] Search
 
   - [ ] Better light theme
 
@@ -86,9 +90,9 @@ Not implemented yet.
 
     - [ ] F-Droid
 
-    - [ ] Etc?
+    - [ ] etc?
 
-  - [ ] iOS release
+  - [ ] iOS release (will Apple allow this?)
 
   - [ ] Linux release
 
@@ -97,6 +101,8 @@ Not implemented yet.
     - [ ] Flatpak
 
     - [ ] deb
+
+    - [ ] etc?
 
   - [ ] Windows release
 

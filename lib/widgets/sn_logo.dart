@@ -9,19 +9,25 @@ class SNLogo extends StatelessWidget {
     double? blurRadius,
     String? text,
     String? heroTag,
-    bool? showVersion = false,
+    bool showVersion = false,
+    bool hideShadow = false,
+    Color? color,
     super.key,
   })  : _size = size,
         _blurRadius = blurRadius,
         _text = text,
         _heroTag = heroTag,
-        _showVersion = showVersion;
+        _showVersion = showVersion,
+        _hideShadow = hideShadow,
+        _color = color;
 
   final double? _size;
   final double? _blurRadius;
   final String? _text;
   final String? _heroTag;
-  final bool? _showVersion;
+  final bool _showVersion;
+  final bool _hideShadow;
+  final Color? _color;
 
   @override
   Widget build(BuildContext context) {
@@ -35,20 +41,23 @@ class SNLogo extends StatelessWidget {
             Hero(
               tag: _heroTag ?? 'sn_logo',
               child: Material(
+                color: Colors.transparent,
                 child: Text(
                   'SN',
                   style: TextStyle(
                     fontFamily: 'lightning',
                     fontWeight: FontWeight.bold,
                     fontSize: _size ?? 32,
-                    color: snYellow,
-                    shadows: [
-                      Shadow(
-                        offset: const Offset(-2.0, 1.0),
-                        blurRadius: _blurRadius ?? _size ?? 32,
-                        color: snYellow,
-                      ),
-                    ],
+                    color: _color ?? snYellow,
+                    shadows: _hideShadow
+                        ? null
+                        : [
+                            Shadow(
+                              offset: const Offset(-2.0, 1.0),
+                              blurRadius: _blurRadius ?? _size ?? 32,
+                              color: _color ?? snYellow,
+                            ),
+                          ],
                   ),
                 ),
               ),
@@ -59,7 +68,7 @@ class SNLogo extends StatelessWidget {
             ],
           ],
         ),
-        if (_showVersion ?? false) ...[
+        if (_showVersion) ...[
           const SizedBox(width: 8),
           const SNVersion(),
         ],

@@ -15,7 +15,8 @@ class StackerNewsApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Stacker News',
-      themeMode: ThemeMode.system,
+      themeMode: ThemeMode
+          .dark, // TODO: Implement theme switcher and change this to ThemeMode.system
       theme: ThemeData(
         drawerTheme: const DrawerThemeData(
           backgroundColor: Colors.white,
@@ -37,6 +38,7 @@ class StackerNewsApp extends StatelessWidget {
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: snYellow,
+            foregroundColor: Colors.black,
           ),
         ),
       ),
@@ -60,7 +62,7 @@ class StackerNewsApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white,
+            foregroundColor: Colors.black,
             backgroundColor: snYellow,
           ),
         ),
