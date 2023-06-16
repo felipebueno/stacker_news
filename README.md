@@ -93,7 +93,7 @@ Not implemented yet.
 
   - [ ] Android release
 
-    - [ ] Google Play
+    - [x] Google Play
 
     - [ ] F-Droid
 
