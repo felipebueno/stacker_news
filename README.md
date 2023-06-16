@@ -6,6 +6,8 @@ I started this project as a Hacker News app in the begining of 2020 to learn the
 
 The code is really hacky and fragile but it works. I'll be slowly refactoring the code to make it more robust and easier to work maintain.
 
+Get the latest APK from the [Releases Section](https://github.com/felipebueno/stacker_news/releases/latest).
+
 ## Screenshots
 
 ### Dark Theme
