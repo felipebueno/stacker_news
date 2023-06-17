@@ -59,6 +59,8 @@ Not implemented yet.
 
   - [ ] Fix mardown rendering issues
 
+  - [ ] Android in_app_update (https://pub.dev/packages/in_app_update)
+
   - [ ] Search
 
   - [ ] Better light theme
@@ -67,11 +69,13 @@ Not implemented yet.
 
   - [ ] More themes
 
-  - [ ] About
+  - [x] About
 
-    - [ ] Add link to source code
+    - [x] Add link to source code
 
-    - [ ] Donations
+    - [x] Donations
+
+    - [ ] Aknowledgements
 
   - [ ] Login / Logout
 
