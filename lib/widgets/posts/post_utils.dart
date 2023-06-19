@@ -40,7 +40,7 @@ class PostListUtils {
             );
 
   static Widget buildErrorState(context, String message) {
-    return Center(
+    return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

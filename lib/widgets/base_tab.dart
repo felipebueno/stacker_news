@@ -55,7 +55,7 @@ class _BaseTabState<TBloc extends Bloc<dynamic, dynamic>>
               icon: const Icon(Icons.add),
               label: const Text('MORE'),
               onPressed: () {
-                Utils.showInfo(context, 'Not implemented yet');
+                Utils.showWarning(context, 'Not implemented yet');
               },
             ),
           ),

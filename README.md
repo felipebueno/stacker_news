@@ -59,9 +59,9 @@ Not implemented yet.
 
   - [ ] Fix mardown rendering issues
 
-  - [ ] Android in_app_update (https://pub.dev/packages/in_app_update)
+  - [x] Android in_app_update (https://pub.dev/packages/in_app_update)
 
-  - [ ] Search
+    - [ ] Handle in_app_update errors
 
   - [ ] Better light theme
 
