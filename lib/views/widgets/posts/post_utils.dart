@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/item.dart';
-import 'package:stacker_news/widgets/post_item.dart';
+import 'package:stacker_news/views/widgets/post_item.dart';
 
 class PostListUtils {
   static Widget buildInitialState(context) {

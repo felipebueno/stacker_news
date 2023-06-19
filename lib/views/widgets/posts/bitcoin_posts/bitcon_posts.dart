@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stacker_news/data/models/item.dart';
 import 'package:stacker_news/utils.dart';
-import 'package:stacker_news/widgets/base_bloc_consumer.dart';
-import 'package:stacker_news/widgets/posts/post_utils.dart';
+import 'package:stacker_news/views/widgets/base_bloc_consumer.dart';
+import 'package:stacker_news/views/widgets/posts/post_utils.dart';
 
 import 'bitcon_posts_bloc.dart';
 

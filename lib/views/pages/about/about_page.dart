@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:stacker_news/colors.dart';
 import 'package:stacker_news/utils.dart';
-import 'package:stacker_news/widgets/generic_page_scaffold.dart';
-import 'package:stacker_news/widgets/sn_logo.dart';
+import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
+import 'package:stacker_news/views/widgets/sn_logo.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});

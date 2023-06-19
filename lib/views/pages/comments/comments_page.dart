@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stacker_news/data/models/item.dart';
-import 'package:stacker_news/pages/comments/comments_bloc.dart';
-import 'package:stacker_news/widgets/comment_item.dart';
-import 'package:stacker_news/widgets/generic_page_scaffold.dart';
-import 'package:stacker_news/widgets/post_item.dart';
-import 'package:stacker_news/widgets/posts/post_utils.dart';
+import 'package:stacker_news/views/pages/comments/comments_bloc.dart';
+import 'package:stacker_news/views/widgets/comment_item.dart';
+import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
+import 'package:stacker_news/views/widgets/post_item.dart';
+import 'package:stacker_news/views/widgets/posts/post_utils.dart';
 
 class PostComments extends StatelessWidget {
   static const String id = 'comments';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:stacker_news/data/models/item.dart';
-import 'package:stacker_news/pages/comments/comments_page.dart';
+import 'package:stacker_news/views/pages/comments/comments_page.dart';
 import 'package:stacker_news/utils.dart';
 
 class PostItem extends StatelessWidget {
@@ -94,9 +94,6 @@ class PostItem extends StatelessWidget {
                             : '${post.ncomments} comments',
                         style: label,
                       ),
-                      Text(
-                        '@${post.user?.name}',
-                        style: link,
                       ),
                       Text(
                         post.timeAgo,

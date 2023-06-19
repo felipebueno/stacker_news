@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/widgets/generic_page_scaffold.dart';
+import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});

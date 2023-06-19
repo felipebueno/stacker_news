@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stacker_news/data/post_repository.dart';
-import 'package:stacker_news/widgets/base_tab.dart';
-import 'package:stacker_news/widgets/generic_page_scaffold.dart';
-import 'package:stacker_news/widgets/posts/bitcoin_posts/bitcon_posts.dart';
-import 'package:stacker_news/widgets/posts/bitcoin_posts/bitcon_posts_bloc.dart';
-import 'package:stacker_news/widgets/posts/job_posts/job_posts.dart';
-import 'package:stacker_news/widgets/posts/job_posts/job_posts_bloc.dart';
-import 'package:stacker_news/widgets/posts/nostr_posts/nostr_posts.dart';
-import 'package:stacker_news/widgets/posts/nostr_posts/nostr_posts_bloc.dart';
-import 'package:stacker_news/widgets/posts/top_posts/top_posts.dart';
-import 'package:stacker_news/widgets/posts/top_posts/top_posts_bloc.dart';
-import 'package:stacker_news/widgets/sn_logo.dart';
+import 'package:stacker_news/views/widgets/base_tab.dart';
+import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
+import 'package:stacker_news/views/widgets/posts/bitcoin_posts/bitcon_posts.dart';
+import 'package:stacker_news/views/widgets/posts/bitcoin_posts/bitcon_posts_bloc.dart';
+import 'package:stacker_news/views/widgets/posts/job_posts/job_posts.dart';
+import 'package:stacker_news/views/widgets/posts/job_posts/job_posts_bloc.dart';
+import 'package:stacker_news/views/widgets/posts/nostr_posts/nostr_posts.dart';
+import 'package:stacker_news/views/widgets/posts/nostr_posts/nostr_posts_bloc.dart';
+import 'package:stacker_news/views/widgets/posts/top_posts/top_posts.dart';
+import 'package:stacker_news/views/widgets/posts/top_posts/top_posts_bloc.dart';
+import 'package:stacker_news/views/widgets/sn_logo.dart';
 
 class HomePage extends StatelessWidget {
   static const String id = 'home';
