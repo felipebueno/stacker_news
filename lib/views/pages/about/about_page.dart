@@ -3,7 +3,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:stacker_news/colors.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
-import 'package:stacker_news/views/widgets/sn_logo.dart';
+import 'package:stacker_news/views/widgets/stack_button.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -46,18 +46,7 @@ class AboutPage extends StatelessWidget {
           const SizedBox(height: 24),
           const Text('Tap or scan the QR code to send a tip'),
           const SizedBox(height: 24),
-          ElevatedButton.icon(
-            icon: const SNLogo(
-              size: 16,
-              color: Colors.black,
-              heroTag: 'zap',
-              hideShadow: true,
-            ),
-            label: const Text('felipe@stacker.news'),
-            onPressed: () {
-              Utils.launchURL('https://stacker.news/felipe');
-            },
-          ),
+          const StackButton('felipe'),
         ],
       ),
     );

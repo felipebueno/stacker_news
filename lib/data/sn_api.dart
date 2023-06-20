@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacker_news/data/models/item.dart';
+import 'package:stacker_news/data/models/user.dart';
 
 enum PostType {
   top,
@@ -33,7 +34,7 @@ final class PostRepository {
       ),
     );
   }
-
+// START Posts / Items
   Future<List<Item>> fetchPosts(PostType postType) async {
     String stories = '';
 
@@ -138,6 +139,45 @@ final class PostRepository {
 
     return Item.fromJson(data);
   }
+
+// END Posts / Items
+
+// START Profile
+  Future<User> fetchProfile(String userName) async {
+    String? currCommit = await _getCurrBuildId();
+
+    final response =
+        await dio.get('/$currCommit/$userName.json?name=$userName');
+
+    if (response.statusCode == 200) {
+      return _parseProfile(response.data);
+    }
+
+    if (response.statusCode == 404) {
+      await _fetchAndSaveCurrBuildId();
+
+      currCommit = await _getCurrBuildId();
+
+      final retryResponse =
+          await dio.get('/$currCommit/$userName.json?name=$userName');
+
+      if (retryResponse.statusCode == 200) {
+        return _parseProfile(retryResponse.data);
+      } else {
+        throw Exception('Error fetching profile');
+      }
+    } else {
+      throw Exception('Error parsing build id');
+    }
+  }
+
+  User _parseProfile(dynamic responseData) {
+    final userMap =
+        responseData['pageProps']['data']['user'] as Map<String, dynamic>;
+
+    return User.fromJson(userMap);
+  }
+// END Profile
 }
 
 class NetworkError extends Error {}

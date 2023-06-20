@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stacker_news/data/post_repository.dart';
+import 'package:stacker_news/data/sn_api.dart';
 import 'package:stacker_news/views/pages/about/about_page.dart';
 import 'package:stacker_news/views/pages/comments/comments_bloc.dart';
 import 'package:stacker_news/views/pages/comments/comments_page.dart';
@@ -42,7 +42,7 @@ class GenericPageScaffold extends StatelessWidget {
       appBar: appBar ??
           AppBar(
             centerTitle: true,
-            leading: route != PostComments.id
+            leading: (route != PostComments.id && route != ProfilePage.id)
                 ? null
                 : IconButton(
                     icon: const Icon(Icons.arrow_back),

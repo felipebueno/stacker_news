@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:stacker_news/data/post_repository.dart';
+import 'package:stacker_news/data/sn_api.dart';
 import 'package:stacker_news/views/widgets/base_tab.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 import 'package:stacker_news/views/widgets/posts/bitcoin_posts/bitcon_posts.dart';

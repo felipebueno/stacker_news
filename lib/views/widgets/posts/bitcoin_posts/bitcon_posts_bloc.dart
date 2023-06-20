@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/item.dart';
-import 'package:stacker_news/data/post_repository.dart';
+import 'package:stacker_news/data/sn_api.dart';
 
 part 'bitcon_posts_event.dart';
 part 'bitcon_posts_state.dart';

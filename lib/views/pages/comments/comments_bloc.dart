@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:stacker_news/data/models/item.dart';
-import 'package:stacker_news/data/post_repository.dart';
+import 'package:stacker_news/data/sn_api.dart';
 
 part 'comments_event.dart';
 part 'comments_state.dart';
