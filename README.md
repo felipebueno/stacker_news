@@ -77,9 +77,13 @@ Not implemented yet.
 
     - [ ] Aknowledgements
 
+  - [x] Profile (show)
+
+    - [ ] Tap yellow button to tip
+
   - [ ] Login / Logout
 
-    - [ ] Profile (show, edit)
+    - [ ] Profile (edit)
 
     - [ ] Bookmarks
 
