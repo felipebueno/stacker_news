@@ -15,7 +15,7 @@ class JobPostsBloc extends Bloc<JobPostsEvent, JobPostsState> {
 
   JobPostsBloc(JobPostsState initialState, this.postRepository)
       : super(initialState) {
-    on<GetJobPosts>((event, emit) async {
+    on<GetJobPosts>((_, emit) async {
       emit(const JobPostsLoading());
 
       from = 30;
@@ -36,7 +36,7 @@ class JobPostsBloc extends Bloc<JobPostsEvent, JobPostsState> {
       }
     });
 
-    on<GetMoreJobPosts>((event, emit) async {
+    on<GetMoreJobPosts>((_, emit) async {
       emit(const JobPostsLoadingMore());
 
       try {

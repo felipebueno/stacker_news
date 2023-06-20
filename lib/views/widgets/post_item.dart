@@ -4,6 +4,7 @@ import 'package:stacker_news/data/models/item.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/comments/comments_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
+import 'package:stacker_news/views/widgets/cowboy_streak.dart';
 
 class PostItem extends StatelessWidget {
   final Item post;
@@ -23,12 +24,8 @@ class PostItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    final TextStyle link = textTheme.titleSmall?.copyWith(
-          color: Colors.blue,
-        ) ??
-        const TextStyle();
-
-    final TextStyle label = textTheme.titleSmall ?? const TextStyle();
+    final link = textTheme.titleSmall?.copyWith(color: Colors.blue);
+    final label = textTheme.titleSmall;
 
     return InkWell(
       onTap: isCommentsPage
@@ -95,22 +92,30 @@ class PostItem extends StatelessWidget {
                             : '${post.ncomments} comments',
                         style: label,
                       ),
-                      TextButton(
-                        child: Text(
-                          '@${post.user?.name}',
-                          style: link,
-                        ),
-                        onPressed: () {
-                          if (post.user == null || post.user?.name == null) {
-                            return;
-                          }
+                      Row(
+                        children: [
+                          TextButton(
+                            child: Text(
+                              '${post.user?.atName}',
+                              style: link,
+                            ),
+                            onPressed: () {
+                              if (post.user == null ||
+                                  post.user?.name == null) {
+                                return;
+                              }
 
-                          Navigator.pushNamed(
-                            context,
-                            ProfilePage.id,
-                            arguments: post.user!.name,
-                          );
-                        },
+                              Navigator.pushNamed(
+                                context,
+                                ProfilePage.id,
+                                arguments: post.user!.name,
+                              );
+                            },
+                          ),
+                          if (post.user?.hideCowboyHat != true &&
+                              post.user?.streak != null)
+                            CowboyHat(color: textTheme.titleSmall?.color),
+                        ],
                       ),
                       Text(
                         post.timeAgo,

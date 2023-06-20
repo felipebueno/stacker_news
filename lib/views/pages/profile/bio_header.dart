@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:stacker_news/colors.dart';
+import 'package:stacker_news/data/models/item.dart';
 import 'package:stacker_news/data/models/user.dart';
+import 'package:stacker_news/views/pages/comments/comments_page.dart';
+import 'package:stacker_news/views/widgets/cowboy_streak.dart';
 import 'package:stacker_news/views/widgets/stack_button.dart';
 
 class BioHeader extends StatelessWidget {
@@ -17,7 +21,8 @@ class BioHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    final TextStyle label = textTheme.titleSmall ?? const TextStyle();
+    final link = textTheme.titleSmall?.copyWith(color: Colors.blue);
+    final label = textTheme.titleSmall;
 
     return Padding(
       padding: const EdgeInsets.all(4.0),
@@ -38,20 +43,42 @@ class BioHeader extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    user.atName,
-                    style: textTheme.titleMedium,
+                  Row(
+                    children: [
+                      Text(
+                        user.atName,
+                        style: textTheme.titleLarge,
+                      ),
+                      if (user.hideCowboyHat != true && user.streak != null)
+                        CowboyStreak(streak: user.streak!),
+                    ],
                   ),
                   Text(
                     '${user.stacked} stacked',
-                    style: textTheme.titleMedium,
+                    style: textTheme.titleLarge?.copyWith(
+                      color: snYellow.withRed(160),
+                    ),
                   ),
+                  const SizedBox(height: 8.0),
                   StackButton(user.name ?? ''),
                   TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      'stacking since: ${user.since}',
-                      style: textTheme.titleMedium,
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(
+                        PostComments.id,
+                        arguments: Item(id: '${user.since}'),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'stacking since: ',
+                          style: label,
+                        ),
+                        Text(
+                          '#${user.since}',
+                          style: link,
+                        ),
+                      ],
                     ),
                   ),
                 ],

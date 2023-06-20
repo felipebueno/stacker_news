@@ -36,7 +36,7 @@ class BitcoinPostsBloc extends Bloc<BitcoinPostsEvent, BitcoinPostsState> {
       }
     });
 
-    on<GetMoreBitcoinPosts>((event, emit) async {
+    on<GetMoreBitcoinPosts>((_, emit) async {
       emit(const BitcoinPostsLoadingMore());
 
       try {

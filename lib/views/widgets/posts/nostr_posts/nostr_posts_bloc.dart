@@ -15,7 +15,7 @@ class NostrPostsBloc extends Bloc<NostrPostsEvent, NostrPostsState> {
 
   NostrPostsBloc(NostrPostsState initialState, this.postRepository)
       : super(initialState) {
-    on<GetNostrPosts>((event, emit) async {
+    on<GetNostrPosts>((_, emit) async {
       emit(const NostrPostsLoading());
 
       from = 30;
@@ -36,7 +36,7 @@ class NostrPostsBloc extends Bloc<NostrPostsEvent, NostrPostsState> {
       }
     });
 
-    on<GetMoreNostrPosts>((event, emit) async {
+    on<GetMoreNostrPosts>((_, emit) async {
       emit(const NostrPostsLoadingMore());
 
       try {

@@ -24,9 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
         if (!snapshot.hasData) {
           return const GenericPageScaffold(
             title: 'Loading...',
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: Center(child: CircularProgressIndicator()),
           );
         }
 

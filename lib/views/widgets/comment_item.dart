@@ -15,12 +15,8 @@ class CommentItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    final TextStyle link = textTheme.titleSmall?.copyWith(
-          color: Colors.blue,
-        ) ??
-        const TextStyle();
-
-    final TextStyle label = textTheme.titleSmall ?? const TextStyle();
+    final link = textTheme.titleSmall?.copyWith(color: Colors.blue);
+    final label = textTheme.titleSmall;
 
     return InkWell(
       onTap: () {

@@ -10,16 +10,16 @@ part 'top_posts_state.dart';
 class TopPostsBloc extends Bloc<TopPostsEvent, TopPostsState> {
   final PostRepository postRepository;
   List<Item> _posts = [];
-  int _from = 30;
-  int _to = 60;
+  int _from = 21;
+  int _to = 42;
 
   TopPostsBloc(TopPostsState initialState, this.postRepository)
       : super(initialState) {
-    on<GetTopPosts>((event, emit) async {
+    on<GetTopPosts>((_, emit) async {
       emit(const TopPostsLoading());
 
-      _from = 30;
-      _to = 60;
+      _from = 21;
+      _to = 42;
 
       try {
         _posts = await postRepository.fetchPosts(PostType.top);
@@ -36,7 +36,7 @@ class TopPostsBloc extends Bloc<TopPostsEvent, TopPostsState> {
       }
     });
 
-    on<GetMoreTopPosts>((event, emit) async {
+    on<GetMoreTopPosts>((_, emit) async {
       emit(const TopPostsLoadingMore());
 
       try {
