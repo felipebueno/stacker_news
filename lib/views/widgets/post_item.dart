@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:stacker_news/data/models/item.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/comments/comments_page.dart';
+import 'package:stacker_news/views/widgets/markdown_item.dart';
 import 'package:stacker_news/views/widgets/user_button.dart';
 
 class PostItem extends StatelessWidget {
@@ -101,7 +101,7 @@ class PostItem extends StatelessWidget {
                   isCommentsPage && post.text != null && post.text != ''
                       ? Padding(
                           padding: const EdgeInsets.only(top: 8.0),
-                          child: MarkdownBody(data: post.text!),
+                          child: MarkdownItem(post.text),
                         )
                       : const SizedBox(),
                 ],

@@ -51,10 +51,7 @@ class _CommentListState extends State<CommentList> {
         } else if (state is ItemLoading) {
           return PostListUtils.buildLoadingState(context);
         } else if (state is ItemLoaded) {
-          final comments = [
-            widget.item,
-            ...(state.item.comments ?? []),
-          ];
+          final comments = state.item.comments ?? [];
 
           return ListView.separated(
             itemBuilder: (context, index) {
@@ -62,10 +59,10 @@ class _CommentListState extends State<CommentList> {
                 return PostItem(state.item, isCommentsPage: true);
               }
 
-              return CommentItem(comments[index]);
+              return CommentItem(comments[index - 1]);
             },
             separatorBuilder: (context, index) => const Divider(),
-            itemCount: comments.length,
+            itemCount: comments.length + 1,
           );
         } else if (state is ItemError) {
           return PostListUtils.buildInitialState(context);

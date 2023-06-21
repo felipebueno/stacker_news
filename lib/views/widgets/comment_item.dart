@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:stacker_news/data/models/item.dart';
 import 'package:stacker_news/views/pages/comments/comments_page.dart';
+import 'package:stacker_news/views/widgets/markdown_item.dart';
 import 'package:stacker_news/views/widgets/user_button.dart';
 
 class CommentItem extends StatelessWidget {
@@ -16,7 +16,6 @@ class CommentItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    final link = textTheme.titleSmall?.copyWith(color: Colors.blue);
     final label = textTheme.titleSmall;
 
     return InkWell(
@@ -60,7 +59,7 @@ class CommentItem extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
-              child: MarkdownBody(data: post.text ?? ''),
+              child: MarkdownItem(post.text),
             ),
           ],
         ),

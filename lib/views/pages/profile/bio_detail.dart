@@ -19,10 +19,10 @@ class BioDetail extends StatelessWidget {
           return BioHeader(user);
         }
 
-        return CommentItem((user.bio!.comments ?? [])[index]);
+        return CommentItem((user.bio!.comments ?? [])[index - 1]);
       },
       separatorBuilder: (context, index) => const Divider(),
-      itemCount: (user.bio!.comments ?? []).length,
+      itemCount: (user.bio!.comments ?? []).length + 1,
     );
   }
 }

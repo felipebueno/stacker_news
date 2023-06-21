@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:stacker_news/colors.dart';
 import 'package:stacker_news/data/models/item.dart';
 import 'package:stacker_news/data/models/user.dart';
 import 'package:stacker_news/views/pages/comments/comments_page.dart';
 import 'package:stacker_news/views/widgets/cowboy_streak.dart';
+import 'package:stacker_news/views/widgets/markdown_item.dart';
 import 'package:stacker_news/views/widgets/stack_button.dart';
 
 class BioHeader extends StatelessWidget {
@@ -105,7 +105,7 @@ class BioHeader extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
-            child: MarkdownBody(data: user.bio!.text!),
+            child: MarkdownItem(user.bio?.text),
           )
         ],
       ),
