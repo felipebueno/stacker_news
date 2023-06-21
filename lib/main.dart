@@ -1,17 +1,35 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:stacker_news/views/pages/home_page.dart';
 import 'package:stacker_news/sn_router.dart';
 import 'package:stacker_news/utils.dart';
+import 'package:stacker_news/views/pages/home_page.dart';
 
 import 'colors.dart';
 
 void main() {
-  Utils.checkForUpdate();
+  if (!kIsWeb) {
+    WidgetsFlutterBinding.ensureInitialized();
+  }
+
   runApp(const StackerNewsApp());
 }
 
-class StackerNewsApp extends StatelessWidget {
+class StackerNewsApp extends StatefulWidget {
   const StackerNewsApp({super.key});
+
+  @override
+  State<StackerNewsApp> createState() => _StackerNewsAppState();
+}
+
+class _StackerNewsAppState extends State<StackerNewsApp> {
+  @override
+  void initState() {
+    super.initState();
+
+    if (mounted) {
+      Utils.checkForUpdate();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
