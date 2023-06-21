@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:stacker_news/colors.dart';
 import 'package:stacker_news/data/models/item.dart';
@@ -31,12 +32,15 @@ class BioHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 48,
-                backgroundImage: NetworkImage(
-                  user.photoId == null
-                      ? 'https://stacker.news/dorian400.jpg'
-                      : 'https://snuploads.s3.amazonaws.com/${user.photoId}',
+              ClipOval(
+                child: CircleAvatar(
+                  radius: 48,
+                  child: CachedNetworkImage(
+                    imageUrl: user.photoId == null
+                        ? 'https://stacker.news/dorian400.jpg'
+                        : 'https://snuploads.s3.amazonaws.com/${user.photoId}',
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
               const SizedBox(width: 8),
