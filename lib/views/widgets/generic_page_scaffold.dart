@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stacker_news/data/models/item.dart';
 import 'package:stacker_news/data/sn_api.dart';
 import 'package:stacker_news/views/pages/about/about_page.dart';
 import 'package:stacker_news/views/pages/comments/comments_bloc.dart';
@@ -109,6 +110,21 @@ class GenericPageScaffold extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, AboutPage.id);
+              },
+            ),
+            ListTile(
+              selected: route == AboutPage.id,
+              leading: const Icon(Icons.question_mark),
+              title: const Text('FAQ'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.of(context).pushNamed(
+                  PostComments.id,
+                  arguments: Item(
+                    id: '349',
+                    pageTitle: 'FAQ',
+                  ),
+                );
               },
             ),
           ],

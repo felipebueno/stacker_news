@@ -14,11 +14,11 @@ class PostComments extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final item = ModalRoute.of(context)?.settings.arguments as Item;
+
     return GenericPageScaffold(
-      title: 'Comments',
-      body: CommentList(
-        item: ModalRoute.of(context)?.settings.arguments as Item,
-      ),
+      title: item.pageTitle ?? 'Comments',
+      body: CommentList(item: item),
     );
   }
 }

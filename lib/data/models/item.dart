@@ -40,6 +40,7 @@ final class Item {
   final User? user;
   final String? text;
   final List<Item>? comments;
+  final String? pageTitle;
 
   Item({
     this.id,
@@ -79,6 +80,7 @@ final class Item {
     this.user,
     this.text,
     this.comments,
+    this.pageTitle,
   });
 
   factory Item.fromJson(Map<String, dynamic> json) {
@@ -122,6 +124,7 @@ final class Item {
       comments: json['comments'] != null
           ? (json['comments'] as List).map((i) => Item.fromJson(i)).toList()
           : null,
+      pageTitle: json['pageTitle'],
     );
   }
 
