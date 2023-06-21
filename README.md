@@ -28,14 +28,14 @@ Get the latest APK from the [Releases Section](https://github.com/felipebueno/st
 
 ### Light Theme
 
-<p float="left">
+<!-- <p float="left">
   <img src="./screenshots/light/top_light1.jpeg" alt="drawing" width="200"/>
   <img src="./screenshots/light/bitcoin_light1.jpeg" alt="drawing" width="200"/>
   <img src="./screenshots/light/nostr_light1.jpeg" alt="drawing" width="200"/>
   <img src="./screenshots/light/jobs_light1.jpeg" alt="drawing" width="200"/>
   <img src="./screenshots/light/comments_light1.jpeg" alt="drawing" width="200"/>
   <img src="./screenshots/light/comments_light2.jpeg" alt="drawing" width="200"/>
-</p>
+</p> -->
 
 Not implemented yet.
 

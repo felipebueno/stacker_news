@@ -32,7 +32,7 @@ class BioHeader extends StatelessWidget {
           Row(
             children: [
               CircleAvatar(
-                radius: 64,
+                radius: 48,
                 backgroundImage: NetworkImage(
                   user.photoId == null
                       ? 'https://stacker.news/dorian400.jpg'

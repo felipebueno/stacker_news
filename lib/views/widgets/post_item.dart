@@ -3,8 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:stacker_news/data/models/item.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/comments/comments_page.dart';
-import 'package:stacker_news/views/pages/profile/profile_page.dart';
-import 'package:stacker_news/views/widgets/cowboy_streak.dart';
+import 'package:stacker_news/views/widgets/user_button.dart';
 
 class PostItem extends StatelessWidget {
   final Item post;
@@ -92,31 +91,7 @@ class PostItem extends StatelessWidget {
                             : '${post.ncomments} comments',
                         style: label,
                       ),
-                      Row(
-                        children: [
-                          TextButton(
-                            child: Text(
-                              '${post.user?.atName}',
-                              style: link,
-                            ),
-                            onPressed: () {
-                              if (post.user == null ||
-                                  post.user?.name == null) {
-                                return;
-                              }
-
-                              Navigator.pushNamed(
-                                context,
-                                ProfilePage.id,
-                                arguments: post.user!.name,
-                              );
-                            },
-                          ),
-                          if (post.user?.hideCowboyHat != true &&
-                              post.user?.streak != null)
-                            CowboyHat(color: textTheme.titleSmall?.color),
-                        ],
-                      ),
+                      UserButton(post.user),
                       Text(
                         post.timeAgo,
                         style: label,

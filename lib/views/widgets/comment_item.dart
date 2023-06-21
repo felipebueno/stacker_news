@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:stacker_news/data/models/item.dart';
 import 'package:stacker_news/views/pages/comments/comments_page.dart';
+import 'package:stacker_news/views/widgets/user_button.dart';
 
 class CommentItem extends StatelessWidget {
   final Item post;
@@ -50,10 +51,7 @@ class CommentItem extends StatelessWidget {
                       : '${post.ncomments} comments',
                   style: label,
                 ),
-                Text(
-                  '@${post.user?.name}',
-                  style: link,
-                ),
+                UserButton(post.user),
                 Text(
                   post.timeAgo,
                   style: label,
