@@ -12,29 +12,37 @@ class UserButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return TextButton(
-      child: Row(
-        children: [
-          Text(
-            '${user?.atName}',
-            style: textTheme.titleSmall?.copyWith(color: Colors.blue),
+    return Row(
+      children: [
+        Text(
+          'by:',
+          style: textTheme.bodySmall,
+        ),
+        TextButton(
+          child: Row(
+            children: [
+              Text(
+                '${user?.atName}',
+                style: textTheme.titleSmall?.copyWith(color: Colors.blue),
+              ),
+              const SizedBox(width: 4),
+              if (user?.hideCowboyHat != true && user?.streak != null)
+                CowboyHat(color: textTheme.titleSmall?.color),
+            ],
           ),
-          const SizedBox(width: 4),
-          if (user?.hideCowboyHat != true && user?.streak != null)
-            CowboyHat(color: textTheme.titleSmall?.color),
-        ],
-      ),
-      onPressed: () {
-        if (user == null || user?.name == null) {
-          return;
-        }
+          onPressed: () {
+            if (user == null || user?.name == null) {
+              return;
+            }
 
-        Navigator.pushNamed(
-          context,
-          ProfilePage.id,
-          arguments: user!.name,
-        );
-      },
+            Navigator.pushNamed(
+              context,
+              ProfilePage.id,
+              arguments: user!.name,
+            );
+          },
+        ),
+      ],
     );
   }
 }

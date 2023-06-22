@@ -59,10 +59,11 @@ class PostItem extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    post.title ?? '',
-                    style: textTheme.titleMedium,
-                  ),
+                  if (post.title != null && post.title != '')
+                    Text(
+                      post.title!,
+                      style: textTheme.titleMedium,
+                    ),
                   if (post.url != null && post.url != '')
                     TextButton(
                       child: Text(
@@ -77,7 +78,7 @@ class PostItem extends StatelessWidget {
                     ),
                   const SizedBox(height: 8.0),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
                         post.isJob == true
@@ -91,19 +92,25 @@ class PostItem extends StatelessWidget {
                             : '${post.ncomments} comments',
                         style: label,
                       ),
-                      UserButton(post.user),
                       Text(
                         post.timeAgo,
                         style: label,
-                      ),
+                        textAlign: TextAlign.end,
+                      )
                     ],
                   ),
-                  isCommentsPage && post.text != null && post.text != ''
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: MarkdownItem(post.text),
-                        )
-                      : const SizedBox(),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [UserButton(post.user)],
+                    ),
+                  ),
+                  if (isCommentsPage && post.text != null && post.text != '')
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: MarkdownItem(post.text),
+                    ),
                 ],
               ),
             ),
