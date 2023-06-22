@@ -47,7 +47,7 @@ Not implemented yet.
 
   - [x] Solve/circumvent the issue with the changing `_next/data/xyz` endpoint
 
-  - [ ] Move away from the bloc pattern to something more simple
+  - [x] Move away from the bloc pattern to something more simple
 
   - [ ] Refactor the code
 
@@ -57,7 +57,7 @@ Not implemented yet.
 
   - [ ] Load more posts
 
-  - [ ] Fix mardown rendering issues
+  - [x] Fix major markdown rendering issues
 
   - [x] Android in_app_update (https://pub.dev/packages/in_app_update)
 
@@ -79,7 +79,7 @@ Not implemented yet.
 
   - [x] Profile (show)
 
-    - [ ] Tap yellow button to tip
+    - [x] Tap yellow button to tip
 
   - [ ] Login / Logout
 
