@@ -3,6 +3,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:stacker_news/colors.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
+import 'package:stacker_news/views/widgets/sn_logo.dart';
 import 'package:stacker_news/views/widgets/stack_button.dart';
 
 class AboutPage extends StatelessWidget {
@@ -17,6 +18,10 @@ class AboutPage extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const SNLogo(
+            showEndpointVersion: true,
+            full: true,
+          ),
           TextButton.icon(
             icon: const Icon(Icons.bug_report),
             label: const Text('Source Code'),

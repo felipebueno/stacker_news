@@ -3,9 +3,18 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Utils {
+  static Future<String> getAppVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    final currentVersion = packageInfo.version;
+    final currentBuildNumber = packageInfo.buildNumber;
+
+    return '$currentVersion+$currentBuildNumber';
+  }
+
   static launchURL(url) async {
     final uri = Uri.tryParse(url);
 

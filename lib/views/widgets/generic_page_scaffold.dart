@@ -43,7 +43,8 @@ class GenericPageScaffold extends StatelessWidget {
       appBar: appBar ??
           AppBar(
             centerTitle: true,
-            leading: (route != PostComments.id && route != ProfilePage.id)
+            leading: ((route != PostComments.id && route != ProfilePage.id) ||
+                    title == 'FAQ')
                 ? null
                 : IconButton(
                     icon: const Icon(Icons.arrow_back),
@@ -72,7 +73,8 @@ class GenericPageScaffold extends StatelessWidget {
                   size: 80,
                   blurRadius: 96,
                   heroTag: 'drawer_logo',
-                  showVersion: true,
+                  showEndpointVersion: true,
+                  full: true,
                 ),
               ),
             ),
@@ -113,7 +115,7 @@ class GenericPageScaffold extends StatelessWidget {
               },
             ),
             ListTile(
-              selected: route == AboutPage.id,
+              selected: route == PostComments.id,
               leading: const Icon(Icons.question_mark),
               title: const Text('FAQ'),
               onTap: () {

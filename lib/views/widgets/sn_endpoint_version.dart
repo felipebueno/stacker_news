@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SNVersion extends StatelessWidget {
-  const SNVersion({super.key});
+class SNEndpointVersion extends StatelessWidget {
+  const SNEndpointVersion({super.key});
 
   Future<String> _getVersion() async {
     final prefs = await SharedPreferences.getInstance();
