@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stacker_news/data/models/item.dart';
-import 'package:stacker_news/views/pages/comments/comments_bloc.dart';
+import 'package:stacker_news/data/sn_api.dart';
+import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/widgets/comment_item.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 import 'package:stacker_news/views/widgets/post_item.dart';
-import 'package:stacker_news/views/widgets/posts/post_utils.dart';
+import 'package:stacker_news/views/widgets/post_list_error.dart';
 
-class PostComments extends StatelessWidget {
+class CommentsPage extends StatelessWidget {
   static const String id = 'comments';
 
-  const PostComments({super.key});
+  const CommentsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class PostComments extends StatelessWidget {
   }
 }
 
-class CommentList extends StatefulWidget {
+class CommentList extends StatelessWidget {
   const CommentList({
     Key? key,
     required this.item,
@@ -32,42 +32,35 @@ class CommentList extends StatefulWidget {
   final Item item;
 
   @override
-  State<CommentList> createState() => _CommentListState();
-}
-
-class _CommentListState extends State<CommentList> {
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<ItemBloc>(context).add(GetItem(widget.item));
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ItemBloc, ItemState>(
-      builder: (context, state) {
-        if (state is ItemInitial) {
-          return PostListUtils.buildInitialState(context);
-        } else if (state is ItemLoading) {
-          return PostListUtils.buildLoadingState(context);
-        } else if (state is ItemLoaded) {
-          final comments = state.item.comments ?? [];
-
-          return ListView.separated(
-            itemBuilder: (context, index) {
-              if (index == 0) {
-                return PostItem(state.item, isCommentsPage: true);
-              }
-
-              return CommentItem(comments[index - 1]);
-            },
-            separatorBuilder: (context, index) => const Divider(),
-            itemCount: comments.length + 1,
-          );
-        } else if (state is ItemError) {
-          return PostListUtils.buildInitialState(context);
+    return FutureBuilder(
+      future: Api().fetchItem(item),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
         }
-        return Container();
+
+        if (snapshot.hasError || !snapshot.hasData) {
+          final err = snapshot.error.toString();
+          Utils.showError(context, err);
+          return PostListError(err);
+        }
+
+        final item = snapshot.data as Item;
+
+        final comments = item.comments ?? [];
+
+        return ListView.separated(
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return PostItem(item, isCommentsPage: true);
+            }
+
+            return CommentItem(comments[index - 1]);
+          },
+          separatorBuilder: (context, index) => const Divider(),
+          itemCount: comments.length + 1,
+        );
       },
     );
   }

@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:stacker_news/data/sn_api.dart';
 import 'package:stacker_news/views/widgets/base_tab.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
-import 'package:stacker_news/views/widgets/posts/bitcoin_posts/bitcon_posts.dart';
-import 'package:stacker_news/views/widgets/posts/bitcoin_posts/bitcon_posts_bloc.dart';
-import 'package:stacker_news/views/widgets/posts/job_posts/job_posts.dart';
-import 'package:stacker_news/views/widgets/posts/job_posts/job_posts_bloc.dart';
-import 'package:stacker_news/views/widgets/posts/nostr_posts/nostr_posts.dart';
-import 'package:stacker_news/views/widgets/posts/nostr_posts/nostr_posts_bloc.dart';
-import 'package:stacker_news/views/widgets/posts/top_posts/top_posts.dart';
-import 'package:stacker_news/views/widgets/posts/top_posts/top_posts_bloc.dart';
 import 'package:stacker_news/views/widgets/sn_logo.dart';
 
 class HomePage extends StatelessWidget {
@@ -23,26 +15,10 @@ class HomePage extends StatelessWidget {
   ];
 
   final List<Widget> tabViews = const [
-    BaseTab<TopPostsBloc>(
-      body: TopPosts(),
-      onRefresh: GetTopPosts(),
-      onMoreTap: GetMoreTopPosts(),
-    ),
-    BaseTab<BitcoinPostsBloc>(
-      body: BitcoinPosts(),
-      onRefresh: GetBitcoinPosts(),
-      onMoreTap: GetMoreBitcoinPosts(),
-    ),
-    BaseTab<NostrPostsBloc>(
-      body: NostrPosts(),
-      onRefresh: GetNostrPosts(),
-      onMoreTap: GetMoreNostrPosts(),
-    ),
-    BaseTab<JobPostsBloc>(
-      body: JobPosts(),
-      onRefresh: GetJobPosts(),
-      onMoreTap: GetMoreJobPosts(),
-    ),
+    BaseTab(postType: PostType.top),
+    BaseTab(postType: PostType.bitcoin),
+    BaseTab(postType: PostType.nostr),
+    BaseTab(postType: PostType.job),
   ];
 
   const HomePage({super.key});
@@ -57,25 +33,7 @@ class HomePage extends StatelessWidget {
           title: const SNLogo(),
           bottom: TabBar(tabs: tabs),
         ),
-        mainBody: MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (context) => TopPostsBloc(TopPostsInitial()),
-            ),
-            BlocProvider(
-              create: (context) => BitcoinPostsBloc(BitcoinPostsInitial()),
-            ),
-            BlocProvider(
-              create: (context) => NostrPostsBloc(NostrPostsInitial()),
-            ),
-            BlocProvider(
-              create: (context) => JobPostsBloc(JobPostsInitial()),
-            ),
-          ],
-          child: TabBarView(
-            children: tabViews,
-          ),
-        ),
+        mainBody: TabBarView(children: tabViews),
       ),
     );
   }

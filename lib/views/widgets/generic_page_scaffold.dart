@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stacker_news/data/models/item.dart';
 import 'package:stacker_news/views/pages/about/about_page.dart';
-import 'package:stacker_news/views/pages/comments/comments_bloc.dart';
 import 'package:stacker_news/views/pages/comments/comments_page.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
@@ -42,7 +40,7 @@ class GenericPageScaffold extends StatelessWidget {
       appBar: appBar ??
           AppBar(
             centerTitle: true,
-            leading: ((route != PostComments.id && route != ProfilePage.id) ||
+            leading: ((route != CommentsPage.id && route != ProfilePage.id) ||
                     title == 'FAQ')
                 ? null
                 : IconButton(
@@ -114,13 +112,13 @@ class GenericPageScaffold extends StatelessWidget {
               },
             ),
             ListTile(
-              selected: route == PostComments.id,
+              selected: route == CommentsPage.id,
               leading: const Icon(Icons.question_mark),
               title: const Text('FAQ'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.of(context).pushNamed(
-                  PostComments.id,
+                  CommentsPage.id,
                   arguments: Item(
                     id: '349',
                     pageTitle: 'FAQ',
@@ -131,13 +129,7 @@ class GenericPageScaffold extends StatelessWidget {
           ],
         ),
       ),
-      body: Center(
-        child: mainBody ??
-            BlocProvider(
-              create: (context) => ItemBloc(ItemInitial()),
-              child: body,
-            ),
-      ),
+      body: Center(child: mainBody ?? body),
     );
   }
 }

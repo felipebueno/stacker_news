@@ -68,7 +68,7 @@ class BioHeader extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pushNamed(
-                        PostComments.id,
+                        CommentsPage.id,
                         arguments: Item(id: '${user.since}'),
                       );
                     },

@@ -35,7 +35,7 @@ class PostItem extends StatelessWidget {
               : null
           : () {
               Navigator.of(context).pushNamed(
-                PostComments.id,
+                CommentsPage.id,
                 arguments: post,
               );
             },

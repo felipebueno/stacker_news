@@ -8,7 +8,7 @@ import 'package:stacker_news/views/pages/settings/settings_page.dart';
 class SNRouter {
   static final routes = <String, WidgetBuilder>{
     HomePage.id: (context) => const HomePage(),
-    PostComments.id: (context) => const PostComments(),
+    CommentsPage.id: (context) => const CommentsPage(),
     SettingsPage.id: (context) => const SettingsPage(),
     ProfilePage.id: (context) => const ProfilePage(),
     AboutPage.id: (context) => const AboutPage(),

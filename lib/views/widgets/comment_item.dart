@@ -23,7 +23,7 @@ class CommentItem extends StatelessWidget {
         if (post.ncomments == null || post.ncomments == 0) return;
 
         Navigator.of(context).pushNamed(
-          PostComments.id,
+          CommentsPage.id,
           arguments: post,
         );
       },
