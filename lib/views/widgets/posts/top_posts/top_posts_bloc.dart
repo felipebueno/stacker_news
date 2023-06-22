@@ -8,13 +8,11 @@ part 'top_posts_event.dart';
 part 'top_posts_state.dart';
 
 class TopPostsBloc extends Bloc<TopPostsEvent, TopPostsState> {
-  final PostRepository postRepository;
   List<Item> _posts = [];
   int _from = 21;
   int _to = 42;
 
-  TopPostsBloc(TopPostsState initialState, this.postRepository)
-      : super(initialState) {
+  TopPostsBloc(TopPostsState initialState) : super(initialState) {
     on<GetTopPosts>((_, emit) async {
       emit(const TopPostsLoading());
 
@@ -22,7 +20,7 @@ class TopPostsBloc extends Bloc<TopPostsEvent, TopPostsState> {
       _to = 42;
 
       try {
-        _posts = await postRepository.fetchPosts(PostType.top);
+        _posts = await Api().fetchPosts(PostType.top);
         emit(TopPostsLoaded(_posts));
       } on NetworkError {
         emit(
@@ -41,7 +39,7 @@ class TopPostsBloc extends Bloc<TopPostsEvent, TopPostsState> {
 
       try {
         final List<Item> newPosts =
-            await postRepository.fetchMorePosts(PostType.top, _from, _to);
+            await Api().fetchMorePosts(PostType.top, _from, _to);
 
         final List<Item> morePosts =
             List<Item>.from(TopPostsLoaded(_posts).posts)..addAll(newPosts);

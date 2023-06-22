@@ -8,13 +8,11 @@ part 'nostr_posts_event.dart';
 part 'nostr_posts_state.dart';
 
 class NostrPostsBloc extends Bloc<NostrPostsEvent, NostrPostsState> {
-  final PostRepository postRepository;
   List<Item> posts = [];
   int from = 30;
   int to = 60;
 
-  NostrPostsBloc(NostrPostsState initialState, this.postRepository)
-      : super(initialState) {
+  NostrPostsBloc(NostrPostsState initialState) : super(initialState) {
     on<GetNostrPosts>((_, emit) async {
       emit(const NostrPostsLoading());
 
@@ -22,7 +20,7 @@ class NostrPostsBloc extends Bloc<NostrPostsEvent, NostrPostsState> {
       to = 60;
 
       try {
-        posts = await postRepository.fetchPosts(PostType.nostr);
+        posts = await Api().fetchPosts(PostType.nostr);
         emit(NostrPostsLoaded(posts));
       } on NetworkError {
         emit(
@@ -41,7 +39,7 @@ class NostrPostsBloc extends Bloc<NostrPostsEvent, NostrPostsState> {
 
       try {
         final List<Item> newPosts =
-            await postRepository.fetchMorePosts(PostType.nostr, from, to);
+            await Api().fetchMorePosts(PostType.nostr, from, to);
 
         final List<Item> morePosts =
             List<Item>.from(NostrPostsLoaded(posts).posts)..addAll(newPosts);

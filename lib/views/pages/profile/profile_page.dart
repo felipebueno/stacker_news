@@ -19,7 +19,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final user = ModalRoute.of(context)?.settings.arguments as String;
 
     return FutureBuilder(
-      future: PostRepository().fetchProfile(user),
+      future: Api().fetchProfile(user),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const GenericPageScaffold(

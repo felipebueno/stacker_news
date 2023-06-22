@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:stacker_news/data/models/item.dart';
-import 'package:stacker_news/data/sn_api.dart';
 import 'package:stacker_news/views/pages/about/about_page.dart';
 import 'package:stacker_news/views/pages/comments/comments_bloc.dart';
 import 'package:stacker_news/views/pages/comments/comments_page.dart';
@@ -135,10 +134,7 @@ class GenericPageScaffold extends StatelessWidget {
       body: Center(
         child: mainBody ??
             BlocProvider(
-              create: (context) => ItemBloc(
-                ItemInitial(),
-                PostRepository(),
-              ),
+              create: (context) => ItemBloc(ItemInitial()),
               child: body,
             ),
       ),

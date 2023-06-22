@@ -7,13 +7,11 @@ part 'comments_event.dart';
 part 'comments_state.dart';
 
 class ItemBloc extends Bloc<ItemEvent, ItemState> {
-  final PostRepository postRepository;
-
-  ItemBloc(ItemState initialState, this.postRepository) : super(initialState) {
+  ItemBloc(ItemState initialState) : super(initialState) {
     on<GetItem>((event, emit) async {
       emit(const ItemLoading());
       try {
-        final item = await postRepository.fetchItem(event.post);
+        final item = await Api().fetchItem(event.post);
         emit(ItemLoaded(item));
       } on NetworkError {
         emit(const ItemError(

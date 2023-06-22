@@ -10,15 +10,15 @@ enum PostType {
   job,
 }
 
-final class PostRepository {
+final class Api {
   final Dio dio = Dio(
     BaseOptions(
       baseUrl: 'https://stacker.news/_next/data',
     ),
   );
 
-  // Ignore 404 errors
-  PostRepository() {
+  // Ignore 404 errors so we can update the build-id and re-fetch posts
+  Api() {
     dio.interceptors.add(
       InterceptorsWrapper(
         onError: (error, handler) {

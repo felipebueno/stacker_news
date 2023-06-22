@@ -8,13 +8,11 @@ part 'bitcon_posts_event.dart';
 part 'bitcon_posts_state.dart';
 
 class BitcoinPostsBloc extends Bloc<BitcoinPostsEvent, BitcoinPostsState> {
-  final PostRepository postRepository;
   List<Item> posts = [];
   int from = 30;
   int to = 60;
 
-  BitcoinPostsBloc(BitcoinPostsState initialState, this.postRepository)
-      : super(initialState) {
+  BitcoinPostsBloc(BitcoinPostsState initialState) : super(initialState) {
     on<GetBitcoinPosts>((event, emit) async {
       emit(const BitcoinPostsLoading());
 
@@ -22,7 +20,7 @@ class BitcoinPostsBloc extends Bloc<BitcoinPostsEvent, BitcoinPostsState> {
       to = 60;
 
       try {
-        posts = await postRepository.fetchPosts(PostType.bitcoin);
+        posts = await Api().fetchPosts(PostType.bitcoin);
         emit(BitcoinPostsLoaded(posts));
       } on NetworkError {
         emit(
@@ -41,7 +39,7 @@ class BitcoinPostsBloc extends Bloc<BitcoinPostsEvent, BitcoinPostsState> {
 
       try {
         final List<Item> newPosts =
-            await postRepository.fetchMorePosts(PostType.bitcoin, from, to);
+            await Api().fetchMorePosts(PostType.bitcoin, from, to);
 
         final List<Item> morePosts =
             List<Item>.from(BitcoinPostsLoaded(posts).posts)..addAll(newPosts);
