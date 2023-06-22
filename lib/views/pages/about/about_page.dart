@@ -33,6 +33,7 @@ class AboutPage extends StatelessWidget {
           Builder(builder: (context) {
             const addr =
                 'lnurl1dp68gurn8ghj7um5v93kketj9ehx2amn9uh8wetvdskkkmn0wahz7mrww4excup0vejkc6tsv5u9ue0w';
+
             return InkWell(
               onTap: () {
                 Utils.launchURL('lightning:$addr');
@@ -49,9 +50,12 @@ class AboutPage extends StatelessWidget {
             );
           }),
           const SizedBox(height: 24),
-          const Text('Tap or scan the QR code to send a tip'),
+          const Text('Tap or scan the QR code to send a tip!'),
           const SizedBox(height: 24),
-          const StackButton('felipe'),
+          const StackButton(
+            'felipe',
+            navigateToProfile: true,
+          ),
         ],
       ),
     );
