@@ -1,16 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacker_news/data/models/item.dart';
+import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/models/user.dart';
-
-enum PostType {
-  top,
-  bitcoin,
-  nostr,
-  tech,
-  meta,
-  job,
-}
 
 final class Api {
   final Dio _dio = Dio(
@@ -38,45 +30,14 @@ final class Api {
   }
 // START Posts / Items
   Future<List<Item>> fetchPosts(PostType postType) async {
-    String stories = '';
-
-    switch (postType) {
-      case PostType.top:
-        stories = 'top/posts/day.json?when=day';
-
-        break;
-
-      case PostType.bitcoin:
-        stories = '~/bitcoin.json?sub=bitcoin';
-
-        break;
-
-      case PostType.nostr:
-        stories = '~/nostr.json?sub=bitcoin';
-
-        break;
-
-      case PostType.tech:
-        stories = '~/tech.json?sub=tech';
-
-      case PostType.meta:
-        stories = '~/meta.json?sub=meta';
-
-      case PostType.job:
-        stories = '~/jobs.json?sub=jobs';
-
-        break;
-
-      default:
-        break;
-    }
+    String endpoint = postType.endpoint;
 
     String? currCommit = await _getCurrBuildId();
 
-    final response = await _dio.get('/$currCommit/$stories');
+    final response = await _dio.get('/$currCommit/$endpoint');
 
     if (response.statusCode == 200) {
-      return await _parseItems(response.data);
+      return await _parseItems(response.data, postType);
     }
 
     if (response.statusCode == 404) {
@@ -84,10 +45,10 @@ final class Api {
 
       currCommit = await _getCurrBuildId();
 
-      final retryResponse = await _dio.get('/$currCommit/$stories');
+      final retryResponse = await _dio.get('/$currCommit/$endpoint');
 
       if (retryResponse.statusCode == 200) {
-        return await _parseItems(retryResponse.data);
+        return await _parseItems(retryResponse.data, postType);
       } else {
         throw Exception('Error fetching posts');
       }
@@ -96,30 +57,21 @@ final class Api {
     }
   }
 
-  Future<List<Item>> _parseItems(dynamic responseData) async {
+  Future<List<Item>> _parseItems(
+    dynamic responseData,
+    PostType postType,
+  ) async {
     final data = (responseData['pageProps'] ?? responseData)['data'];
     final itemsMap = (data['items'] ?? data['topItems']);
     final List items = itemsMap['items'];
 
-    // Get cursor from list
     final cursor = itemsMap['cursor'];
-    // Save cursor to shared prefs
     if (cursor != null) {
-      await _saveCursor(cursor);
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('${postType.name}-cursor', cursor);
     }
 
     return items.map((item) => Item.fromJson(item)).toList();
-  }
-
-  Future<void> _saveCursor(String cursor) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('cursor', cursor);
-  }
-
-  Future<String?> _getCursor() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    return prefs.getString('cursor');
   }
 
   Future<void> _fetchAndSaveCurrBuildId() async {
@@ -152,16 +104,20 @@ final class Api {
   }
 
   Future<List<Item>> fetchMorePosts(PostType postType) async {
-    final cursor = await _getCursor();
+    final prefs = await SharedPreferences.getInstance();
+    final cursor = prefs.getString('${postType.name}-cursor');
+
+    if (cursor == null) {
+      throw Exception('Error fetching more');
+    }
 
     final response = await _dio.post(
       'https://stacker.news/api/graphql',
-      data:
-          '{\"operationName\":\"topItems\",\"variables\":{\"when\":\"day\",\"cursor\":\"$cursor\"},\"query\":\"fragment ItemFields on Item {\\n  id\\n  parentId\\n  createdAt\\n  deletedAt\\n  title\\n  url\\n  user {\\n    name\\n    streak\\n    hideCowboyHat\\n    id\\n    __typename\\n  }\\n  fwdUserId\\n  otsHash\\n  position\\n  sats\\n  boost\\n  bounty\\n  bountyPaidTo\\n  path\\n  upvotes\\n  meSats\\n  meDontLike\\n  meBookmark\\n  meSubscription\\n  outlawed\\n  freebie\\n  ncomments\\n  commentSats\\n  lastCommentAt\\n  maxBid\\n  isJob\\n  company\\n  location\\n  remote\\n  subName\\n  pollCost\\n  status\\n  uploadId\\n  mine\\n  __typename\\n}\\n\\nquery topItems(\$sort: String, \$cursor: String, \$when: String) {\\n  topItems(sort: \$sort, cursor: \$cursor, when: \$when) {\\n    cursor\\n    items {\\n      ...ItemFields\\n      __typename\\n    }\\n    pins {\\n      ...ItemFields\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"}',
+      data: postType.getBody(cursor),
     );
 
     if (response.statusCode == 200) {
-      return await _parseItems(response.data);
+      return await _parseItems(response.data, postType);
     }
 
     throw Exception('Error fetching more');

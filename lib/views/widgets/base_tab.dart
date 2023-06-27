@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/item.dart';
+import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/sn_api.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/widgets/post_item.dart';
@@ -23,15 +24,17 @@ class _BaseTabState extends State<BaseTab> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
-  Future<List<Item>> _fetchPosts() async =>
-      await Api().fetchPosts(widget.postType);
+  final Api _api = Api();
+
+  Future<List<Item>> _fetchInitialPosts() async =>
+      await _api.fetchPosts(widget.postType);
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
 
     return FutureBuilder(
-      future: _fetchPosts(),
+      future: _fetchInitialPosts(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -49,7 +52,7 @@ class _BaseTabState extends State<BaseTab> with AutomaticKeepAliveClientMixin {
           children: [
             Expanded(
               child: RefreshIndicator(
-                onRefresh: _fetchPosts,
+                onRefresh: _fetchInitialPosts,
                 child: posts.isEmpty
                     ? const Center(child: Text('No posts found'))
                     : ListView.separated(
@@ -82,7 +85,7 @@ class _BaseTabState extends State<BaseTab> with AutomaticKeepAliveClientMixin {
                     icon: const Icon(Icons.add),
                     label: const Text('MORE'),
                     onPressed: () async {
-                      final items = await Api().fetchMorePosts(widget.postType);
+                      final items = await _api.fetchMorePosts(widget.postType);
 
                       print(items);
                     },
