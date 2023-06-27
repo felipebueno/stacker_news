@@ -13,7 +13,7 @@ enum PostType {
 }
 
 final class Api {
-  final Dio dio = Dio(
+  final Dio _dio = Dio(
     BaseOptions(
       baseUrl: 'https://stacker.news/_next/data',
     ),
@@ -21,7 +21,7 @@ final class Api {
 
   // Ignore 404 errors so we can update the build-id and re-fetch posts
   Api() {
-    dio.interceptors.add(
+    _dio.interceptors.add(
       InterceptorsWrapper(
         onError: (error, handler) {
           if (error.response?.statusCode == 404) {
@@ -73,10 +73,10 @@ final class Api {
 
     String? currCommit = await _getCurrBuildId();
 
-    final response = await dio.get('/$currCommit/$stories');
+    final response = await _dio.get('/$currCommit/$stories');
 
     if (response.statusCode == 200) {
-      return _parseItems(response.data);
+      return await _parseItems(response.data);
     }
 
     if (response.statusCode == 404) {
@@ -84,10 +84,10 @@ final class Api {
 
       currCommit = await _getCurrBuildId();
 
-      final retryResponse = await dio.get('/$currCommit/$stories');
+      final retryResponse = await _dio.get('/$currCommit/$stories');
 
       if (retryResponse.statusCode == 200) {
-        return _parseItems(retryResponse.data);
+        return await _parseItems(retryResponse.data);
       } else {
         throw Exception('Error fetching posts');
       }
@@ -96,15 +96,34 @@ final class Api {
     }
   }
 
-  List<Item> _parseItems(dynamic responseData) {
-    final data = responseData['pageProps']['data'];
-    final List items = (data['items'] ?? data['topItems'])['items'];
+  Future<List<Item>> _parseItems(dynamic responseData) async {
+    final data = (responseData['pageProps'] ?? responseData)['data'];
+    final itemsMap = (data['items'] ?? data['topItems']);
+    final List items = itemsMap['items'];
+
+    // Get cursor from list
+    final cursor = itemsMap['cursor'];
+    // Save cursor to shared prefs
+    if (cursor != null) {
+      await _saveCursor(cursor);
+    }
 
     return items.map((item) => Item.fromJson(item)).toList();
   }
 
+  Future<void> _saveCursor(String cursor) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('cursor', cursor);
+  }
+
+  Future<String?> _getCursor() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    return prefs.getString('cursor');
+  }
+
   Future<void> _fetchAndSaveCurrBuildId() async {
-    final response = await dio.get('https://stacker.news');
+    final response = await _dio.get('https://stacker.news');
 
     if (response.statusCode != 200) {
       throw Exception('Error fetching build id');
@@ -132,13 +151,25 @@ final class Api {
     return prefs.getString('build-id');
   }
 
-  Future<List<Item>> fetchMorePosts(PostType postType, int from, int to) async {
-    throw UnimplementedError();
+  Future<List<Item>> fetchMorePosts(PostType postType) async {
+    final cursor = await _getCursor();
+
+    final response = await _dio.post(
+      'https://stacker.news/api/graphql',
+      data:
+          '{\"operationName\":\"topItems\",\"variables\":{\"when\":\"day\",\"cursor\":\"$cursor\"},\"query\":\"fragment ItemFields on Item {\\n  id\\n  parentId\\n  createdAt\\n  deletedAt\\n  title\\n  url\\n  user {\\n    name\\n    streak\\n    hideCowboyHat\\n    id\\n    __typename\\n  }\\n  fwdUserId\\n  otsHash\\n  position\\n  sats\\n  boost\\n  bounty\\n  bountyPaidTo\\n  path\\n  upvotes\\n  meSats\\n  meDontLike\\n  meBookmark\\n  meSubscription\\n  outlawed\\n  freebie\\n  ncomments\\n  commentSats\\n  lastCommentAt\\n  maxBid\\n  isJob\\n  company\\n  location\\n  remote\\n  subName\\n  pollCost\\n  status\\n  uploadId\\n  mine\\n  __typename\\n}\\n\\nquery topItems(\$sort: String, \$cursor: String, \$when: String) {\\n  topItems(sort: \$sort, cursor: \$cursor, when: \$when) {\\n    cursor\\n    items {\\n      ...ItemFields\\n      __typename\\n    }\\n    pins {\\n      ...ItemFields\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n\"}',
+    );
+
+    if (response.statusCode == 200) {
+      return await _parseItems(response.data);
+    }
+
+    throw Exception('Error fetching more');
   }
 
   Future<Item> fetchItem(Item post) async {
     String? currCommit = await _getCurrBuildId();
-    final response = await dio.get('/$currCommit/items/${post.id}.json');
+    final response = await _dio.get('/$currCommit/items/${post.id}.json');
     if (response.statusCode != 200) {
       throw Exception('Error fetching comments');
     }
@@ -155,7 +186,7 @@ final class Api {
     String? currCommit = await _getCurrBuildId();
 
     final response =
-        await dio.get('/$currCommit/$userName.json?name=$userName');
+        await _dio.get('/$currCommit/$userName.json?name=$userName');
 
     if (response.statusCode == 200) {
       return _parseProfile(response.data);
@@ -167,7 +198,7 @@ final class Api {
       currCommit = await _getCurrBuildId();
 
       final retryResponse =
-          await dio.get('/$currCommit/$userName.json?name=$userName');
+          await _dio.get('/$currCommit/$userName.json?name=$userName');
 
       if (retryResponse.statusCode == 200) {
         return _parseProfile(retryResponse.data);

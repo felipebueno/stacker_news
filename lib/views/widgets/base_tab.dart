@@ -73,19 +73,22 @@ class _BaseTabState extends State<BaseTab> with AutomaticKeepAliveClientMixin {
                       ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  icon: const Icon(Icons.add),
-                  label: const Text('MORE'),
-                  onPressed: () {
-                    Utils.showWarning(context, 'Not implemented yet');
-                  },
+            if (widget.postType != PostType.job)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    icon: const Icon(Icons.add),
+                    label: const Text('MORE'),
+                    onPressed: () async {
+                      final items = await Api().fetchMorePosts(widget.postType);
+
+                      print(items);
+                    },
+                  ),
                 ),
               ),
-            ),
           ],
         );
       },
