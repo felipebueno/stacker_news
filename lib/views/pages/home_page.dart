@@ -7,17 +7,40 @@ import 'package:stacker_news/views/widgets/sn_logo.dart';
 class HomePage extends StatelessWidget {
   static const String id = 'home';
 
+  // TODO: Clean up / Refactor this
   final List<Tab> tabs = const [
-    Tab(icon: Icon(Icons.new_releases), text: 'Top'),
-    Tab(icon: Icon(Icons.attach_money), text: 'Bitcoin'),
-    Tab(icon: Icon(Icons.chat_bubble_sharp), text: 'Nostr'),
-    Tab(icon: Icon(Icons.handshake_sharp), text: 'Jobs'),
+    Tab(
+      icon: Icon(Icons.new_releases),
+      child: SizedBox(width: 64, child: Center(child: Text('Top'))),
+    ),
+    Tab(
+      icon: Icon(Icons.attach_money),
+      child: SizedBox(width: 64, child: Center(child: Text('Bitcoin'))),
+    ),
+    Tab(
+      icon: Icon(Icons.chat_bubble_sharp),
+      child: SizedBox(width: 64, child: Center(child: Text('Nostr'))),
+    ),
+    Tab(
+      icon: Icon(Icons.abc),
+      child: SizedBox(width: 64, child: Center(child: Text('Tech'))),
+    ),
+    Tab(
+      icon: Icon(Icons.merge_type),
+      child: SizedBox(width: 64, child: Center(child: Text('Meta'))),
+    ),
+    Tab(
+      icon: Icon(Icons.handshake_sharp),
+      child: SizedBox(width: 64, child: Center(child: Text('Jobs'))),
+    ),
   ];
 
   final List<Widget> tabViews = const [
     BaseTab(postType: PostType.top),
     BaseTab(postType: PostType.bitcoin),
     BaseTab(postType: PostType.nostr),
+    BaseTab(postType: PostType.tech),
+    BaseTab(postType: PostType.meta),
     BaseTab(postType: PostType.job),
   ];
 
@@ -31,7 +54,10 @@ class HomePage extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           title: const SNLogo(),
-          bottom: TabBar(tabs: tabs),
+          bottom: TabBar(
+            isScrollable: true,
+            tabs: tabs,
+          ),
         ),
         mainBody: TabBarView(children: tabViews),
       ),

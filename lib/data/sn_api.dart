@@ -7,6 +7,8 @@ enum PostType {
   top,
   bitcoin,
   nostr,
+  tech,
+  meta,
   job,
 }
 
@@ -53,6 +55,12 @@ final class Api {
         stories = '~/nostr.json?sub=bitcoin';
 
         break;
+
+      case PostType.tech:
+        stories = '~/tech.json?sub=tech';
+
+      case PostType.meta:
+        stories = '~/meta.json?sub=meta';
 
       case PostType.job:
         stories = '~/jobs.json?sub=jobs';
