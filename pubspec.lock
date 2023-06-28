@@ -297,7 +297,7 @@ packages:
     source: hosted
     version: "2.1.1"
   markdown:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       name: markdown
       sha256: d95a9d12954aafc97f984ca29baaa7690ed4d9ec4140a23ad40580bcdb6c87f5

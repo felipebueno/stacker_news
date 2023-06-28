@@ -34,6 +34,7 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: Utils.navigatorKey,
       title: 'Stacker News',
       themeMode: ThemeMode
           .dark, // TODO: Implement theme switcher and change this to ThemeMode.system

@@ -4,9 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:stacker_news/data/models/item.dart';
+import 'package:stacker_news/views/pages/comments/comments_page.dart';
+import 'package:stacker_news/views/pages/profile/profile_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Utils {
+  static final navigatorKey = GlobalKey<NavigatorState>();
+
   static Future<String> getAppVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     final currentVersion = packageInfo.version;
@@ -15,7 +20,44 @@ class Utils {
     return '$currentVersion+$currentBuildNumber';
   }
 
-  static launchURL(url) async {
+  static launchURL(String url) async {
+    const snUrl = 'https://stacker.news/';
+
+    if (url.contains('${snUrl}items/')) {
+      final id = url.split('/').last;
+      if (int.tryParse(id) == null) {
+        throw 'Could not launch $url because id is not an integer';
+      }
+
+      final context = navigatorKey.currentContext;
+      if (context == null) {
+        throw 'Could not launch $url because context is null';
+      }
+
+      Navigator.of(context).pushNamed(
+        CommentsPage.id,
+        arguments: Item(id: id),
+      );
+
+      return;
+    }
+
+    if (url.contains(snUrl) && url.contains('?isUser=true')) {
+      final userName = url.split('/').last.split('?').first;
+
+      final context = navigatorKey.currentContext;
+      if (context == null) {
+        throw 'Could not launch $url because context is null';
+      }
+
+      Navigator.of(context).pushNamed(
+        ProfilePage.id,
+        arguments: userName,
+      );
+
+      return;
+    }
+
     final uri = Uri.tryParse(url);
 
     if (uri == null) {

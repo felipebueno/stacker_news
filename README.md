@@ -57,6 +57,8 @@ Not implemented yet.
 
 - [ ] App
 
+  - [ ] Open stacker.news links in the app
+
   - [x] Load more posts [issue 3](https://github.com/felipebueno/stacker_news/issues/3)
 
   - [x] Fix major markdown rendering issues
