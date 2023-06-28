@@ -27,7 +27,7 @@ class _BaseTabState extends State<BaseTab> with AutomaticKeepAliveClientMixin {
   final Api _api = Api();
 
   Future<List<Item>> _fetchInitialPosts() async =>
-      await _api.fetchPosts(widget.postType);
+      await _api.fetchInitialPosts(widget.postType);
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +43,7 @@ class _BaseTabState extends State<BaseTab> with AutomaticKeepAliveClientMixin {
         if (snapshot.hasError || !snapshot.hasData) {
           final err = snapshot.error.toString();
           Utils.showError(context, err);
+
           return PostListError(err);
         }
 
@@ -55,46 +56,89 @@ class _BaseTabState extends State<BaseTab> with AutomaticKeepAliveClientMixin {
                 onRefresh: _fetchInitialPosts,
                 child: posts.isEmpty
                     ? const Center(child: Text('No posts found'))
-                    : ListView.separated(
-                        itemBuilder: (context, index) {
-                          if (index == posts.length) {
-                            return const Center(
-                              child: Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
-                          }
-
-                          return PostItem(
-                            posts[index],
-                            idx: index + 1,
-                          );
-                        },
-                        separatorBuilder: (context, index) => const Divider(),
-                        itemCount: posts.length,
+                    : PostList(
+                        posts,
+                        postType: widget.postType,
                       ),
               ),
             ),
-            if (widget.postType != PostType.job)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    icon: const Icon(Icons.add),
-                    label: const Text('MORE'),
-                    onPressed: () async {
-                      final items = await _api.fetchMorePosts(widget.postType);
-
-                      print(items);
-                    },
-                  ),
-                ),
-              ),
           ],
         );
       },
+    );
+  }
+}
+
+class PostList extends StatefulWidget {
+  const PostList(
+    this.posts, {
+    required this.postType,
+    super.key,
+  });
+
+  final List<Item> posts;
+  final PostType postType;
+
+  @override
+  State<PostList> createState() => _PostListState();
+}
+
+class _PostListState extends State<PostList> {
+  final _scrollController = ScrollController();
+  bool _loadingMore = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (widget.postType != PostType.job) {
+      _scrollController.addListener(() async {
+        if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent) {
+          setState(() {
+            _loadingMore = true;
+          });
+
+          final items = await Api().fetchMorePosts(widget.postType);
+
+          setState(() {
+            widget.posts.addAll(items);
+            _loadingMore = false;
+          });
+        }
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      controller: _scrollController,
+      itemBuilder: (context, index) {
+        if (((index + 1) == widget.posts.length) && _loadingMore) {
+          return Column(
+            children: [
+              PostItem(
+                widget.posts[index],
+                idx: index + 1,
+              ),
+              const Center(
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            ],
+          );
+        }
+
+        return PostItem(
+          widget.posts[index],
+          idx: index + 1,
+        );
+      },
+      separatorBuilder: (context, index) => const Divider(),
+      itemCount: widget.posts.length,
     );
   }
 }

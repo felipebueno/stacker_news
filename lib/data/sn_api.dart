@@ -29,7 +29,7 @@ final class Api {
     );
   }
 // START Posts / Items
-  Future<List<Item>> fetchPosts(PostType postType) async {
+  Future<List<Item>> fetchInitialPosts(PostType postType) async {
     String endpoint = postType.endpoint;
 
     String? currCommit = await _getCurrBuildId();
