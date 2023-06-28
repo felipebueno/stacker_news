@@ -1,13 +1,13 @@
 import 'dart:core';
 
-import 'package:stacker_news/data/models/item.dart';
+import 'package:stacker_news/data/models/post.dart';
 
 class User {
   final String? id;
   final String? name;
   final int? streak;
   final bool? hideCowboyHat;
-  final Item? bio;
+  final Post? bio;
   final int? nItems;
   final int? nComments;
   final int? nBookmarks;
@@ -35,7 +35,7 @@ class User {
       name: json['name'] as String?,
       streak: json['streak'] as int?,
       hideCowboyHat: json['hideCowboyHat'] as bool?,
-      bio: json['bio'] != null ? Item.fromJson(json['bio']) : null,
+      bio: json['bio'] != null ? Post.fromJson(json['bio']) : null,
       nItems: json['nitems'] as int?,
       nComments: json['ncomments'] as int?,
       nBookmarks: json['nbookmarks'] as int?,

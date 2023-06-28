@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stacker_news/data/models/item.dart';
+import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/models/user.dart';
 
@@ -28,8 +28,8 @@ final class Api {
       ),
     );
   }
-// START Posts / Items
-  Future<List<Item>> fetchInitialPosts(PostType postType) async {
+// START Posts
+  Future<List<Post>> fetchInitialPosts(PostType postType) async {
     String endpoint = postType.endpoint;
 
     String? currCommit = await _getCurrBuildId();
@@ -37,7 +37,7 @@ final class Api {
     final response = await _dio.get('/$currCommit/$endpoint');
 
     if (response.statusCode == 200) {
-      return await _parseItems(response.data, postType);
+      return await _parsePosts(response.data, postType);
     }
 
     if (response.statusCode == 404) {
@@ -48,7 +48,7 @@ final class Api {
       final retryResponse = await _dio.get('/$currCommit/$endpoint');
 
       if (retryResponse.statusCode == 200) {
-        return await _parseItems(retryResponse.data, postType);
+        return await _parsePosts(retryResponse.data, postType);
       } else {
         throw Exception('Error fetching posts');
       }
@@ -57,7 +57,7 @@ final class Api {
     }
   }
 
-  Future<List<Item>> _parseItems(
+  Future<List<Post>> _parsePosts(
     dynamic responseData,
     PostType postType,
   ) async {
@@ -71,7 +71,7 @@ final class Api {
       await prefs.setString('${postType.name}-cursor', cursor);
     }
 
-    return items.map((item) => Item.fromJson(item)).toList();
+    return items.map((item) => Post.fromJson(item)).toList();
   }
 
   Future<void> _fetchAndSaveCurrBuildId() async {
@@ -103,7 +103,7 @@ final class Api {
     return prefs.getString('build-id');
   }
 
-  Future<List<Item>> fetchMorePosts(PostType postType) async {
+  Future<List<Post>> fetchMorePosts(PostType postType) async {
     final prefs = await SharedPreferences.getInstance();
     final cursor = prefs.getString('${postType.name}-cursor');
 
@@ -117,25 +117,25 @@ final class Api {
     );
 
     if (response.statusCode == 200) {
-      return await _parseItems(response.data, postType);
+      return await _parsePosts(response.data, postType);
     }
 
     throw Exception('Error fetching more');
   }
 
-  Future<Item> fetchItem(Item post) async {
+  Future<Post> fetchPostDetails(String id) async {
     String? currCommit = await _getCurrBuildId();
-    final response = await _dio.get('/$currCommit/items/${post.id}.json');
+    final response = await _dio.get('/$currCommit/items/$id.json');
     if (response.statusCode != 200) {
       throw Exception('Error fetching comments');
     }
 
     final data = response.data['pageProps']['data']['item'];
 
-    return Item.fromJson(data);
+    return Post.fromJson(data);
   }
 
-// END Posts / Items
+// END Posts
 
 // START Profile
   Future<User> fetchProfile(String userName) async {

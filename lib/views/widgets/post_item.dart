@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/models/item.dart';
+import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/utils.dart';
-import 'package:stacker_news/views/pages/comments/comments_page.dart';
+import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/widgets/markdown_item.dart';
 import 'package:stacker_news/views/widgets/user_button.dart';
 
 class PostItem extends StatelessWidget {
-  final Item post;
+  final Post post;
   final int? idx;
   final bool isCommentsPage;
   final bool isJobList;
@@ -35,7 +35,7 @@ class PostItem extends StatelessWidget {
               : null
           : () {
               Navigator.of(context).pushNamed(
-                CommentsPage.id,
+                PostPage.id,
                 arguments: post,
               );
             },

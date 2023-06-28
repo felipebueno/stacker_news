@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/models/item.dart';
+import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/sn_api.dart';
 import 'package:stacker_news/utils.dart';
@@ -26,7 +26,7 @@ class _BaseTabState extends State<BaseTab> with AutomaticKeepAliveClientMixin {
 
   final Api _api = Api();
 
-  Future<List<Item>> _fetchInitialPosts() async =>
+  Future<List<Post>> _fetchInitialPosts() async =>
       await _api.fetchInitialPosts(widget.postType);
 
   @override
@@ -47,13 +47,15 @@ class _BaseTabState extends State<BaseTab> with AutomaticKeepAliveClientMixin {
           return PostListError(err);
         }
 
-        final posts = snapshot.data as List<Item>;
+        final posts = snapshot.data as List<Post>;
 
         return Column(
           children: [
             Expanded(
               child: RefreshIndicator(
-                onRefresh: _fetchInitialPosts,
+                onRefresh: () async {
+                  setState(() {});
+                },
                 child: posts.isEmpty
                     ? const Center(child: Text('No posts found'))
                     : PostList(
@@ -76,7 +78,7 @@ class PostList extends StatefulWidget {
     super.key,
   });
 
-  final List<Item> posts;
+  final List<Post> posts;
   final PostType postType;
 
   @override
@@ -99,10 +101,10 @@ class _PostListState extends State<PostList> {
             _loadingMore = true;
           });
 
-          final items = await Api().fetchMorePosts(widget.postType);
+          final posts = await Api().fetchMorePosts(widget.postType);
 
           setState(() {
-            widget.posts.addAll(items);
+            widget.posts.addAll(posts);
             _loadingMore = false;
           });
         }

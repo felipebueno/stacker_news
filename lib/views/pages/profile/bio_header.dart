@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:stacker_news/colors.dart';
-import 'package:stacker_news/data/models/item.dart';
+import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/user.dart';
-import 'package:stacker_news/views/pages/comments/comments_page.dart';
+import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/widgets/cowboy_streak.dart';
 import 'package:stacker_news/views/widgets/markdown_item.dart';
 import 'package:stacker_news/views/widgets/stack_button.dart';
@@ -68,8 +68,8 @@ class BioHeader extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pushNamed(
-                        CommentsPage.id,
-                        arguments: Item(id: '${user.since}'),
+                        PostPage.id,
+                        arguments: Post(id: '${user.since}'),
                       );
                     },
                     child: Row(

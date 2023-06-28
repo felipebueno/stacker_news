@@ -4,8 +4,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:stacker_news/data/models/item.dart';
-import 'package:stacker_news/views/pages/comments/comments_page.dart';
+import 'package:stacker_news/data/models/post.dart';
+import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -35,8 +35,8 @@ class Utils {
       }
 
       Navigator.of(context).pushNamed(
-        CommentsPage.id,
-        arguments: Item(id: id),
+        PostPage.id,
+        arguments: Post(id: id),
       );
 
       return;

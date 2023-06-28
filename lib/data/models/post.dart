@@ -2,7 +2,7 @@ import 'package:timeago/timeago.dart' as ta;
 
 import 'user.dart';
 
-final class Item {
+final class Post {
   final String? id;
   final int? parentId;
   final String? createdAt;
@@ -39,10 +39,10 @@ final class Item {
   final bool? mine;
   final User? user;
   final String? text;
-  final List<Item>? comments;
+  final List<Post>? comments;
   final String? pageTitle;
 
-  Item({
+  Post({
     this.id,
     this.parentId,
     this.createdAt,
@@ -83,8 +83,8 @@ final class Item {
     this.pageTitle,
   });
 
-  factory Item.fromJson(Map<String, dynamic> json) {
-    return Item(
+  factory Post.fromJson(Map<String, dynamic> json) {
+    return Post(
       id: json['id'],
       parentId: json['parentId'],
       createdAt: json['createdAt'],
@@ -122,7 +122,7 @@ final class Item {
       user: User.fromJson(json['user']),
       text: json['text'],
       comments: json['comments'] != null
-          ? (json['comments'] as List).map((i) => Item.fromJson(i)).toList()
+          ? (json['comments'] as List).map((i) => Post.fromJson(i)).toList()
           : null,
       pageTitle: json['pageTitle'],
     );

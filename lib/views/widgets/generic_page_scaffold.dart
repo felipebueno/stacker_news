@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/models/item.dart';
+import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/views/pages/about/about_page.dart';
-import 'package:stacker_news/views/pages/comments/comments_page.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
+import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
 import 'package:stacker_news/views/pages/settings/settings_page.dart';
 import 'package:stacker_news/views/widgets/sn_logo.dart';
@@ -40,7 +40,7 @@ class GenericPageScaffold extends StatelessWidget {
       appBar: appBar ??
           AppBar(
             centerTitle: true,
-            leading: ((route != CommentsPage.id && route != ProfilePage.id) ||
+            leading: ((route != PostPage.id && route != ProfilePage.id) ||
                     title == 'FAQ')
                 ? null
                 : IconButton(
@@ -112,14 +112,14 @@ class GenericPageScaffold extends StatelessWidget {
               },
             ),
             ListTile(
-              selected: route == CommentsPage.id,
+              selected: route == PostPage.id,
               leading: const Icon(Icons.question_mark),
               title: const Text('FAQ'),
               onTap: () {
                 Navigator.pop(context);
                 Navigator.of(context).pushNamed(
-                  CommentsPage.id,
-                  arguments: Item(
+                  PostPage.id,
+                  arguments: Post(
                     id: '349',
                     pageTitle: 'FAQ',
                   ),
