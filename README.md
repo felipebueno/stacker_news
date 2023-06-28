@@ -43,6 +43,8 @@ Not implemented yet.
 
 - [ ] Write a better TODO list
 
+- [ ] Update screenshots [Issue 4](https://github.com/felipebueno/stacker_news/issues/4)
+
 - [ ] Code
 
   - [x] Solve/circumvent the issue with the changing `_next/data/xyz` endpoint
@@ -55,11 +57,11 @@ Not implemented yet.
 
 - [ ] App
 
-  - [ ] Load more posts
+  - [x] Load more posts [issue 3](https://github.com/felipebueno/stacker_news/issues/3)
 
   - [x] Fix major markdown rendering issues
 
-  - [x] Android in_app_update (https://pub.dev/packages/in_app_update)
+  - [x] Android [in_app_update](https://pub.dev/packages/in_app_update)
 
     - [ ] Handle in_app_update errors
 
@@ -95,7 +97,9 @@ Not implemented yet.
 
   - [ ] Search
 
-  - [ ] More subs / filters (tech, hot, recent, etc)
+  - [x] More subs (tech, meta)
+
+  - [ ] Filters (hot, recent, top)
 
 - [ ] Releases
 
