@@ -31,35 +31,37 @@ class CommentItem extends StatelessWidget {
         padding: const EdgeInsets.only(
           left: 24.0,
           right: 8.0,
-          top: 8.0,
-          bottom: 8.0,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (post.text != null && post.text != '') MarkdownItem(post.text),
+            if (post.text != null && post.text != '')
+              const SizedBox(height: 8.0),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  post.isJob == true ? '${post.company}' : '${post.sats} sats',
+                  '${post.sats} sats',
                   style: label,
                 ),
                 Text(
-                  post.isJob == true
-                      ? '${(post.remote == true && post.location == '') ? 'Remote' : post.location}'
-                      : '${post.ncomments} comments',
+                  '${post.ncomments} comments',
                   style: label,
                 ),
-                UserButton(post.user),
                 Text(
                   post.timeAgo,
                   style: label,
-                ),
+                  textAlign: TextAlign.end,
+                )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: MarkdownItem(post.text),
+            SizedBox(
+              width: double.infinity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [UserButton(post.user)],
+              ),
             ),
           ],
         ),

@@ -40,14 +40,14 @@ class PostItem extends StatelessWidget {
               );
             },
       child: Padding(
-        padding: const EdgeInsets.all(4.0),
+        padding: const EdgeInsets.symmetric(horizontal: 4.0),
         child: Row(
           children: [
             if (!isCommentsPage)
               SizedBox(
                 width: 32.0,
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 4.0),
+                  padding: const EdgeInsets.only(right: 0),
                   child: Text(
                     '$idx.',
                     textAlign: TextAlign.end,
@@ -76,6 +76,8 @@ class PostItem extends StatelessWidget {
                         Utils.launchURL(post.url!);
                       },
                     ),
+                  if (isCommentsPage && post.text != null && post.text != '')
+                    MarkdownItem(post.text),
                   const SizedBox(height: 8.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -106,11 +108,6 @@ class PostItem extends StatelessWidget {
                       children: [UserButton(post.user)],
                     ),
                   ),
-                  if (isCommentsPage && post.text != null && post.text != '')
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: MarkdownItem(post.text),
-                    ),
                 ],
               ),
             ),

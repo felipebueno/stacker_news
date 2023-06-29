@@ -15,10 +15,10 @@ class UserButton extends StatelessWidget {
     return Row(
       children: [
         Text(
-          'by:',
+          'by: ',
           style: textTheme.bodySmall,
         ),
-        TextButton(
+        InkWell(
           child: Row(
             children: [
               Text(
@@ -30,7 +30,7 @@ class UserButton extends StatelessWidget {
                 CowboyHat(color: textTheme.titleSmall?.color),
             ],
           ),
-          onPressed: () {
+          onTap: () {
             if (user == null || user?.name == null) {
               return;
             }
