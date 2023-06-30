@@ -17,24 +17,24 @@ Get the latest APK from the [Releases Section](https://github.com/felipebueno/st
 ### Dark Theme
 
 <p float="left">
-  <img src="./screenshots/dark/top_dark1.jpeg" alt="drawing" width="200"/>
-  <img src="./screenshots/dark/bitcoin_dark1.jpeg" alt="drawing" width="200"/>
-  <img src="./screenshots/dark/nostr_dark1.jpeg" alt="drawing" width="200"/>
-  <img src="./screenshots/dark/jobs_dark1.jpeg" alt="drawing" width="200"/>
-  <img src="./screenshots/dark/comments_dark1.jpeg" alt="drawing" width="200"/>
-  <img src="./screenshots/dark/comments_dark2.jpeg" alt="drawing" width="200"/>
-  <img src="./screenshots/dark/about_dark1.jpeg" alt="drawing" width="200"/>
+  <img src="./screenshots/dark/top_dark1.jpg" alt="drawing" width="200"/>
+  <img src="./screenshots/dark/bitcoin_dark1.jpg" alt="drawing" width="200"/>
+  <img src="./screenshots/dark/nostr_dark1.jpg" alt="drawing" width="200"/>
+  <img src="./screenshots/dark/jobs_dark1.jpg" alt="drawing" width="200"/>
+  <img src="./screenshots/dark/comments_dark1.jpg" alt="drawing" width="200"/>
+  <img src="./screenshots/dark/comments_dark2.jpg" alt="drawing" width="200"/>
+  <img src="./screenshots/dark/about_dark1.jpg" alt="drawing" width="200"/>
 </p>
 
 ### Light Theme
 
 <!-- <p float="left">
-  <img src="./screenshots/light/top_light1.jpeg" alt="drawing" width="200"/>
-  <img src="./screenshots/light/bitcoin_light1.jpeg" alt="drawing" width="200"/>
-  <img src="./screenshots/light/nostr_light1.jpeg" alt="drawing" width="200"/>
-  <img src="./screenshots/light/jobs_light1.jpeg" alt="drawing" width="200"/>
-  <img src="./screenshots/light/comments_light1.jpeg" alt="drawing" width="200"/>
-  <img src="./screenshots/light/comments_light2.jpeg" alt="drawing" width="200"/>
+  <img src="./screenshots/light/top_light1.jpg" alt="drawing" width="200"/>
+  <img src="./screenshots/light/bitcoin_light1.jpg" alt="drawing" width="200"/>
+  <img src="./screenshots/light/nostr_light1.jpg" alt="drawing" width="200"/>
+  <img src="./screenshots/light/jobs_light1.jpg" alt="drawing" width="200"/>
+  <img src="./screenshots/light/comments_light1.jpg" alt="drawing" width="200"/>
+  <img src="./screenshots/light/comments_light2.jpg" alt="drawing" width="200"/>
 </p> -->
 
 Not implemented yet.
