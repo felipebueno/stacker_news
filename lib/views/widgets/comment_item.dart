@@ -35,6 +35,7 @@ class CommentItem extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 4),
             if (post.text != null && post.text != '') MarkdownItem(post.text),
             if (post.text != null && post.text != '')
               const SizedBox(height: 8.0),
@@ -56,6 +57,7 @@ class CommentItem extends StatelessWidget {
                 )
               ],
             ),
+            const SizedBox(height: 2),
             SizedBox(
               width: double.infinity,
               child: Row(

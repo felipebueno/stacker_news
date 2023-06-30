@@ -55,10 +55,12 @@ class PostItem extends StatelessWidget {
                   ),
                 ),
               ),
+            if (!isCommentsPage) const SizedBox(width: 4),
             Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const SizedBox(height: 4),
                   if (post.title != null && post.title != '')
                     Text(
                       post.title!,
