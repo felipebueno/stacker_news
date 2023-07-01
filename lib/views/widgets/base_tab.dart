@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/sn_api.dart';
+import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/widgets/post_item.dart';
 import 'package:stacker_news/views/widgets/post_list_error.dart';
@@ -24,7 +25,7 @@ class _BaseTabState extends State<BaseTab> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
-  final Api _api = Api();
+  final Api _api = locator<Api>();
 
   Future<List<Post>> _fetchInitialPosts() async =>
       await _api.fetchInitialPosts(widget.postType);
@@ -101,7 +102,7 @@ class _PostListState extends State<PostList> {
             _loadingMore = true;
           });
 
-          final posts = await Api().fetchMorePosts(widget.postType);
+          final posts = await locator<Api>().fetchMorePosts(widget.postType);
 
           setState(() {
             widget.posts.addAll(posts);

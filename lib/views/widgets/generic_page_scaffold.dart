@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/views/pages/about/about_page.dart';
+import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
@@ -82,6 +83,15 @@ class GenericPageScaffold extends StatelessWidget {
               onTap: () {
                 Navigator.pop(context);
                 Navigator.pushNamed(context, HomePage.id);
+              },
+            ),
+            ListTile(
+              selected: route == SignInPage.id,
+              leading: const Icon(Icons.login),
+              title: const Text('Sign In'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, SignInPage.id);
               },
             ),
             // ListTile(

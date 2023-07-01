@@ -1,4 +1,8 @@
+import 'dart:convert';
+
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/post_type.dart';
@@ -8,15 +12,39 @@ final class Api {
   final Dio _dio = Dio(
     BaseOptions(
       baseUrl: 'https://stacker.news/_next/data',
+      headers: {
+        'authority': 'stacker.news',
+        'accept': '*/*',
+        'accept-language': 'en-US,en;q=0.9,pt;q=0.8',
+        'content-type': 'application/x-www-form-urlencoded',
+        'origin': 'https://stacker.news',
+        'sec-ch-ua':
+            '"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Linux"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin',
+        'user-agent':
+            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
+      },
     ),
   );
 
-  // Ignore 404 errors so we can update the build-id and re-fetch posts
   Api() {
+    // final Directory appDocDir = await getApplicationDocumentsDirectory();
+    // final String appDocPath = appDocDir.path;
+    // final jar = PersistCookieJar(
+    //   ignoreExpires: true,
+    //   storage: FileStorage(appDocPath + "/.cookies/"),
+    // );
+    _dio.interceptors.add(CookieManager(PersistCookieJar()));
+
     _dio.interceptors.add(
       InterceptorsWrapper(
         onError: (error, handler) {
           if (error.response?.statusCode == 404) {
+            // Ignore 404 errors so we can update the build-id and re-fetch posts
             handler.resolve(Response(
               requestOptions: error.requestOptions,
               statusCode: 404,
@@ -173,6 +201,102 @@ final class Api {
     return User.fromJson(userMap);
   }
 // END Profile
-}
 
-class NetworkError extends Error {}
+// START Auth
+  Future<String> getSession(String link) async {
+    // https://stacker.news/api/auth/callback/email?email=bueno.felipe%2B0.996125%40gmail.com&token=cbfde7ae0ec3012cebb05e5125d459472eb95881cf870f6daab6c6befbd9a7ef
+
+    // final uri = Uri.parse(link);
+    // final queryParams = uri.queryParameters;
+
+    // final email = queryParams['email'];
+    // final token = queryParams['token'];
+
+    // if (email == null || token == null) {
+    //   throw Exception('Error validating token');
+    // }
+
+    // final redirected = await _dio.get(
+    //   uri.toString(),
+    //   options: Options(
+    //     followRedirects: false,
+    //     validateStatus: (status) {
+    //       if (status == null) {
+    //         return false;
+    //       }
+
+    //       return status < 500;
+    //     },
+    //   ),
+    // );
+
+    // final response = await _dio.get(
+    //   redirected.headers.value(HttpHeaders.locationHeader)!,
+    // );
+
+    // if (response.statusCode != 302) {
+    //   print('Error validating token');
+    // }
+
+    // print(response.data);
+
+    final sessionResponse =
+        await _dio.get('https://stacker.news/api/auth/session');
+
+    if (sessionResponse.statusCode != 200) {
+      throw Exception('Error validating token');
+    }
+
+    final session = sessionResponse.data;
+
+    print(session);
+
+    return jsonEncode(session);
+  }
+
+  Future<void> loginWithEmail(String email) async {
+    // Get csrf token from https://stacker.news/api/auth/csrf
+    final csrfResponse = await _dio.get(
+      'https://stacker.news/api/auth/csrf',
+      options: Options(
+        headers: {
+          'x-csrf-token': '1',
+        },
+      ),
+    );
+
+    if (csrfResponse.statusCode != 200) {
+      throw Exception('Error fetching csrf token');
+    }
+
+    final csrfToken = csrfResponse.data['csrfToken'];
+
+    // Set csrf token in header
+    _dio.options.headers['x-csrf-token'] = csrfToken;
+
+    // 'referer': 'https://stacker.news/login',
+
+    final response = await _dio.post(
+      'https://stacker.news/api/auth/signin/email?',
+      data: {
+        'email': email,
+        'callbackUrl': 'http://stacker.news/',
+        'csrfToken': csrfToken,
+        'json': true,
+      },
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Unknonw Error ');
+    }
+
+    // The response looks like this:
+    // {"url":"https://stacker.news/api/auth/verify-request?provider=email&type=email"}%
+    print(response.data);
+
+    // The email has a link that looks like this:
+    // https://stacker.news/api/auth/callback/email?email=bueno.felipe%2B0.589866%40gmail.com&token=fc702221ad563f1dcd13cad23ea5429860682cc058dbc741a2603a452546f71a
+    // The token is used to verify the email
+  }
+// END Auth
+}

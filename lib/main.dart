@@ -1,15 +1,21 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:stacker_news/data/sn_api.dart';
 import 'package:stacker_news/sn_router.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
 
 import 'colors.dart';
 
+final locator = GetIt.instance;
+
 void main() {
   if (!kIsWeb) {
     WidgetsFlutterBinding.ensureInitialized();
   }
+
+  locator.registerLazySingleton(Api.new);
 
   runApp(const StackerNewsApp());
 }
