@@ -1,12 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/post_type.dart';
+import 'package:stacker_news/data/models/session.dart';
 import 'package:stacker_news/data/models/user.dart';
+import 'package:stacker_news/utils.dart';
+import 'package:stacker_news/views/pages/about/login_failed_page.dart';
 
 final class Api {
   final Dio _dio = Dio(
@@ -31,23 +37,30 @@ final class Api {
     ),
   );
 
+  Future<void> _cookieJar() async {
+    final appDocDir = await getApplicationDocumentsDirectory();
+    final String appDocPath = appDocDir.path;
+    final jar = PersistCookieJar(
+      ignoreExpires: true,
+      storage: FileStorage('$appDocPath/.cookies/'),
+    );
+    _dio.interceptors.add(CookieManager(jar));
+  }
+
   Api() {
-    // final Directory appDocDir = await getApplicationDocumentsDirectory();
-    // final String appDocPath = appDocDir.path;
-    // final jar = PersistCookieJar(
-    //   ignoreExpires: true,
-    //   storage: FileStorage(appDocPath + "/.cookies/"),
-    // );
-    _dio.interceptors.add(CookieManager(PersistCookieJar()));
+    _cookieJar();
 
     _dio.interceptors.add(
       InterceptorsWrapper(
         onError: (error, handler) {
-          if (error.response?.statusCode == 404) {
+          final statusCode = error.response?.statusCode;
+
+          if (statusCode == 403 || statusCode == 404) {
+            // Ignore 403 errors when unable to login with magic link
             // Ignore 404 errors so we can update the build-id and re-fetch posts
             handler.resolve(Response(
               requestOptions: error.requestOptions,
-              statusCode: 404,
+              statusCode: statusCode,
             ));
           } else {
             handler.next(error);
@@ -203,43 +216,55 @@ final class Api {
 // END Profile
 
 // START Auth
-  Future<String> getSession(String link) async {
-    // https://stacker.news/api/auth/callback/email?email=bueno.felipe%2B0.996125%40gmail.com&token=cbfde7ae0ec3012cebb05e5125d459472eb95881cf870f6daab6c6befbd9a7ef
+  Future<void> validateLink(String link) async {
+    final uri = Uri.parse(link);
+    final queryParams = uri.queryParameters;
 
-    // final uri = Uri.parse(link);
-    // final queryParams = uri.queryParameters;
+    final email = queryParams['email'];
+    final token = queryParams['token'];
 
-    // final email = queryParams['email'];
-    // final token = queryParams['token'];
+    if (email == null || token == null) {
+      throw Exception('1 Error validating token');
+    }
 
-    // if (email == null || token == null) {
-    //   throw Exception('Error validating token');
-    // }
+    final redirected = await _dio.get(
+      uri.toString(),
+      options: Options(
+        followRedirects: false,
+        validateStatus: (status) {
+          if (status == null) {
+            return false;
+          }
 
-    // final redirected = await _dio.get(
-    //   uri.toString(),
-    //   options: Options(
-    //     followRedirects: false,
-    //     validateStatus: (status) {
-    //       if (status == null) {
-    //         return false;
-    //       }
+          return status < 500;
+        },
+      ),
+    );
 
-    //       return status < 500;
-    //     },
-    //   ),
-    // );
+    final value = redirected.headers.value(HttpHeaders.locationHeader);
 
-    // final response = await _dio.get(
-    //   redirected.headers.value(HttpHeaders.locationHeader)!,
-    // );
+    if (value == null) {
+      throw Exception('2 Error validating token');
+    }
 
-    // if (response.statusCode != 302) {
-    //   print('Error validating token');
-    // }
+    final response = await _dio.get(value);
 
-    // print(response.data);
+    if (response.statusCode != 302) {
+      if (response.statusCode == 403 &&
+          response.realUri.toString() ==
+              'https://stacker.news/api/auth/error?error=Verification') {
+        // TODO: If the magiclink.email == savedSession?.email then we can just navigate to the home page
+        final context = Utils.navigatorKey.currentState!.overlay!.context;
+        if (context.mounted) {
+          Navigator.pushReplacementNamed(context, LoginFailedPage.id);
+        }
+      }
 
+      throw Exception('3 Error validating token');
+    }
+  }
+
+  Future<Session> getSession(String link) async {
     final sessionResponse =
         await _dio.get('https://stacker.news/api/auth/session');
 
@@ -247,15 +272,17 @@ final class Api {
       throw Exception('Error validating token');
     }
 
-    final session = sessionResponse.data;
+    final session = Session.fromJson(sessionResponse.data);
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('session', jsonEncode(sessionResponse.data));
 
     print(session);
 
-    return jsonEncode(session);
+    return session;
   }
 
-  Future<void> loginWithEmail(String email) async {
-    // Get csrf token from https://stacker.news/api/auth/csrf
+  Future<void> requestMagicLink(String email) async {
     final csrfResponse = await _dio.get(
       'https://stacker.news/api/auth/csrf',
       options: Options(
@@ -270,11 +297,7 @@ final class Api {
     }
 
     final csrfToken = csrfResponse.data['csrfToken'];
-
-    // Set csrf token in header
     _dio.options.headers['x-csrf-token'] = csrfToken;
-
-    // 'referer': 'https://stacker.news/login',
 
     final response = await _dio.post(
       'https://stacker.news/api/auth/signin/email?',
@@ -289,14 +312,6 @@ final class Api {
     if (response.statusCode != 200) {
       throw Exception('Unknonw Error ');
     }
-
-    // The response looks like this:
-    // {"url":"https://stacker.news/api/auth/verify-request?provider=email&type=email"}%
-    print(response.data);
-
-    // The email has a link that looks like this:
-    // https://stacker.news/api/auth/callback/email?email=bueno.felipe%2B0.589866%40gmail.com&token=fc702221ad563f1dcd13cad23ea5429860682cc058dbc741a2603a452546f71a
-    // The token is used to verify the email
   }
 // END Auth
 }

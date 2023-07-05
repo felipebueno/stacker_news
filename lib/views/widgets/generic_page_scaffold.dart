@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/views/pages/about/about_page.dart';
+import 'package:stacker_news/views/pages/about/check_email_page.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
@@ -41,7 +43,9 @@ class GenericPageScaffold extends StatelessWidget {
       appBar: appBar ??
           AppBar(
             centerTitle: true,
-            leading: ((route != PostPage.id && route != ProfilePage.id) ||
+            leading: ((route != PostPage.id &&
+                        route != ProfilePage.id &&
+                        route != CheckEmailPage.id) ||
                     title == 'FAQ')
                 ? null
                 : IconButton(
@@ -55,9 +59,9 @@ class GenericPageScaffold extends StatelessWidget {
             actions: [
               IconButton(
                 icon: const Icon(Icons.home),
-                onPressed: () => Navigator.popUntil(
+                onPressed: () => Navigator.pushReplacementNamed(
                   context,
-                  ModalRoute.withName(HomePage.id),
+                  HomePage.id,
                 ),
               ),
             ],
@@ -85,24 +89,6 @@ class GenericPageScaffold extends StatelessWidget {
                 Navigator.pushNamed(context, HomePage.id);
               },
             ),
-            ListTile(
-              selected: route == SignInPage.id,
-              leading: const Icon(Icons.login),
-              title: const Text('Sign In'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, SignInPage.id);
-              },
-            ),
-            // ListTile(
-            //   selected: route == ProfilePage.id,
-            //   leading: const Icon(Icons.person),
-            //   title: const Text('Profile'),
-            //   onTap: () {
-            //     Navigator.pop(context);
-            //     Navigator.pushNamed(context, ProfilePage.id);
-            //   },
-            // ),
             // ListTile(
             //   selected: route == SettingsPage.id,
             //   leading: const Icon(Icons.settings),
@@ -136,10 +122,59 @@ class GenericPageScaffold extends StatelessWidget {
                 );
               },
             ),
+            const Divider(),
+            const MaybeSignInButton(),
           ],
         ),
       ),
       body: Center(child: mainBody ?? body),
+    );
+  }
+}
+
+class MaybeSignInButton extends StatefulWidget {
+  const MaybeSignInButton({super.key});
+
+  @override
+  State<MaybeSignInButton> createState() => _MaybeLoginButtonState();
+}
+
+class _MaybeLoginButtonState extends State<MaybeSignInButton> {
+  Future<bool> _getSession() async {
+    final prefs = await SharedPreferences.getInstance();
+    final sessionData = prefs.getString('session');
+    return sessionData != null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final route = ModalRoute.of(context)?.settings.name;
+
+    return FutureBuilder(
+      future: _getSession(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data == true) {
+          return ListTile(
+            selected: route == ProfilePage.id,
+            leading: const Icon(Icons.person),
+            title: const Text('Profile'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, ProfilePage.id);
+            },
+          );
+        }
+
+        return ListTile(
+          selected: route == SignInPage.id,
+          leading: const Icon(Icons.login),
+          title: const Text('Login'),
+          onTap: () {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, SignInPage.id);
+          },
+        );
+      },
     );
   }
 }
