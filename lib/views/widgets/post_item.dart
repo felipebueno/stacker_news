@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/post.dart';
+import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/widgets/markdown_item.dart';
@@ -10,17 +11,18 @@ class PostItem extends StatelessWidget {
   final int? idx;
   final bool isCommentsPage;
   final bool isJobList;
+  final PostType? postType;
 
   const PostItem(
     this.post, {
     Key? key,
     this.idx,
+    this.postType,
     this.isCommentsPage = false,
     this.isJobList = false,
   }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildNormalItem(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
     final link = textTheme.titleSmall?.copyWith(color: Colors.blue);
@@ -117,5 +119,18 @@ class PostItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildNotificationItem(BuildContext context) {
+    return ListTile(
+      title: Text('$post'),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return postType == PostType.notifications
+        ? _buildNotificationItem(context)
+        : _buildNormalItem(context);
   }
 }

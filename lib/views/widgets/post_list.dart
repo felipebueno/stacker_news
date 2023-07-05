@@ -57,6 +57,7 @@ class _PostListState extends State<PostList> {
               PostItem(
                 widget.posts[index],
                 idx: index + 1,
+                postType: widget.postType,
               ),
               const Center(
                 child: Padding(
@@ -71,6 +72,7 @@ class _PostListState extends State<PostList> {
         return PostItem(
           widget.posts[index],
           idx: index + 1,
+          postType: widget.postType,
         );
       },
       separatorBuilder: (context, index) => const Divider(),

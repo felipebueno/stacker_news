@@ -3,6 +3,7 @@ import 'package:timeago/timeago.dart' as ta;
 import 'user.dart';
 
 final class Post {
+  final String? typeName;
   final String? id;
   final int? parentId;
   final String? createdAt;
@@ -43,6 +44,7 @@ final class Post {
   final String? pageTitle;
 
   Post({
+    this.typeName,
     this.id,
     this.parentId,
     this.createdAt,
@@ -85,6 +87,7 @@ final class Post {
 
   factory Post.fromJson(Map<String, dynamic> json) {
     return Post(
+      typeName: json['__typename'],
       id: json['id'],
       parentId: json['parentId'],
       createdAt: json['createdAt'],
@@ -131,4 +134,9 @@ final class Post {
   // TODO: Protect against null or invalid createAt
   String get timeAgo =>
       createdAt == null ? '' : ta.format(DateTime.parse(createdAt!));
+
+  @override
+  String toString() {
+    return '$typeName Notification Item\n\nNot Implemented Yet';
+  }
 }

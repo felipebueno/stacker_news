@@ -160,11 +160,7 @@ class _MaybeNewPostFabState extends State<MaybeNewPostFab> {
 
           return FloatingActionButton.extended(
             onPressed: () {
-              Navigator.pushNamed(
-                context,
-                ProfilePage.id,
-                arguments: session.user?.name,
-              );
+              Utils.showInfo('Not implemented yet');
             },
             icon: const Icon(Icons.add),
             label: const Text('Post'),
