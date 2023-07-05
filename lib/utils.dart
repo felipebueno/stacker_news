@@ -81,6 +81,7 @@ class Utils {
   }
 
   static void showInfo(String message) {
+    debugPrint(message);
     scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
 
     scaffoldMessengerKey.currentState?.showSnackBar(
@@ -89,6 +90,7 @@ class Utils {
   }
 
   static void showWarning(String message) {
+    debugPrint(message);
     scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
 
     scaffoldMessengerKey.currentState?.showSnackBar(
@@ -100,6 +102,25 @@ class Utils {
   }
 
   static void showError(String message) {
+    debugPrint(message);
+    scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
+
+    try {
+      scaffoldMessengerKey.currentState?.showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } catch (_) {}
+  }
+
+  static void showException(String message, StackTrace st) {
+    debugPrint(message);
+    debugPrintStack(
+      label: message,
+      stackTrace: st,
+    );
     scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
 
     try {

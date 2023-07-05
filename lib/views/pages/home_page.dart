@@ -67,7 +67,7 @@ class _MaybeNotificationsButtonState extends State<MaybeNotificationsButton> {
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data == true) {
           return IconButton(
-            icon: const Icon(Icons.notifications),
+            icon: const Icon(Icons.logout),
             onPressed: () async {
               final prefs = await SharedPreferences.getInstance();
               await prefs.remove('session');

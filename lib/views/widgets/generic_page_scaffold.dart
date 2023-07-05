@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacker_news/data/models/post.dart';
+import 'package:stacker_news/data/models/session.dart';
 import 'package:stacker_news/views/pages/about/about_page.dart';
 import 'package:stacker_news/views/pages/about/check_email_page.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
@@ -140,10 +143,15 @@ class MaybeSignInButton extends StatefulWidget {
 }
 
 class _MaybeLoginButtonState extends State<MaybeSignInButton> {
-  Future<bool> _getSession() async {
+  Future<Session?> _getSession() async {
     final prefs = await SharedPreferences.getInstance();
     final sessionData = prefs.getString('session');
-    return sessionData != null;
+
+    if (sessionData == null) {
+      return null;
+    }
+
+    return Session.fromJson(jsonDecode(sessionData));
   }
 
   @override
@@ -153,14 +161,21 @@ class _MaybeLoginButtonState extends State<MaybeSignInButton> {
     return FutureBuilder(
       future: _getSession(),
       builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data == true) {
+        if (snapshot.hasData && snapshot.data is Session) {
+          final session = snapshot.data as Session;
+
           return ListTile(
             selected: route == ProfilePage.id,
             leading: const Icon(Icons.person),
             title: const Text('Profile'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushNamed(context, ProfilePage.id);
+
+              Navigator.pushNamed(
+                context,
+                ProfilePage.id,
+                arguments: session.user?.name,
+              );
             },
           );
         }

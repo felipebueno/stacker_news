@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacker_news/data/models/post.dart';
@@ -11,6 +12,7 @@ import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/models/session.dart';
 import 'package:stacker_news/data/models/user.dart';
 import 'package:stacker_news/utils.dart';
+import 'package:stacker_news/views/pages/about/login_failed_page.dart';
 
 final class Api {
   final Dio _dio = Dio(
@@ -214,6 +216,21 @@ final class Api {
 // END Profile
 
 // START Auth
+  void _goToLoginFailedPage() {
+    final context = Utils.navigatorKey.currentContext;
+    if (context == null) {
+      Utils.showError('Error navigating to login failed page. Context null');
+
+      return;
+    }
+
+    if (context.mounted) {
+      Navigator.pushNamed(context, LoginFailedPage.id);
+
+      return;
+    }
+  }
+
   Future<Session?> login(String link) async {
     final uri = Uri.parse(link);
     final queryParams = uri.queryParameters;
@@ -251,25 +268,47 @@ final class Api {
 
     final response = await _dio.get(value);
 
-    if (response.statusCode != 302 &&
-        !(response.statusCode == 403 &&
-            response.realUri.toString() ==
-                'https://stacker.news/api/auth/error?error=Verification')) {
+    if (response.statusCode != 200 &&
+        response.statusCode != 302 &&
+        response.statusCode != 403) {
       Utils.showError('3 Error validating token');
 
       return null;
     }
 
-    final sessionResponse =
-        await _dio.get('https://stacker.news/api/auth/session');
+    final prefs = await SharedPreferences.getInstance();
+
+    if (response.statusCode == 403 &&
+        response.realUri.toString() ==
+            'https://stacker.news/api/auth/error?error=Verification') {
+      final sessionData = prefs.getString('session');
+      if (sessionData == null) {
+        _goToLoginFailedPage();
+
+        return null;
+      }
+
+      final session = Session.fromJson(jsonDecode(sessionData));
+
+      if (email != session.user?.email) {
+        _goToLoginFailedPage();
+
+        return null;
+      }
+    }
+
+    final sessionResponse = await _dio.get(
+      'https://stacker.news/api/auth/session',
+    );
 
     if (sessionResponse.statusCode != 200) {
-      Utils.showError('Error validating token');
+      Utils.showError(
+        '4 Error validating token (Expected sessionResponse.statusCode 200 but got ${sessionResponse.statusCode})',
+      );
 
       return null;
     }
 
-    final prefs = await SharedPreferences.getInstance();
     await prefs.setString('session', jsonEncode(sessionResponse.data));
 
     return Session.fromJson(sessionResponse.data);
