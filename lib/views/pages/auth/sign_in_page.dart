@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/sn_api.dart';
 import 'package:stacker_news/main.dart';
@@ -39,14 +37,6 @@ class _LoginFormState extends State<LoginForm> {
   final _busy = ValueNotifier<bool>(false);
   final _emailController = TextEditingController();
   final _tokenController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-
-    _emailController.text =
-        'bueno.felipe+${Random().nextDouble().toStringAsFixed(6)}@gmail.com';
-  }
 
   @override
   void dispose() {
