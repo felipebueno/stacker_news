@@ -119,7 +119,7 @@ final class Post {
       status: json['status'],
       uploadId: json['uploadId'],
       mine: json['mine'],
-      user: User.fromJson(json['user']),
+      user: json['user'] == null ? null : User.fromJson(json['user']),
       text: json['text'],
       comments: json['comments'] != null
           ? (json['comments'] as List).map((i) => Post.fromJson(i)).toList()
@@ -129,5 +129,6 @@ final class Post {
   }
 
   // TODO: Protect against null or invalid createAt
-  String get timeAgo => ta.format(DateTime.parse(createdAt!));
+  String get timeAgo =>
+      createdAt == null ? '' : ta.format(DateTime.parse(createdAt!));
 }

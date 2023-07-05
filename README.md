@@ -99,6 +99,8 @@ Not implemented yet.
 
     - [ ] Zaps
 
+    - [ ] Notifications (hasNewNotes)
+
   - [ ] Search
 
   - [x] More subs (tech, meta)

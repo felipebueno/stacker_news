@@ -1,39 +1,62 @@
 import 'package:flutter/material.dart';
+import 'package:stacker_news/data/models/post.dart';
+import 'package:stacker_news/data/models/post_type.dart';
+import 'package:stacker_news/data/sn_api.dart';
+import 'package:stacker_news/main.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
+import 'package:stacker_news/views/widgets/post_list.dart';
+import 'package:stacker_news/views/widgets/post_list_error.dart';
 
-class NotificationsPage extends StatelessWidget {
+class NotificationsPage extends StatefulWidget {
   static const String id = 'notifications';
 
   const NotificationsPage({super.key});
 
-  Future<String> _getNotifications() async {
-    await Future.delayed(const Duration(seconds: 2));
+  @override
+  State<NotificationsPage> createState() => _NotificationsPageState();
+}
 
-    return 'Notifications';
-  }
+class _NotificationsPageState extends State<NotificationsPage> {
+  final _api = locator<Api>();
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _getNotifications(),
-      builder: (context, snaptshot) {
-        return GenericPageScaffold(
-          title: 'Notifications',
-          body: Builder(
-            builder: (context) {
-              if (snaptshot.hasData) {
-                return Center(
-                  child: Text(snaptshot.data as String),
-                );
-              }
+    return GenericPageScaffold(
+      title: 'Notifications',
+      body: FutureBuilder(
+        future: _api.fetchInitialPosts(PostType.notifications),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            final err = snapshot.error.toString();
 
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            },
-          ),
-        );
-      },
+            return PostListError(err);
+          }
+
+          if (snapshot.hasData) {
+            final posts = snapshot.data as List<Post>;
+
+            return Column(
+              children: [
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      setState(() {});
+                    },
+                    child: posts.isEmpty
+                        ? const Center(child: Text('No posts found'))
+                        : PostList(
+                            posts,
+                            postType: PostType.notifications,
+                          ),
+                  ),
+                ),
+              ],
+            );
+          }
+
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 }

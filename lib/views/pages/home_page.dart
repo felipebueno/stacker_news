@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/models/session.dart';
+import 'package:stacker_news/data/sn_api.dart';
+import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
 import 'package:stacker_news/views/pages/notifications/notifications_page.dart';
@@ -17,6 +21,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tabs = PostType.values
+        .where((p) => p != PostType.notifications)
         .map((t) => Tab(
               icon: Icon(t.icon),
               child: SizedBox(
@@ -26,7 +31,10 @@ class HomePage extends StatelessWidget {
             ))
         .toList();
 
-    final tabViews = PostType.values.map((t) => BaseTab(postType: t)).toList();
+    final tabViews = PostType.values
+        .where((p) => p != PostType.notifications)
+        .map((t) => BaseTab(postType: t))
+        .toList();
 
     return DefaultTabController(
       length: tabs.length,
@@ -58,12 +66,38 @@ class MaybeNotificationsButton extends StatefulWidget {
 }
 
 class _MaybeNotificationsButtonState extends State<MaybeNotificationsButton> {
+  bool _hasNewNotes = false;
+  Timer? _timer;
+
+  void _startFetchingNewNotes() {
+    _timer?.cancel();
+
+    _timer = Timer.periodic(const Duration(seconds: 30), (timer) async {
+      final ret = await locator<Api>().hasNewNotes();
+
+      if (mounted) {
+        setState(() {
+          _hasNewNotes = ret;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: Utils.getSession(),
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data is Session) {
+          _startFetchingNewNotes();
+
           final session = snapshot.data as Session;
 
           return Row(
@@ -76,7 +110,12 @@ class _MaybeNotificationsButtonState extends State<MaybeNotificationsButton> {
                     arguments: session.user?.name,
                   );
                 },
-                icon: const Icon(Icons.notifications),
+                icon: Icon(
+                  _hasNewNotes
+                      ? Icons.notifications_active
+                      : Icons.notifications,
+                  color: _hasNewNotes ? Colors.green : null,
+                ),
               ),
               TextButton(
                 child: Text('@${session.user?.name}'),

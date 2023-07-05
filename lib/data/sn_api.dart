@@ -22,7 +22,7 @@ final class Api {
         'authority': 'stacker.news',
         'accept': '*/*',
         'accept-language': 'en-US,en;q=0.9,pt;q=0.8',
-        'content-type': 'application/x-www-form-urlencoded',
+        'content-type': 'application/json',
         'origin': 'https://stacker.news',
         'sec-ch-ua':
             '"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"',
@@ -63,38 +63,47 @@ final class Api {
               statusCode: statusCode,
             ));
           } else {
+            debugPrint(error.response?.data);
             handler.next(error);
           }
         },
       ),
     );
   }
-// START Posts
+
+  // START Posts
   Future<List<Post>> fetchInitialPosts(PostType postType) async {
-    String endpoint = postType.endpoint;
+    try {
+      String endpoint = postType.endpoint;
 
-    String? currCommit = await _getCurrBuildId();
+      String? currCommit = await _getCurrBuildId();
 
-    final response = await _dio.get('/$currCommit/$endpoint');
+      final response = await _dio.get('/$currCommit/$endpoint');
 
-    if (response.statusCode == 200) {
-      return await _parsePosts(response.data, postType);
-    }
-
-    if (response.statusCode == 404) {
-      await _fetchAndSaveCurrBuildId();
-
-      currCommit = await _getCurrBuildId();
-
-      final retryResponse = await _dio.get('/$currCommit/$endpoint');
-
-      if (retryResponse.statusCode == 200) {
-        return await _parsePosts(retryResponse.data, postType);
-      } else {
-        throw Exception('Error fetching posts');
+      if (response.statusCode == 200) {
+        return await _parsePosts(response.data, postType);
       }
-    } else {
-      throw Exception('Error parsing build id');
+
+      if (response.statusCode == 404) {
+        await _fetchAndSaveCurrBuildId();
+
+        currCommit = await _getCurrBuildId();
+
+        final retryResponse = await _dio.get('/$currCommit/$endpoint');
+
+        if (retryResponse.statusCode == 200) {
+          return await _parsePosts(retryResponse.data, postType);
+        } else {
+          throw Exception('Error fetching posts');
+        }
+      } else {
+        throw Exception('Error parsing build id');
+      }
+    } catch (e, st) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: st);
+
+      rethrow;
     }
   }
 
@@ -103,8 +112,9 @@ final class Api {
     PostType postType,
   ) async {
     final data = (responseData['pageProps'] ?? responseData)['data'];
-    final itemsMap = (data['items'] ?? data['topItems']);
-    final List items = itemsMap['items'];
+    final itemsMap =
+        (data['items'] ?? data['topItems'] ?? data['notifications']);
+    final List items = itemsMap['items'] ?? itemsMap['notifications'];
 
     final cursor = itemsMap['cursor'];
     if (cursor != null) {
@@ -112,7 +122,9 @@ final class Api {
       await prefs.setString('${postType.name}-cursor', cursor);
     }
 
-    return items.map((item) => Post.fromJson(item)).toList();
+    return items.map((item) {
+      return Post.fromJson(item);
+    }).toList();
   }
 
   Future<void> _fetchAndSaveCurrBuildId() async {
@@ -154,7 +166,7 @@ final class Api {
 
     final response = await _dio.post(
       'https://stacker.news/api/graphql',
-      data: postType.getBody(cursor),
+      data: postType.getGraphQLBody(cursor),
     );
 
     if (response.statusCode == 200) {
@@ -176,9 +188,9 @@ final class Api {
     return Post.fromJson(data);
   }
 
-// END Posts
+  // END Posts
 
-// START Profile
+  // START Profile
   Future<User> fetchProfile(String userName) async {
     String? currCommit = await _getCurrBuildId();
 
@@ -213,9 +225,9 @@ final class Api {
 
     return User.fromJson(userMap);
   }
-// END Profile
+  // END Profile
 
-// START Auth
+  // START Auth
   void _goToLoginFailedPage() {
     final context = Utils.navigatorKey.currentContext;
     if (context == null) {
@@ -351,5 +363,28 @@ final class Api {
 
     return true;
   }
-// END Auth
+  // END Auth
+
+  // START Notifications
+  Future<bool> hasNewNotes() async {
+    debugPrint('fetching hasNewNotes');
+
+    final response = await _dio.post(
+      'https://stacker.news/api/graphql',
+      data: '{"variables":{},"query":"{\\n  hasNewNotes\\n}\\n"}',
+    );
+
+    if (response.statusCode == 200) {
+      final ret = response.data['data']?['hasNewNotes'] as bool?;
+
+      debugPrint('hasNewNotes: $ret');
+
+      return ret == true;
+    }
+
+    debugPrint('hasNewNotes: false, statusCode: ${response.statusCode}');
+
+    return false;
+  }
+  // END Notifications
 }
