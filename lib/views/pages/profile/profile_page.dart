@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacker_news/data/models/user.dart';
 import 'package:stacker_news/data/sn_api.dart';
 import 'package:stacker_news/main.dart';
+import 'package:stacker_news/views/pages/home_page.dart';
 import 'package:stacker_news/views/pages/profile/bio_detail.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 
@@ -40,6 +42,23 @@ class _ProfilePageState extends State<ProfilePage> {
 
         return GenericPageScaffold(
           title: user.name ?? '',
+          moreActions: [
+            TextButton.icon(
+              label: const Text('Logout'),
+              icon: const Icon(Icons.logout),
+              onPressed: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.remove('session');
+
+                if (context.mounted) {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    HomePage.id,
+                  );
+                }
+              },
+            )
+          ],
           body: RefreshIndicator(
             onRefresh: () async {
               setState(() {});

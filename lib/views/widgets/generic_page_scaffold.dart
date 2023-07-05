@@ -1,13 +1,12 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/session.dart';
+import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/about/about_page.dart';
 import 'package:stacker_news/views/pages/about/check_email_page.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
+import 'package:stacker_news/views/pages/notifications/notifications_page.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
 import 'package:stacker_news/views/pages/settings/settings_page.dart';
@@ -18,6 +17,8 @@ class GenericPageScaffold extends StatelessWidget {
   final String? title;
   final Widget? body;
   final Widget? mainBody;
+  final Widget? fab;
+  final List<Widget>? moreActions;
 
   const GenericPageScaffold({
     Key? key,
@@ -25,6 +26,8 @@ class GenericPageScaffold extends StatelessWidget {
     this.appBar,
     this.body,
     this.mainBody,
+    this.fab,
+    this.moreActions,
   }) : super(key: key);
 
   String? _getHeroTag(String? route) {
@@ -48,7 +51,8 @@ class GenericPageScaffold extends StatelessWidget {
             centerTitle: true,
             leading: ((route != PostPage.id &&
                         route != ProfilePage.id &&
-                        route != CheckEmailPage.id) ||
+                        route != CheckEmailPage.id &&
+                        route != NotificationsPage.id) ||
                     title == 'FAQ')
                 ? null
                 : IconButton(
@@ -62,11 +66,14 @@ class GenericPageScaffold extends StatelessWidget {
             actions: [
               IconButton(
                 icon: const Icon(Icons.home),
-                onPressed: () => Navigator.pushReplacementNamed(
-                  context,
-                  HomePage.id,
-                ),
+                onPressed: () {
+                  Navigator.pushReplacementNamed(
+                    context,
+                    HomePage.id,
+                  );
+                },
               ),
+              ...(moreActions ?? []),
             ],
           ),
       drawer: Drawer(
@@ -131,6 +138,7 @@ class GenericPageScaffold extends StatelessWidget {
         ),
       ),
       body: Center(child: mainBody ?? body),
+      floatingActionButton: fab,
     );
   }
 }
@@ -143,23 +151,12 @@ class MaybeSignInButton extends StatefulWidget {
 }
 
 class _MaybeLoginButtonState extends State<MaybeSignInButton> {
-  Future<Session?> _getSession() async {
-    final prefs = await SharedPreferences.getInstance();
-    final sessionData = prefs.getString('session');
-
-    if (sessionData == null) {
-      return null;
-    }
-
-    return Session.fromJson(jsonDecode(sessionData));
-  }
-
   @override
   Widget build(BuildContext context) {
     final route = ModalRoute.of(context)?.settings.name;
 
     return FutureBuilder(
-      future: _getSession(),
+      future: Utils.getSession(),
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data is Session) {
           final session = snapshot.data as Session;

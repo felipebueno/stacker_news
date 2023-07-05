@@ -1,10 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacker_news/data/models/post.dart';
+import 'package:stacker_news/data/models/session.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -80,6 +83,59 @@ class Utils {
     }
   }
 
+  static void hideBusyModal([BuildContext? context]) {
+    final ctx = context ?? navigatorKey.currentContext;
+
+    if (ctx == null) {
+      debugPrint('Could not hide busy modal because context is null');
+
+      return;
+    }
+
+    // TODO: We should check if the modal is open before popping
+    if (Navigator.of(ctx).canPop()) {
+      Navigator.of(ctx).pop();
+    }
+  }
+
+  static void showBusyModal({String? message, BuildContext? context}) {
+    final ctx = context ?? navigatorKey.currentContext;
+
+    if (ctx == null) {
+      debugPrint('Could not show busy modal because context is null');
+
+      return;
+    }
+
+    showDialog(
+      context: ctx,
+      barrierDismissible: false,
+      builder: (context) {
+        return Material(
+          color: Colors.black12.withOpacity(.7),
+          child: WillPopScope(
+            onWillPop: () async => false,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircularProgressIndicator(),
+                    if (message != null) ...[
+                      const SizedBox(height: 20),
+                      Text(message),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   static void showInfo(String message) {
     debugPrint(message);
     scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
@@ -151,5 +207,16 @@ class Utils {
       );
       // TODO: Do something with this error
     }
+  }
+
+  static Future<Session?> getSession() async {
+    final prefs = await SharedPreferences.getInstance();
+    final sessionData = prefs.getString('session');
+
+    if (sessionData == null) {
+      return null;
+    }
+
+    return Session.fromJson(jsonDecode(sessionData));
   }
 }

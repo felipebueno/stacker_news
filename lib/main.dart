@@ -39,10 +39,9 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
   void initState() {
     super.initState();
 
-    _handleIncomingLinks();
-    _handleInitialUri();
-
     if (mounted) {
+      _handleIncomingLinks();
+      _handleInitialUri();
       Utils.checkForUpdate();
     }
   }
@@ -50,6 +49,7 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
   @override
   void dispose() {
     _sub?.cancel();
+
     super.dispose();
   }
 
@@ -58,7 +58,10 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
 
   Future<void> _login(String link) async {
     try {
-      // _busy = true;
+      // Utils.showBusyModal(
+      //   context: context,
+      //   message: 'Logging in...',
+      // );
 
       final session = await locator<Api>().login(link);
 
@@ -80,7 +83,7 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
     } catch (e, st) {
       Utils.showException('Error logging in $e', st);
     } finally {
-      // _busy = false;
+      // Utils.hideBusyModal(context);
     }
   }
 

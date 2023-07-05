@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacker_news/data/models/post_type.dart';
+import 'package:stacker_news/data/models/session.dart';
+import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
+import 'package:stacker_news/views/pages/notifications/notifications_page.dart';
+import 'package:stacker_news/views/pages/profile/profile_page.dart';
 import 'package:stacker_news/views/widgets/base_tab.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 import 'package:stacker_news/views/widgets/sn_logo.dart';
@@ -40,6 +43,7 @@ class HomePage extends StatelessWidget {
           ],
         ),
         mainBody: TabBarView(children: tabViews),
+        fab: const MaybeNewPostFab(),
       ),
     );
   }
@@ -54,26 +58,37 @@ class MaybeNotificationsButton extends StatefulWidget {
 }
 
 class _MaybeNotificationsButtonState extends State<MaybeNotificationsButton> {
-  Future<bool> _getSession() async {
-    final prefs = await SharedPreferences.getInstance();
-    final sessionData = prefs.getString('session');
-    return sessionData != null;
-  }
-
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _getSession(),
+      future: Utils.getSession(),
       builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data == true) {
-          return IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              final prefs = await SharedPreferences.getInstance();
-              await prefs.remove('session');
+        if (snapshot.hasData && snapshot.data is Session) {
+          final session = snapshot.data as Session;
 
-              setState(() {});
-            },
+          return Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.pushNamed(
+                    context,
+                    NotificationsPage.id,
+                    arguments: session.user?.name,
+                  );
+                },
+                icon: const Icon(Icons.notifications),
+              ),
+              TextButton(
+                child: Text('@${session.user?.name}'),
+                onPressed: () async {
+                  Navigator.pushNamed(
+                    context,
+                    ProfilePage.id,
+                    arguments: session.user?.name,
+                  );
+                },
+              ),
+            ],
           );
         }
 
@@ -83,6 +98,41 @@ class _MaybeNotificationsButtonState extends State<MaybeNotificationsButton> {
             Navigator.pushNamed(context, SignInPage.id);
           },
         );
+      },
+    );
+  }
+}
+
+class MaybeNewPostFab extends StatefulWidget {
+  const MaybeNewPostFab({super.key});
+
+  @override
+  State<MaybeNewPostFab> createState() => _MaybeNewPostFabState();
+}
+
+class _MaybeNewPostFabState extends State<MaybeNewPostFab> {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: Utils.getSession(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data is Session) {
+          final session = snapshot.data as Session;
+
+          return FloatingActionButton.extended(
+            onPressed: () {
+              Navigator.pushNamed(
+                context,
+                ProfilePage.id,
+                arguments: session.user?.name,
+              );
+            },
+            icon: const Icon(Icons.add),
+            label: const Text('Post'),
+          );
+        }
+
+        return Container();
       },
     );
   }
