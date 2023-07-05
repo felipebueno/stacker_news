@@ -99,7 +99,7 @@ Not implemented yet.
 
     - [ ] Zaps
 
-    - [ ] Notifications (hasNewNotes)
+    - [ ] Notifications (hasNewNotes icon, notifications page)
 
   - [ ] Search
 
