@@ -353,9 +353,19 @@ final class Api {
         'csrfToken': csrfToken,
         'json': true,
       },
+      options: Options(
+        followRedirects: false,
+        validateStatus: (status) {
+          if (status == null) {
+            return false;
+          }
+
+          return status < 500;
+        },
+      ),
     );
 
-    if (response.statusCode != 200) {
+    if (response.statusCode != 200 && response.statusCode != 302) {
       Utils.showError('Unknonw Error ');
 
       return false;
