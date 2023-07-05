@@ -51,6 +51,8 @@ Not implemented yet.
 
   - [x] Move away from the bloc pattern to something more simple
 
+  - [ ] Properly handle errors
+
   - [ ] Refactor the code
 
   - [ ] Add tests

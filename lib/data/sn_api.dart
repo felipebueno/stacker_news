@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacker_news/data/models/post.dart';
@@ -12,7 +11,6 @@ import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/models/session.dart';
 import 'package:stacker_news/data/models/user.dart';
 import 'package:stacker_news/utils.dart';
-import 'package:stacker_news/views/pages/about/login_failed_page.dart';
 
 final class Api {
   final Dio _dio = Dio(
@@ -216,7 +214,7 @@ final class Api {
 // END Profile
 
 // START Auth
-  Future<void> validateLink(String link) async {
+  Future<Session?> login(String link) async {
     final uri = Uri.parse(link);
     final queryParams = uri.queryParameters;
 
@@ -224,7 +222,9 @@ final class Api {
     final token = queryParams['token'];
 
     if (email == null || token == null) {
-      throw Exception('1 Error validating token');
+      Utils.showError('1 Error validating token');
+
+      return null;
     }
 
     final redirected = await _dio.get(
@@ -244,45 +244,38 @@ final class Api {
     final value = redirected.headers.value(HttpHeaders.locationHeader);
 
     if (value == null) {
-      throw Exception('2 Error validating token');
+      Utils.showError('2 Error validating token');
+
+      return null;
     }
 
     final response = await _dio.get(value);
 
-    if (response.statusCode != 302) {
-      if (response.statusCode == 403 &&
-          response.realUri.toString() ==
-              'https://stacker.news/api/auth/error?error=Verification') {
-        // TODO: If the magiclink.email == savedSession?.email then we can just navigate to the home page
-        final context = Utils.navigatorKey.currentState!.overlay!.context;
-        if (context.mounted) {
-          Navigator.pushReplacementNamed(context, LoginFailedPage.id);
-        }
-      }
+    if (response.statusCode != 302 &&
+        !(response.statusCode == 403 &&
+            response.realUri.toString() ==
+                'https://stacker.news/api/auth/error?error=Verification')) {
+      Utils.showError('3 Error validating token');
 
-      throw Exception('3 Error validating token');
+      return null;
     }
-  }
 
-  Future<Session> getSession(String link) async {
     final sessionResponse =
         await _dio.get('https://stacker.news/api/auth/session');
 
     if (sessionResponse.statusCode != 200) {
-      throw Exception('Error validating token');
-    }
+      Utils.showError('Error validating token');
 
-    final session = Session.fromJson(sessionResponse.data);
+      return null;
+    }
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('session', jsonEncode(sessionResponse.data));
 
-    print(session);
-
-    return session;
+    return Session.fromJson(sessionResponse.data);
   }
 
-  Future<void> requestMagicLink(String email) async {
+  Future<bool> requestMagicLink(String email) async {
     final csrfResponse = await _dio.get(
       'https://stacker.news/api/auth/csrf',
       options: Options(
@@ -293,7 +286,9 @@ final class Api {
     );
 
     if (csrfResponse.statusCode != 200) {
-      throw Exception('Error fetching csrf token');
+      Utils.showError('Error fetching csrf token');
+
+      return false;
     }
 
     final csrfToken = csrfResponse.data['csrfToken'];
@@ -310,8 +305,12 @@ final class Api {
     );
 
     if (response.statusCode != 200) {
-      throw Exception('Unknonw Error ');
+      Utils.showError('Unknonw Error ');
+
+      return false;
     }
+
+    return true;
   }
 // END Auth
 }

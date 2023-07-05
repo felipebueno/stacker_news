@@ -43,7 +43,7 @@ class _BaseTabState extends State<BaseTab> with AutomaticKeepAliveClientMixin {
 
         if (snapshot.hasError || !snapshot.hasData) {
           final err = snapshot.error.toString();
-          Utils.showError(context, err);
+          Utils.showError(err);
 
           return PostListError(err);
         }

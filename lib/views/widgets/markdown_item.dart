@@ -77,9 +77,10 @@ class SNAutolinkExtensionSyntax extends md.InlineSyntax {
   bool onMatch(md.InlineParser parser, Match match) {
     final consumeLength = match.match.length;
 
-    final text = match.match.substring(0, consumeLength).replaceAll('@', '');
+    final text = match.match.substring(0, consumeLength);
 
-    final destination = 'https://stacker.news/$text?isUser=true';
+    final destination =
+        'https://stacker.news/${text.replaceAll('@', '')}?isUser=true';
 
     final anchor = md.Element.text('a', text)
       ..attributes['href'] = Uri.encodeFull(destination);

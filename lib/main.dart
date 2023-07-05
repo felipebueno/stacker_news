@@ -41,6 +41,7 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorKey: Utils.navigatorKey,
+      scaffoldMessengerKey: Utils.scaffoldMessengerKey,
       title: 'Stacker News',
       themeMode: ThemeMode
           .dark, // TODO: Implement theme switcher and change this to ThemeMode.system

@@ -11,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class Utils {
   static final navigatorKey = GlobalKey<NavigatorState>();
+  static final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
   static Future<String> getAppVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
@@ -26,12 +27,16 @@ class Utils {
     if (url.contains('${snUrl}items/')) {
       final id = url.split('/').last;
       if (int.tryParse(id) == null) {
-        throw 'Could not launch $url because id is not an integer';
+        showError('Could not launch $url because id is not an integer');
+
+        return;
       }
 
       final context = navigatorKey.currentContext;
       if (context == null) {
-        throw 'Could not launch $url because context is null';
+        showError('Could not launch $url because context is null');
+
+        return;
       }
 
       Navigator.of(context).pushNamed(
@@ -47,7 +52,9 @@ class Utils {
 
       final context = navigatorKey.currentContext;
       if (context == null) {
-        throw 'Could not launch $url because context is null';
+        showError('Could not launch $url because context is null');
+
+        return;
       }
 
       Navigator.of(context).pushNamed(
@@ -61,22 +68,30 @@ class Utils {
     final uri = Uri.tryParse(url);
 
     if (uri == null) {
-      throw 'Could not launch $url';
+      showError('Could not launch $url');
+
+      return;
     } else if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
-      throw 'Could not launch $url';
+      showError('Could not launch $url');
+
+      return;
     }
   }
 
-  static void showInfo(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
+  static void showInfo(String message) {
+    scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
+
+    scaffoldMessengerKey.currentState?.showSnackBar(
       SnackBar(content: Text(message)),
     );
   }
 
-  static void showWarning(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
+  static void showWarning(String message) {
+    scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
+
+    scaffoldMessengerKey.currentState?.showSnackBar(
       SnackBar(
         content: Text(message),
         backgroundColor: Colors.orange,
@@ -84,9 +99,11 @@ class Utils {
     );
   }
 
-  static void showError(BuildContext context, String message) {
+  static void showError(String message) {
+    scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
+
     try {
-      ScaffoldMessenger.of(context).showSnackBar(
+      scaffoldMessengerKey.currentState?.showSnackBar(
         SnackBar(
           content: Text(message),
           backgroundColor: Colors.red,

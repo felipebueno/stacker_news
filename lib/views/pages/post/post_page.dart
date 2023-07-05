@@ -37,7 +37,7 @@ class _PostPageState extends State<PostPage> {
 
           if (snapshot.hasError || !snapshot.hasData) {
             final err = snapshot.error.toString();
-            Utils.showError(context, err);
+            Utils.showError(err);
             return PostListError(err);
           }
 
