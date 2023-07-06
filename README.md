@@ -91,15 +91,21 @@ Not implemented yet.
 
     - [ ] Profile (edit)
 
-    - [ ] Bookmarks
+    - [ ] Settings (edit)
+
+    - [ ] Bookmarking
 
     - [ ] Post
 
-    - [ ] Commenting
+    - [ ] Comment
 
-    - [ ] Zaps
+    - [x] Zaps posts
+
+    - [ ] Zaps comments
 
     - [ ] Notifications (hasNewNotes icon, notifications page)
+
+    - [ ] Replace uni_links with flutter_appauth or app_links
 
   - [ ] Search
 
