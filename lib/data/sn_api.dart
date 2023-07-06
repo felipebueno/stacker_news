@@ -191,6 +191,33 @@ final class Api {
   // END Posts
 
   // START Profile
+  Future<User?> fetchMe() async {
+    final response = await _dio.post(
+      'https://stacker.news/api/graphql',
+      data:
+          '{"variables":{},"query":"{\\n  me {\\n    id\\n    name\\n    streak\\n    sats\\n    stacked\\n    freePosts\\n    freeComments\\n    tipDefault\\n    turboTipping\\n    fiatCurrency\\n    bioId\\n    upvotePopover\\n    tipPopover\\n    noteItemSats\\n    noteEarning\\n    noteAllDescendants\\n    noteMentions\\n    noteDeposits\\n    noteInvites\\n    noteJobIndicator\\n    noteCowboyHat\\n    hideInvoiceDesc\\n    hideFromTopUsers\\n    hideCowboyHat\\n    wildWestMode\\n    greeterMode\\n    lastCheckedJobs\\n    __typename\\n  }\\n}\\n"}',
+    );
+
+    if (response.statusCode != 200) {
+      Utils.showError('1 Error fetching profile');
+
+      return null;
+    }
+
+    final me = response.data?['data']?['me'];
+
+    if (me == null) {
+      Utils.showError('2 Error fetching profile');
+
+      return null;
+    }
+
+    await (await SharedPreferences.getInstance())
+        .setString('me', jsonEncode(me));
+
+    return User.fromJson(me);
+  }
+
   Future<User> fetchProfile(String userName) async {
     String? currCommit = await _getCurrBuildId();
 
@@ -294,7 +321,7 @@ final class Api {
         response.realUri.toString() ==
             'https://stacker.news/api/auth/error?error=Verification') {
       final sessionData = prefs.getString('session');
-      if (sessionData == null) {
+      if (sessionData == null || sessionData == 'null') {
         _goToLoginFailedPage();
 
         return null;
@@ -397,4 +424,39 @@ final class Api {
     return false;
   }
   // END Notifications
+
+  // START Zap Things
+  Future<int> zapPost(String id) async {
+    final me = await fetchMe();
+
+    if (me == null) {
+      Utils.showError('Error fetching me');
+
+      return 0;
+    }
+
+    final amount = me.tipDefault ?? 1;
+
+    final response = await _dio.post(
+      'https://stacker.news/api/graphql',
+      data:
+          '{"operationName":"act","variables":{"id":"$id","sats": $amount},"query":"mutation act(\$id: ID!, \$sats: Int!) {\\n  act(id: \$id, sats: \$sats) {\\n    vote\\n    sats\\n    __typename\\n  }\\n}\\n"}',
+    );
+
+    if (response.statusCode == 200) {
+      final errors = (response.data['errors'] ?? []) as List;
+      final error = errors.isEmpty ? null : errors[0]?['message'];
+
+      if (error != null) {
+        Utils.showError(error);
+
+        return 0;
+      }
+
+      return amount;
+    }
+
+    return 0;
+  }
+  // END Zap Things
 }

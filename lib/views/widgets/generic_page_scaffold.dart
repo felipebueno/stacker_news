@@ -52,7 +52,8 @@ class GenericPageScaffold extends StatelessWidget {
             leading: ((route != PostPage.id &&
                         route != ProfilePage.id &&
                         route != CheckEmailPage.id &&
-                        route != NotificationsPage.id) ||
+                        route != NotificationsPage.id &&
+                        route != SettingsPage.id) ||
                     title == 'FAQ')
                 ? null
                 : IconButton(
@@ -99,15 +100,6 @@ class GenericPageScaffold extends StatelessWidget {
                 Navigator.pushNamed(context, HomePage.id);
               },
             ),
-            // ListTile(
-            //   selected: route == SettingsPage.id,
-            //   leading: const Icon(Icons.settings),
-            //   title: const Text('Settings'),
-            //   onTap: () {
-            //     Navigator.pop(context);
-            //     Navigator.pushNamed(context, SettingsPage.id);
-            //   },
-            // ),
             ListTile(
               selected: route == AboutPage.id,
               leading: const Icon(Icons.settings),
@@ -161,19 +153,32 @@ class _MaybeLoginButtonState extends State<MaybeSignInButton> {
         if (snapshot.hasData && snapshot.data is Session) {
           final session = snapshot.data as Session;
 
-          return ListTile(
-            selected: route == ProfilePage.id,
-            leading: const Icon(Icons.person),
-            title: const Text('Profile'),
-            onTap: () {
-              Navigator.pop(context);
+          return Column(
+            children: [
+              ListTile(
+                selected: route == ProfilePage.id,
+                leading: const Icon(Icons.person),
+                title: const Text('Profile'),
+                onTap: () {
+                  Navigator.pop(context);
 
-              Navigator.pushNamed(
-                context,
-                ProfilePage.id,
-                arguments: session.user?.name,
-              );
-            },
+                  Navigator.pushNamed(
+                    context,
+                    ProfilePage.id,
+                    arguments: session.user?.name,
+                  );
+                },
+              ),
+              ListTile(
+                selected: route == SettingsPage.id,
+                leading: const Icon(Icons.settings),
+                title: const Text('Settings'),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, SettingsPage.id);
+                },
+              ),
+            ],
           );
         }
 

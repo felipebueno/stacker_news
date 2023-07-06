@@ -156,8 +156,6 @@ class _MaybeNewPostFabState extends State<MaybeNewPostFab> {
       future: Utils.getSession(),
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data is Session) {
-          final session = snapshot.data as Session;
-
           return FloatingActionButton.extended(
             onPressed: () {
               Utils.showInfo('Not implemented yet');

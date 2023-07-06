@@ -43,7 +43,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                       setState(() {});
                     },
                     child: posts.isEmpty
-                        ? const Center(child: Text('No posts found'))
+                        ? const Center(child: Text('No notifications found'))
                         : PostList(
                             posts,
                             postType: PostType.notifications,
