@@ -1,6 +1,6 @@
 import 'package:stacker_news/views/pages/about/about_page.dart';
-import 'package:stacker_news/views/pages/about/check_email_page.dart';
-import 'package:stacker_news/views/pages/about/login_failed_page.dart';
+import 'package:stacker_news/views/pages/auth/check_email_page.dart';
+import 'package:stacker_news/views/pages/auth/login_failed_page.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
 import 'package:stacker_news/views/pages/notifications/notifications_page.dart';

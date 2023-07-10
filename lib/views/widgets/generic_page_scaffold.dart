@@ -3,7 +3,7 @@ import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/session.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/about/about_page.dart';
-import 'package:stacker_news/views/pages/about/check_email_page.dart';
+import 'package:stacker_news/views/pages/auth/check_email_page.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
 import 'package:stacker_news/views/pages/notifications/notifications_page.dart';

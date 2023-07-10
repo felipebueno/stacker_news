@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/sn_api.dart';
 import 'package:stacker_news/main.dart';
-import 'package:stacker_news/views/pages/about/check_email_page.dart';
+import 'package:stacker_news/views/pages/auth/check_email_page.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 
 class SignInPage extends StatelessWidget {

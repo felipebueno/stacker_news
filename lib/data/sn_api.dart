@@ -12,7 +12,7 @@ import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/models/session.dart';
 import 'package:stacker_news/data/models/user.dart';
 import 'package:stacker_news/utils.dart';
-import 'package:stacker_news/views/pages/about/login_failed_page.dart';
+import 'package:stacker_news/views/pages/auth/login_failed_page.dart';
 
 final class Api {
   final Dio _dio = Dio(
