@@ -7,6 +7,7 @@ import 'package:stacker_news/data/sn_api.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
+import 'package:stacker_news/views/pages/new_post/new_post_page.dart';
 import 'package:stacker_news/views/pages/notifications/notifications_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
 import 'package:stacker_news/views/widgets/base_tab.dart';
@@ -158,10 +159,10 @@ class _MaybeNewPostFabState extends State<MaybeNewPostFab> {
         if (snapshot.hasData && snapshot.data is Session) {
           return FloatingActionButton.extended(
             onPressed: () {
-              Utils.showInfo('Not implemented yet');
+              Navigator.pushNamed(context, NewPostPage.id);
             },
             icon: const Icon(Icons.add),
-            label: const Text('Post'),
+            label: const Text('New Post'),
           );
         }
 
