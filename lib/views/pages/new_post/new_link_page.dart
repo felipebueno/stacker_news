@@ -46,7 +46,6 @@ class _NewLinkPageState extends State<NewLinkPage> {
               labelText: 'URL',
             ),
           ),
-          const SizedBox(height: 16),
           const Divider(),
           const Text('Options'),
           const Divider(),

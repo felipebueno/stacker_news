@@ -49,7 +49,7 @@ class _NewPostPageState extends State<NewPostPage> {
           ElevatedButton(
             onPressed: () {
               if (_selectedSub == null || _selectedSub!.isEmpty) {
-                Utils.showError('Please select a sub');
+                Utils.showError('Please pick a sub');
 
                 return;
               }
