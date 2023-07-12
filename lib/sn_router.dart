@@ -3,6 +3,7 @@ import 'package:stacker_news/views/pages/auth/check_email_page.dart';
 import 'package:stacker_news/views/pages/auth/login_failed_page.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
+import 'package:stacker_news/views/pages/new_post/new_discussion_page.dart';
 import 'package:stacker_news/views/pages/new_post/new_link_page.dart';
 import 'package:stacker_news/views/pages/new_post/new_post_page.dart';
 import 'package:stacker_news/views/pages/notifications/notifications_page.dart';
@@ -23,5 +24,6 @@ class SNRouter {
     NotificationsPage.id: (context) => const NotificationsPage(),
     NewPostPage.id: (context) => const NewPostPage(),
     NewLinkPage.id: (context) => const NewLinkPage(),
+    NewDiscussionPage.id: (context) => const NewDiscussionPage(),
   };
 }
