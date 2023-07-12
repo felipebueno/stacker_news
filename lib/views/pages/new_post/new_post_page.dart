@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/new_post/new_discussion_page.dart';
+import 'package:stacker_news/views/pages/new_post/new_poll_page.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 
 import 'new_link_page.dart';
@@ -83,7 +84,17 @@ class _NewPostPageState extends State<NewPostPage> {
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              // Navigator.pushReplacementNamed(context, SignInPage.id);
+              if (_selectedSub == null || _selectedSub!.isEmpty) {
+                Utils.showError('Pick a sub first');
+
+                return;
+              }
+
+              Navigator.pushNamed(
+                context,
+                NewPollPage.id,
+                arguments: _selectedSub,
+              );
             },
             child: const Text('Poll'),
           ),

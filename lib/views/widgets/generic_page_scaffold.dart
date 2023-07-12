@@ -8,6 +8,7 @@ import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
 import 'package:stacker_news/views/pages/new_post/new_discussion_page.dart';
 import 'package:stacker_news/views/pages/new_post/new_link_page.dart';
+import 'package:stacker_news/views/pages/new_post/new_poll_page.dart';
 import 'package:stacker_news/views/pages/new_post/new_post_page.dart';
 import 'package:stacker_news/views/pages/notifications/notifications_page.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
@@ -60,7 +61,8 @@ class GenericPageScaffold extends StatelessWidget {
                         route != SettingsPage.id &&
                         route != NewPostPage.id &&
                         route != NewLinkPage.id &&
-                        route != NewDiscussionPage.id) ||
+                        route != NewDiscussionPage.id &&
+                        route != NewPollPage.id) ||
                     title == 'FAQ')
                 ? null
                 : IconButton(
