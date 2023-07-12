@@ -12,9 +12,21 @@ class NewPollPage extends StatefulWidget {
   State<NewPollPage> createState() => _NewPollPageState();
 }
 
+class ChoiceController {
+  final TextEditingController controller;
+  final FocusNode focusNode;
+
+  ChoiceController(this.controller, this.focusNode);
+}
+
 class _NewPollPageState extends State<NewPollPage> {
   String? _selectedSub;
-  final _choices = <String>[''];
+  final _choices = [
+    ChoiceController(
+      TextEditingController(text: ''),
+      FocusNode(),
+    ),
+  ];
 
   @override
   void initState() {
@@ -60,9 +72,8 @@ class _NewPollPageState extends State<NewPollPage> {
                 children: [
                   const SizedBox(height: 8),
                   TextField(
-                    onChanged: (value) {
-                      _choices[i] = value;
-                    },
+                    controller: _choices[i].controller,
+                    focusNode: _choices[i].focusNode,
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(),
                       labelText: 'Choice ${i + 1}',
@@ -72,6 +83,7 @@ class _NewPollPageState extends State<NewPollPage> {
                               onPressed: () {
                                 setState(() {
                                   _choices.removeAt(i);
+                                  FocusScope.of(context).unfocus();
                                 });
                               },
                               icon: const Icon(Icons.delete),
@@ -84,7 +96,11 @@ class _NewPollPageState extends State<NewPollPage> {
           TextButton.icon(
             onPressed: () {
               setState(() {
-                _choices.add('');
+                _choices.add(ChoiceController(
+                  TextEditingController(text: ''),
+                  FocusNode(),
+                ));
+                _choices[_choices.length - 1].focusNode.requestFocus();
               });
             },
             icon: const Icon(Icons.add),
