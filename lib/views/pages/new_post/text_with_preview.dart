@@ -60,8 +60,18 @@ class _TextWithPreviewState extends State<TextWithPreview> {
             maxLines: 12,
           ),
         if (_selectedTab == 1)
-          Expanded(
-            child: Markdown(data: _textController.text),
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Theme.of(context).dividerColor,
+                width: 1,
+              ),
+            ),
+            height: 176,
+            child: Markdown(
+              data: _textController.text,
+              shrinkWrap: true,
+            ),
           ),
       ],
     );
