@@ -1,14 +1,17 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
-class NewPostFooter extends StatefulWidget {
-  const NewPostFooter({super.key});
+class NewJobFooter extends StatefulWidget {
+  const NewJobFooter({super.key});
 
   @override
-  State<NewPostFooter> createState() => _NewPostFooterState();
+  State<NewJobFooter> createState() => _NewJobFooterState();
 }
 
-class _NewPostFooterState extends State<NewPostFooter> {
+class _NewJobFooterState extends State<NewJobFooter> {
   bool _visible = false;
+  final _bidController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,7 @@ class _NewPostFooterState extends State<NewPostFooter> {
               Row(
                 children: [
                   Icon(_visible ? Icons.arrow_drop_down : Icons.arrow_right),
-                  const Text('Options'),
+                  const Text('Promote'),
                 ],
               ),
               const Divider(),
@@ -33,10 +36,13 @@ class _NewPostFooterState extends State<NewPostFooter> {
           Column(
             children: [
               TextField(
+                controller: _bidController,
+                keyboardType: TextInputType.number,
+                onChanged: (_) => setState(() {}),
                 decoration: InputDecoration(
                   border: const OutlineInputBorder(),
-                  labelText: 'Boost',
-                  suffixText: 'sats',
+                  labelText: 'Bid (optional)',
+                  suffixText: 'sats/min',
                   suffixIcon: IconButton(
                     onPressed: () {
                       showDialog(
@@ -53,22 +59,15 @@ class _NewPostFooterState extends State<NewPostFooter> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const Text(
-                                      '1. Boost ranks posts higher temporarily based on the amount\n',
+                                      '1. The higher your bid the higher your job will rank\n',
                                     ),
                                     const Text(
-                                        '2. The minimum boost is 5000 sats\n'),
+                                        '2. You can increase, decrease, or remove your bid at anytime\n'),
                                     const Text(
-                                      '3. Each 5000 sats of boost is equivalent to one trusted upvote',
+                                      '3. You can edit or stop your job at anytime\n',
                                     ),
                                     const Text(
-                                        '    e.g. 10000 sats is like 2 votes\n'),
-                                    const Text(
-                                      '4. The decay of boost "votes" increases at 2x the rate of organic votes',
-                                    ),
-                                    const Text(
-                                        '    i.e. boost votes fall out of ranking faster\n'),
-                                    const Text(
-                                      '5. 100% of sats from boost are given back to top stackers as rewards',
+                                      '4. If you run out of sats, your job will stop being promoted until you fill your wallet again',
                                     ),
                                     SizedBox(
                                       width: double.infinity,
@@ -98,20 +97,17 @@ class _NewPostFooterState extends State<NewPostFooter> {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
-              const TextField(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Forward sats to',
-                  prefix: Text('@'),
-                ),
-              ),
+              if (_bidController.text.isNotEmpty)
+                Text(
+                    '${Random().nextInt(10000) + 1} sats/mo which is \$${Random().nextInt(1000) + 1}/mo'),
+              Text(
+                  'This bid puts your job in position: ${Random().nextInt(10) + 1}'),
             ],
           ),
         const SizedBox(height: 16),
         ElevatedButton(
           onPressed: () {},
-          child: const Text('Post'),
+          child: const Text('Post 1000 sats'),
         ),
       ],
     );

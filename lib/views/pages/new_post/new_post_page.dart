@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/new_post/new_bounty_page.dart';
 import 'package:stacker_news/views/pages/new_post/new_discussion_page.dart';
+import 'package:stacker_news/views/pages/new_post/new_job_page.dart';
 import 'package:stacker_news/views/pages/new_post/new_poll_page.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 
@@ -117,9 +118,14 @@ class _NewPostPageState extends State<NewPostPage> {
             child: const Text('Bounty'),
           ),
           const SizedBox(height: 16),
+          const Divider(),
+          const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              // Navigator.pushReplacementNamed(context, SignInPage.id);
+              Navigator.pushNamed(
+                context,
+                NewJobPage.id,
+              );
             },
             child: const Text('Job'),
           ),

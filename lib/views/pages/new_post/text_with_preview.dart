@@ -3,7 +3,12 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:stacker_news/utils.dart';
 
 class TextWithPreview extends StatefulWidget {
-  const TextWithPreview({super.key});
+  const TextWithPreview({
+    super.key,
+    this.label,
+  });
+
+  final String? label;
 
   @override
   State<TextWithPreview> createState() => _TextWithPreviewState();
@@ -46,7 +51,7 @@ class _TextWithPreviewState extends State<TextWithPreview> {
             controller: _textController,
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
-              labelText: 'Text',
+              labelText: widget.label ?? 'Text',
               suffixIcon: IconButton(
                 onPressed: () {
                   Utils.launchURL(

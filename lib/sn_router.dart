@@ -5,6 +5,7 @@ import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
 import 'package:stacker_news/views/pages/new_post/new_bounty_page.dart';
 import 'package:stacker_news/views/pages/new_post/new_discussion_page.dart';
+import 'package:stacker_news/views/pages/new_post/new_job_page.dart';
 import 'package:stacker_news/views/pages/new_post/new_link_page.dart';
 import 'package:stacker_news/views/pages/new_post/new_poll_page.dart';
 import 'package:stacker_news/views/pages/new_post/new_post_page.dart';
@@ -29,5 +30,6 @@ class SNRouter {
     NewDiscussionPage.id: (context) => const NewDiscussionPage(),
     NewPollPage.id: (context) => const NewPollPage(),
     NewBountyPage.id: (context) => const NewBountyPage(),
+    NewJobPage.id: (context) => const NewJobPage(),
   };
 }
