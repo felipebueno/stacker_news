@@ -20,8 +20,6 @@ class CommentItem extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        if (post.ncomments == null || post.ncomments == 0) return;
-
         Navigator.of(context).pushNamed(
           PostPage.id,
           arguments: post,
@@ -61,8 +59,11 @@ class CommentItem extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [UserButton(post.user)],
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Reply', style: textTheme.bodySmall),
+                  UserButton(post.user),
+                ],
               ),
             ),
           ],

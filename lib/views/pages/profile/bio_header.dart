@@ -12,11 +12,13 @@ import 'package:stacker_news/views/widgets/stack_button.dart';
 class BioHeader extends StatelessWidget {
   final User user;
   final int? idx;
+  final VoidCallback? onCommentCreated;
 
   const BioHeader(
     this.user, {
     Key? key,
     this.idx,
+    this.onCommentCreated,
   }) : super(key: key);
 
   @override
@@ -113,7 +115,11 @@ class BioHeader extends StatelessWidget {
             child: MarkdownItem(user.bio?.text),
           ),
           const SizedBox(height: 8.0),
-          const ReplyField(),
+          if (user.bio != null)
+            ReplyField(
+              user.bio!,
+              onCommentCreated: onCommentCreated,
+            ),
         ],
       ),
     );

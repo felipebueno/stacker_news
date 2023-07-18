@@ -59,7 +59,12 @@ class _PostPageState extends State<PostPage> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       PostItem(item, isCommentsPage: true),
-                      const ReplyField(),
+                      ReplyField(
+                        item,
+                        onCommentCreated: () {
+                          setState(() {});
+                        },
+                      ),
                     ],
                   );
                 }

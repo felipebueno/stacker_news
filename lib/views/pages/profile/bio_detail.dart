@@ -7,16 +7,21 @@ class BioDetail extends StatelessWidget {
   const BioDetail(
     this.user, {
     Key? key,
+    this.onCommentCreated,
   }) : super(key: key);
 
   final User user;
+  final VoidCallback? onCommentCreated;
 
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
       itemBuilder: (context, index) {
         if (index == 0) {
-          return BioHeader(user);
+          return BioHeader(
+            user,
+            onCommentCreated: onCommentCreated,
+          );
         }
 
         return CommentItem((user.bio?.comments ?? [])[index - 1]);

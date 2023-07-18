@@ -63,7 +63,12 @@ class _ProfilePageState extends State<ProfilePage> {
             onRefresh: () async {
               setState(() {});
             },
-            child: BioDetail(user),
+            child: BioDetail(
+              user,
+              onCommentCreated: () {
+                setState(() {});
+              },
+            ),
           ),
         );
       },

@@ -6,9 +6,11 @@ class TextWithPreview extends StatefulWidget {
   const TextWithPreview({
     super.key,
     this.label,
+    this.onChanged,
   });
 
   final String? label;
+  final ValueChanged<String>? onChanged;
 
   @override
   State<TextWithPreview> createState() => _TextWithPreviewState();
@@ -17,6 +19,15 @@ class TextWithPreview extends StatefulWidget {
 class _TextWithPreviewState extends State<TextWithPreview> {
   int _selectedTab = 0;
   final _textController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _textController.addListener(() {
+      widget.onChanged?.call(_textController.text);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

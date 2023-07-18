@@ -459,4 +459,32 @@ final class Api {
     return 0;
   }
   // END Zap Things
+
+  // START Items & Comments
+  Future<Post?> createComment({
+    required String parentId,
+    required String text,
+  }) async {
+    final response = await _dio.post(
+      'https://stacker.news/api/graphql',
+      data:
+          '{"operationName":"createComment","variables":{"text":"$text","parentId":"$parentId"},"query":"fragment CommentFields on Item {\\n  id\\n  parentId\\n  createdAt\\n  deletedAt\\n  text\\n  user {\\n    name\\n    streak\\n    hideCowboyHat\\n    id\\n    __typename\\n  }\\n  sats\\n  upvotes\\n  wvotes\\n  boost\\n  meSats\\n  meDontLike\\n  meBookmark\\n  meSubscription\\n  outlawed\\n  freebie\\n  path\\n  commentSats\\n  mine\\n  otsHash\\n  ncomments\\n  __typename\\n}\\n\\nfragment CommentsRecursive on Item {\\n  ...CommentFields\\n  comments {\\n    ...CommentFields\\n    comments {\\n      ...CommentFields\\n      comments {\\n        ...CommentFields\\n        comments {\\n          ...CommentFields\\n          comments {\\n            ...CommentFields\\n            comments {\\n              ...CommentFields\\n              comments {\\n                ...CommentFields\\n                comments {\\n                  ...CommentFields\\n                  comments {\\n                    ...CommentFields\\n                    comments {\\n                      ...CommentFields\\n                      comments {\\n                        ...CommentFields\\n                        comments {\\n                          ...CommentFields\\n                          comments {\\n                            ...CommentFields\\n                            comments {\\n                              ...CommentFields\\n                              comments {\\n                                ...CommentFields\\n                                comments {\\n                                  ...CommentFields\\n                                  comments {\\n                                    ...CommentFields\\n                                    comments {\\n                                      ...CommentFields\\n                                      comments {\\n                                        ...CommentFields\\n                                        comments {\\n                                          ...CommentFields\\n                                          comments {\\n                                            ...CommentFields\\n                                            comments {\\n                                              ...CommentFields\\n                                              comments {\\n                                                ...CommentFields\\n                                                comments {\\n                                                  ...CommentFields\\n                                                  comments {\\n                                                    ...CommentFields\\n                                                    __typename\\n                                                  }\\n                                                  __typename\\n                                                }\\n                                                __typename\\n                                              }\\n                                              __typename\\n                                            }\\n                                            __typename\\n                                          }\\n                                          __typename\\n                                        }\\n                                        __typename\\n                                      }\\n                                      __typename\\n                                    }\\n                                    __typename\\n                                  }\\n                                  __typename\\n                                }\\n                                __typename\\n                              }\\n                              __typename\\n                            }\\n                            __typename\\n                          }\\n                          __typename\\n                        }\\n                        __typename\\n                      }\\n                      __typename\\n                    }\\n                    __typename\\n                  }\\n                  __typename\\n                }\\n                __typename\\n              }\\n              __typename\\n            }\\n            __typename\\n          }\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n  __typename\\n}\\n\\nmutation createComment(\$text: String!, \$parentId: ID!) {\\n  createComment(text: \$text, parentId: \$parentId) {\\n    ...CommentFields\\n    comments {\\n      ...CommentsRecursive\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n"}',
+    );
+
+    if (response.statusCode == 200) {
+      final errors = (response.data['errors'] ?? []) as List;
+      final error = errors.isEmpty ? null : errors[0]?['message'];
+
+      if (error != null) {
+        Utils.showError(error);
+
+        throw Exception(error);
+      }
+
+      return Post.fromJson(response.data);
+    }
+
+    throw Exception('Failed to create comment');
+  }
+  // END Items & Comments
 }
