@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:stacker_news/utils.dart';
 
 class NewJobFooter extends StatefulWidget {
   const NewJobFooter({super.key});
@@ -106,7 +107,9 @@ class _NewJobFooterState extends State<NewJobFooter> {
           ),
         const SizedBox(height: 16),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Utils.showInfo('Not implemented yet');
+          },
           child: const Text('Post 1000 sats'),
         ),
       ],
