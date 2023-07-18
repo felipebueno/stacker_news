@@ -6,6 +6,7 @@ import 'package:stacker_news/data/models/user.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/widgets/cowboy_streak.dart';
 import 'package:stacker_news/views/widgets/markdown_item.dart';
+import 'package:stacker_news/views/widgets/reply_field.dart';
 import 'package:stacker_news/views/widgets/stack_button.dart';
 
 class BioHeader extends StatelessWidget {
@@ -110,7 +111,9 @@ class BioHeader extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
             child: MarkdownItem(user.bio?.text),
-          )
+          ),
+          const SizedBox(height: 8.0),
+          const ReplyField(),
         ],
       ),
     );

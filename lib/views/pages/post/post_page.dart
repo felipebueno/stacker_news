@@ -7,6 +7,7 @@ import 'package:stacker_news/views/widgets/comment_item.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 import 'package:stacker_news/views/widgets/post_item.dart';
 import 'package:stacker_news/views/widgets/post_list_error.dart';
+import 'package:stacker_news/views/widgets/reply_field.dart';
 
 class PostPage extends StatefulWidget {
   static const String id = 'post';
@@ -39,6 +40,7 @@ class _PostPageState extends State<PostPage> {
           if (snapshot.hasError) {
             final err = snapshot.error.toString();
             Utils.showError(err);
+
             return PostListError(err);
           }
 
@@ -53,7 +55,13 @@ class _PostPageState extends State<PostPage> {
             child: ListView.separated(
               itemBuilder: (context, index) {
                 if (index == 0) {
-                  return PostItem(item, isCommentsPage: true);
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      PostItem(item, isCommentsPage: true),
+                      const ReplyField(),
+                    ],
+                  );
                 }
 
                 return CommentItem(comments[index - 1]);
