@@ -61,6 +61,20 @@ class _PostItemState extends State<PostItem> {
         padding: const EdgeInsets.symmetric(horizontal: 4.0),
         child: Row(
           children: [
+            if (widget.isCommentsPage && _post.id != null && _post.id != '')
+              SizedBox(
+                width: 32.0,
+                child: MaybeZapButton(
+                  _post.id!,
+                  onZapped: (int amount) {
+                    setState(() {
+                      _post = _post.copyWith(
+                        sats: (_post.sats ?? 0) + amount,
+                      );
+                    });
+                  },
+                ),
+              ),
             if (!widget.isCommentsPage)
               SizedBox(
                 width: 32.0,
@@ -85,7 +99,7 @@ class _PostItemState extends State<PostItem> {
                   ],
                 ),
               ),
-            if (!widget.isCommentsPage) const SizedBox(width: 4),
+            const SizedBox(width: 4),
             Flexible(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

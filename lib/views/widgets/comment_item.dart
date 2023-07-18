@@ -2,15 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/widgets/markdown_item.dart';
+import 'package:stacker_news/views/widgets/post_item.dart';
 import 'package:stacker_news/views/widgets/user_button.dart';
 
-class CommentItem extends StatelessWidget {
+class CommentItem extends StatefulWidget {
   final Post post;
 
   const CommentItem(
     this.post, {
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<CommentItem> createState() => _CommentItemState();
+}
+
+class _CommentItemState extends State<CommentItem> {
+  late Post _post;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _post = widget.post;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,47 +37,66 @@ class CommentItem extends StatelessWidget {
       onTap: () {
         Navigator.of(context).pushNamed(
           PostPage.id,
-          arguments: post,
+          arguments: _post,
         );
       },
       child: Padding(
         padding: const EdgeInsets.only(
-          left: 24.0,
           right: 8.0,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            const SizedBox(height: 4),
-            if (post.text != null && post.text != '') MarkdownItem(post.text),
-            if (post.text != null && post.text != '')
-              const SizedBox(height: 8.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Text(
-                  '${post.sats} sats',
-                  style: label,
-                ),
-                Text(
-                  '${post.ncomments} comments',
-                  style: label,
-                ),
-                Text(
-                  post.timeAgo,
-                  style: label,
-                  textAlign: TextAlign.end,
-                )
-              ],
-            ),
-            const SizedBox(height: 2),
             SizedBox(
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              width: 40.0,
+              child: MaybeZapButton(
+                _post.id!,
+                onZapped: (int amount) {
+                  setState(() {
+                    _post = _post.copyWith(
+                      sats: (_post.sats ?? 0) + amount,
+                    );
+                  });
+                },
+              ),
+            ),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Reply', style: textTheme.bodySmall),
-                  UserButton(post.user),
+                  const SizedBox(height: 4),
+                  if (_post.text != null && _post.text != '')
+                    MarkdownItem(_post.text),
+                  if (_post.text != null && _post.text != '')
+                    const SizedBox(height: 8.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        '${_post.sats} sats',
+                        style: label,
+                      ),
+                      Text(
+                        '${_post.ncomments} comments',
+                        style: label,
+                      ),
+                      Text(
+                        _post.timeAgo,
+                        style: label,
+                        textAlign: TextAlign.end,
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 2),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Reply', style: textTheme.bodySmall),
+                        UserButton(_post.user),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
