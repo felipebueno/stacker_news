@@ -107,9 +107,9 @@ class User {
       lastCheckedJobs: json['lastCheckedJobs'] as String?,
       typename: json['__typename'] as String?,
       bio: json['bio'] != null ? Post.fromJson(json['bio']) : null,
-      nItems: json['nItems'] as int?,
-      nComments: json['nComments'] as int?,
-      nBookmarks: json['nBookmarks'] as int?,
+      nItems: json['nitems'] as int?,
+      nComments: json['ncomments'] as int?,
+      nBookmarks: json['nbookmarks'] as int?,
       photoId: json['photoId'] as int?,
       since: json['since'] as int?,
     );
