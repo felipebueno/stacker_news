@@ -97,11 +97,11 @@ Not implemented yet.
 
     - [ ] Post
 
-    - [ ] Comment
+    - [x] Comment
 
     - [x] Zaps posts
 
-    - [ ] Zaps comments
+    - [x] Zaps comments
 
     - [ ] Notifications (hasNewNotes icon, notifications page)
 
