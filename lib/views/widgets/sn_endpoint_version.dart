@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stacker_news/data/shared_prefs_manager.dart';
 
 class SNEndpointVersion extends StatelessWidget {
   const SNEndpointVersion({super.key});
 
-  Future<String> _getVersion() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    return prefs.getString('build-id') ?? 'Unknown';
-  }
+  Future<String> _getVersion() async =>
+      await SharedPrefsManager.read('build-id') ?? 'Unknown';
 
   @override
   Widget build(BuildContext context) {

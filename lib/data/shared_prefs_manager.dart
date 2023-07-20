@@ -1,10 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// TODO: Make all places that use shared preferences use this class
 class SharedPrefsManager {
-  static void create(String key, dynamic value) async {
+  static Future<void> create(String key, dynamic value) async {
     final prefs = await SharedPreferences.getInstance();
+
     if (value is int) {
       prefs.setInt(key, value);
     } else if (value is String) {

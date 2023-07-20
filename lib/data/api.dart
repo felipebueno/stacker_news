@@ -6,13 +6,14 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/models/session.dart';
 import 'package:stacker_news/data/models/user.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/auth/login_failed_page.dart';
+
+import 'shared_prefs_manager.dart';
 
 final class Api {
   final Dio _dio = Dio(
@@ -118,8 +119,10 @@ final class Api {
 
     final cursor = itemsMap['cursor'];
     if (cursor != null) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('${postType.name}-cursor', cursor);
+      await SharedPrefsManager.create(
+        '${postType.name}-cursor',
+        cursor,
+      );
     }
 
     return items.map((item) {
@@ -146,19 +149,15 @@ final class Api {
   }
 
   Future<void> _saveBuildId(String newBuildId) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('build-id', newBuildId);
+    await SharedPrefsManager.create('build-id', newBuildId);
   }
 
   Future<String?> _getCurrBuildId() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    return prefs.getString('build-id');
+    return await SharedPrefsManager.read('build-id');
   }
 
   Future<List<Post>> fetchMorePosts(PostType postType) async {
-    final prefs = await SharedPreferences.getInstance();
-    final cursor = prefs.getString('${postType.name}-cursor');
+    final cursor = await SharedPrefsManager.read('${postType.name}-cursor');
 
     if (cursor == null) {
       throw Exception('Error fetching more');
@@ -212,8 +211,10 @@ final class Api {
       return null;
     }
 
-    await (await SharedPreferences.getInstance())
-        .setString('me', jsonEncode(me));
+    await SharedPrefsManager.create(
+      'me',
+      jsonEncode(me),
+    );
 
     return User.fromJson(me);
   }
@@ -315,12 +316,10 @@ final class Api {
       return null;
     }
 
-    final prefs = await SharedPreferences.getInstance();
-
     if (response.statusCode == 403 &&
         response.realUri.toString() ==
             'https://stacker.news/api/auth/error?error=Verification') {
-      final sessionData = prefs.getString('session');
+      final sessionData = await SharedPrefsManager.read('session');
       if (sessionData == null || sessionData == 'null') {
         _goToLoginFailedPage();
 
@@ -348,7 +347,10 @@ final class Api {
       return null;
     }
 
-    await prefs.setString('session', jsonEncode(sessionResponse.data));
+    await SharedPrefsManager.create(
+      'session',
+      jsonEncode(sessionResponse.data),
+    );
 
     return Session.fromJson(sessionResponse.data);
   }
