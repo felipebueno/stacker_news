@@ -16,6 +16,30 @@ import 'package:stacker_news/views/pages/auth/login_failed_page.dart';
 import 'shared_prefs_manager.dart';
 
 final class Api {
+  Api() {
+    _cookieJar();
+
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onError: (error, handler) {
+          final statusCode = error.response?.statusCode;
+
+          if (statusCode == 403 || statusCode == 404) {
+            // Ignore 403 errors when unable to login with magic link
+            // Ignore 404 errors so we can update the build-id and re-fetch posts
+            handler.resolve(Response(
+              requestOptions: error.requestOptions,
+              statusCode: statusCode,
+            ));
+          } else {
+            debugPrint(error.response?.data);
+            handler.next(error);
+          }
+        },
+      ),
+    );
+  }
+
   final Dio _dio = Dio(
     BaseOptions(
       baseUrl: 'https://stacker.news/_next/data',
@@ -48,31 +72,7 @@ final class Api {
     _dio.interceptors.add(CookieManager(jar));
   }
 
-  Api() {
-    _cookieJar();
-
-    _dio.interceptors.add(
-      InterceptorsWrapper(
-        onError: (error, handler) {
-          final statusCode = error.response?.statusCode;
-
-          if (statusCode == 403 || statusCode == 404) {
-            // Ignore 403 errors when unable to login with magic link
-            // Ignore 404 errors so we can update the build-id and re-fetch posts
-            handler.resolve(Response(
-              requestOptions: error.requestOptions,
-              statusCode: statusCode,
-            ));
-          } else {
-            debugPrint(error.response?.data);
-            handler.next(error);
-          }
-        },
-      ),
-    );
-  }
-
-  // START Posts
+  // #region Posts
   Future<List<Post>> fetchInitialPosts(PostType postType) async {
     try {
       String endpoint = postType.endpoint;
@@ -186,10 +186,9 @@ final class Api {
 
     return Post.fromJson(data);
   }
+  // #endregion Posts
 
-  // END Posts
-
-  // START Profile
+  // #region Profile
   Future<User?> fetchMe() async {
     final response = await _dio.post(
       'https://stacker.news/api/graphql',
@@ -253,9 +252,9 @@ final class Api {
 
     return User.fromJson(userMap);
   }
-  // END Profile
+  // #endregion Profile
 
-  // START Auth
+  // #region Auth
   void _goToLoginFailedPage() {
     final context = Utils.navigatorKey.currentContext;
     if (context == null) {
@@ -402,9 +401,9 @@ final class Api {
 
     return true;
   }
-  // END Auth
+  // #endregion Auth
 
-  // START Notifications
+  // #region Notifications
   Future<bool> hasNewNotes() async {
     debugPrint('fetching hasNewNotes');
 
@@ -425,9 +424,9 @@ final class Api {
 
     return false;
   }
-  // END Notifications
+  // #endregion Notifications
 
-  // START Zap Things
+  // #region Zap Things
   Future<int> zapPost(String id) async {
     final me = await fetchMe();
 
@@ -460,15 +459,15 @@ final class Api {
 
     return 0;
   }
-  // END Zap Things
+  // #endregion Zap Things
 
-  // START Items & Comments
+  // #region Items & Comments
   Future<Post?> createComment({
     required String parentId,
     required String text,
   }) async {
     final response = await _dio.post(
-      'https://stacker.news/api/graphql',
+      'https://stacker.news/api/graphql', // TODO: Multiline text not working
       data:
           '{"operationName":"createComment","variables":{"text":"$text","parentId":"$parentId"},"query":"fragment CommentFields on Item {\\n  id\\n  parentId\\n  createdAt\\n  deletedAt\\n  text\\n  user {\\n    name\\n    streak\\n    hideCowboyHat\\n    id\\n    __typename\\n  }\\n  sats\\n  upvotes\\n  wvotes\\n  boost\\n  meSats\\n  meDontLike\\n  meBookmark\\n  meSubscription\\n  outlawed\\n  freebie\\n  path\\n  commentSats\\n  mine\\n  otsHash\\n  ncomments\\n  __typename\\n}\\n\\nfragment CommentsRecursive on Item {\\n  ...CommentFields\\n  comments {\\n    ...CommentFields\\n    comments {\\n      ...CommentFields\\n      comments {\\n        ...CommentFields\\n        comments {\\n          ...CommentFields\\n          comments {\\n            ...CommentFields\\n            comments {\\n              ...CommentFields\\n              comments {\\n                ...CommentFields\\n                comments {\\n                  ...CommentFields\\n                  comments {\\n                    ...CommentFields\\n                    comments {\\n                      ...CommentFields\\n                      comments {\\n                        ...CommentFields\\n                        comments {\\n                          ...CommentFields\\n                          comments {\\n                            ...CommentFields\\n                            comments {\\n                              ...CommentFields\\n                              comments {\\n                                ...CommentFields\\n                                comments {\\n                                  ...CommentFields\\n                                  comments {\\n                                    ...CommentFields\\n                                    comments {\\n                                      ...CommentFields\\n                                      comments {\\n                                        ...CommentFields\\n                                        comments {\\n                                          ...CommentFields\\n                                          comments {\\n                                            ...CommentFields\\n                                            comments {\\n                                              ...CommentFields\\n                                              comments {\\n                                                ...CommentFields\\n                                                comments {\\n                                                  ...CommentFields\\n                                                  comments {\\n                                                    ...CommentFields\\n                                                    __typename\\n                                                  }\\n                                                  __typename\\n                                                }\\n                                                __typename\\n                                              }\\n                                              __typename\\n                                            }\\n                                            __typename\\n                                          }\\n                                          __typename\\n                                        }\\n                                        __typename\\n                                      }\\n                                      __typename\\n                                    }\\n                                    __typename\\n                                  }\\n                                  __typename\\n                                }\\n                                __typename\\n                              }\\n                              __typename\\n                            }\\n                            __typename\\n                          }\\n                          __typename\\n                        }\\n                        __typename\\n                      }\\n                      __typename\\n                    }\\n                    __typename\\n                  }\\n                  __typename\\n                }\\n                __typename\\n              }\\n              __typename\\n            }\\n            __typename\\n          }\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n  __typename\\n}\\n\\nmutation createComment(\$text: String!, \$parentId: ID!) {\\n  createComment(text: \$text, parentId: \$parentId) {\\n    ...CommentFields\\n    comments {\\n      ...CommentsRecursive\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n"}',
     );
@@ -488,5 +487,5 @@ final class Api {
 
     throw Exception('Failed to create comment');
   }
-  // END Items & Comments
+  // #endregion Items & Comments
 }
