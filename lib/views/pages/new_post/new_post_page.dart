@@ -29,20 +29,23 @@ class _NewPostPageState extends State<NewPostPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           DropdownButton<String>(
-              value: _selectedSub,
-              hint: const Text('pick sub'),
-              isExpanded: true,
-              onChanged: (String? val) {
-                setState(() {
-                  _selectedSub = val;
-                });
-              },
-              items: <String>['Bitcoin', 'Nostr', 'Tech', 'Meta', 'Jobs']
-                  .map((e) => DropdownMenuItem<String>(
-                        value: e,
-                        child: Text(e),
-                      ))
-                  .toList()),
+            value: _selectedSub,
+            hint: const Text('pick sub'),
+            isExpanded: true,
+            onChanged: (String? val) {
+              setState(() {
+                _selectedSub = val;
+              });
+            },
+            items: ['Bitcoin', 'Nostr', 'Tech', 'Meta', 'Jobs']
+                .map(
+                  (e) => DropdownMenuItem(
+                    value: e,
+                    child: Text(e),
+                  ),
+                )
+                .toList(),
+          ),
           const SizedBox(height: 16),
           const Text(
             'Choose a type of post to create',

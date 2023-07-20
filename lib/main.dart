@@ -1,16 +1,18 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
-import 'package:stacker_news/data/sn_api.dart';
+import 'package:provider/provider.dart';
+import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/sn_router.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
 import 'package:uni_links/uni_links.dart';
 
-import 'colors.dart';
+import 'data/theme_notifier.dart';
 
 final locator = GetIt.instance;
 bool _initialUriIsHandled = false;
@@ -22,7 +24,10 @@ void main() {
 
   locator.registerLazySingleton(Api.new);
 
-  runApp(const StackerNewsApp());
+  runApp(ChangeNotifierProvider<ThemeNotifier>(
+    create: (_) => ThemeNotifier(),
+    child: const StackerNewsApp(),
+  ));
 }
 
 class StackerNewsApp extends StatefulWidget {
@@ -39,7 +44,7 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
   void initState() {
     super.initState();
 
-    if (mounted) {
+    if (mounted && Platform.isAndroid) {
       _handleIncomingLinks();
       _handleInitialUri();
       Utils.checkForUpdate();
@@ -58,6 +63,7 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
 
   Future<void> _login(String link) async {
     try {
+      // TODO: Show busy indicator while logging in
       // Utils.showBusyModal(
       //   context: context,
       //   message: 'Logging in...',
@@ -117,10 +123,6 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
       if (!_isLoginLink(link)) return;
       if (!mounted) return;
 
-      Utils.showInfo('got initial link: $link');
-
-      if (!mounted) return;
-
       _login(link);
     } on PlatformException {
       // Platform messages may fail but we ignore the exception
@@ -133,65 +135,20 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: Utils.navigatorKey,
-      scaffoldMessengerKey: Utils.scaffoldMessengerKey,
-      title: 'Stacker News',
-      themeMode: ThemeMode
-          .dark, // TODO: Implement theme switcher and change this to ThemeMode.system
-      theme: ThemeData(
-        drawerTheme: const DrawerThemeData(
-          backgroundColor: Colors.white,
-          surfaceTintColor: Colors.white,
-        ),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: snYellow,
-          brightness: Brightness.light,
-          background: Colors.white,
-        ),
-        useMaterial3: true,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.white,
-          foregroundColor: snYellow,
-        ),
-        tabBarTheme: const TabBarTheme(
-          labelColor: snYellow,
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: snYellow,
-            foregroundColor: Colors.black,
-          ),
-        ),
-      ),
-      darkTheme: ThemeData(
-        drawerTheme: const DrawerThemeData(
-          backgroundColor: Colors.black,
-          surfaceTintColor: Colors.black,
-        ),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: snYellow,
-          brightness: Brightness.dark,
-          background: Colors.black,
-        ),
-        useMaterial3: true,
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.black,
-          foregroundColor: snYellow,
-        ),
-        tabBarTheme: const TabBarTheme(
-          labelColor: snYellow,
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.black,
-            backgroundColor: snYellow,
-          ),
-        ),
-      ),
-      initialRoute: HomePage.id,
-      routes: SNRouter.routes,
-      home: const HomePage(),
+    return Consumer<ThemeNotifier>(
+      builder: (context, theme, _) {
+        return MaterialApp(
+          navigatorKey: Utils.navigatorKey,
+          scaffoldMessengerKey: Utils.scaffoldMessengerKey,
+          title: 'Stacker News',
+          themeMode: theme.themeMode,
+          theme: theme.lightTheme,
+          darkTheme: theme.darkTheme,
+          initialRoute: HomePage.id,
+          routes: SNRouter.routes,
+          home: const HomePage(),
+        );
+      },
     );
   }
 }

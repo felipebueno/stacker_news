@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/models/session.dart';
-import 'package:stacker_news/data/sn_api.dart';
+import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_page.dart';

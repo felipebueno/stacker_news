@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/models/session.dart';
-import 'package:stacker_news/data/sn_api.dart';
+import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stacker_news/data/models/user.dart';
-import 'package:stacker_news/data/sn_api.dart';
+import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
 import 'package:stacker_news/views/pages/profile/bio_detail.dart';
