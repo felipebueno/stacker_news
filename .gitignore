@@ -9,6 +9,7 @@ key.properties
 .buildlog/
 .history
 .svn/
+.cookies/
 
 # IntelliJ related
 *.iml
