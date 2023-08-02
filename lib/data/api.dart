@@ -103,6 +103,7 @@ final class Api {
     } catch (e, st) {
       debugPrint(e.toString());
       debugPrintStack(stackTrace: st);
+      Utils.showException(e.toString(), st);
 
       rethrow;
     }
@@ -112,7 +113,8 @@ final class Api {
     dynamic responseData,
     PostType postType,
   ) async {
-    final data = (responseData['pageProps'] ?? responseData)['data'];
+    final response = (responseData['pageProps'] ?? responseData);
+    final data = response['ssrData'] ?? response['data'];
     final itemsMap =
         (data['items'] ?? data['topItems'] ?? data['notifications']);
     final List items = itemsMap['items'] ?? itemsMap['notifications'];

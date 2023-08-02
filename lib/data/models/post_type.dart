@@ -16,7 +16,7 @@ enum PostType {
       return 'notifications.json';
     }
 
-    return '~/$name.json?sub=$name';
+    return '~.json?sub=$name';
   }
 
   String get name {
