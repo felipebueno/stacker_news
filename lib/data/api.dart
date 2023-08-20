@@ -184,7 +184,9 @@ final class Api {
       throw Exception('Error fetching comments');
     }
 
-    final data = response.data['pageProps']['data']['item'];
+    final props = response.data['pageProps'];
+
+    final data = (props['ssrData'] ?? props['data'])['item'];
 
     return Post.fromJson(data);
   }
