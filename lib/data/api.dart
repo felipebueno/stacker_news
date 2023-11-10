@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_single_quotes
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -27,12 +29,14 @@ final class Api {
           if (statusCode == 403 || statusCode == 404) {
             // Ignore 403 errors when unable to login with magic link
             // Ignore 404 errors so we can update the build-id and re-fetch posts
-            handler.resolve(Response(
-              requestOptions: error.requestOptions,
-              statusCode: statusCode,
-            ));
+            handler.resolve(
+              Response(
+                requestOptions: error.requestOptions,
+                statusCode: statusCode,
+              ),
+            );
           } else {
-            debugPrint(error.response?.data);
+            debugPrint(error.response?.data.toString());
             handler.next(error);
           }
         },
@@ -165,16 +169,28 @@ final class Api {
       throw Exception('Error fetching more');
     }
 
-    final response = await _dio.post(
-      'https://stacker.news/api/graphql',
-      data: postType.getGraphQLBody(cursor),
-    );
+    try {
+      final response = await _dio.post(
+        'https://stacker.news/api/graphql',
+        data: postType.getGraphQLBody(cursor),
+      );
 
-    if (response.statusCode == 200) {
-      return await _parsePosts(response.data, postType);
+      if (response.statusCode == 200) {
+        return await _parsePosts(response.data, postType);
+      }
+    } catch (e, st) {
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: st);
+
+      final msg =
+          ((e is DioException) ? e.response?.data.toString() : e.toString()) ??
+              '';
+      Utils.showException(msg, st);
+
+      rethrow;
     }
 
-    throw Exception('Error fetching more');
+    throw Exception('Error fetching more posts');
   }
 
   Future<Post> fetchPostDetails(String id) async {
@@ -251,8 +267,9 @@ final class Api {
   }
 
   User _parseProfile(dynamic responseData) {
-    final userMap =
-        responseData['pageProps']['data']['user'] as Map<String, dynamic>;
+    final response = (responseData['pageProps'] ?? responseData);
+    final data = response['ssrData'] ?? response['data'];
+    final userMap = data['user'] as Map<String, dynamic>;
 
     return User.fromJson(userMap);
   }
@@ -466,7 +483,7 @@ final class Api {
   // #endregion Zap Things
 
   // #region Items & Comments
-  Future<Post?> createComment({
+  Future<Post?> upsertComment({
     required String parentId,
     required String text,
   }) async {
@@ -475,7 +492,7 @@ final class Api {
     final response = await _dio.post(
       'https://stacker.news/api/graphql',
       data:
-          '{"operationName":"createComment","variables":{"text":"$text","parentId":"$parentId"},"query":"fragment CommentFields on Item {\\n  id\\n  parentId\\n  createdAt\\n  deletedAt\\n  text\\n  user {\\n    name\\n    streak\\n    hideCowboyHat\\n    id\\n    __typename\\n  }\\n  sats\\n  upvotes\\n  wvotes\\n  boost\\n  meSats\\n  meDontLike\\n  meBookmark\\n  meSubscription\\n  outlawed\\n  freebie\\n  path\\n  commentSats\\n  mine\\n  otsHash\\n  ncomments\\n  __typename\\n}\\n\\nfragment CommentsRecursive on Item {\\n  ...CommentFields\\n  comments {\\n    ...CommentFields\\n    comments {\\n      ...CommentFields\\n      comments {\\n        ...CommentFields\\n        comments {\\n          ...CommentFields\\n          comments {\\n            ...CommentFields\\n            comments {\\n              ...CommentFields\\n              comments {\\n                ...CommentFields\\n                comments {\\n                  ...CommentFields\\n                  comments {\\n                    ...CommentFields\\n                    comments {\\n                      ...CommentFields\\n                      comments {\\n                        ...CommentFields\\n                        comments {\\n                          ...CommentFields\\n                          comments {\\n                            ...CommentFields\\n                            comments {\\n                              ...CommentFields\\n                              comments {\\n                                ...CommentFields\\n                                comments {\\n                                  ...CommentFields\\n                                  comments {\\n                                    ...CommentFields\\n                                    comments {\\n                                      ...CommentFields\\n                                      comments {\\n                                        ...CommentFields\\n                                        comments {\\n                                          ...CommentFields\\n                                          comments {\\n                                            ...CommentFields\\n                                            comments {\\n                                              ...CommentFields\\n                                              comments {\\n                                                ...CommentFields\\n                                                comments {\\n                                                  ...CommentFields\\n                                                  comments {\\n                                                    ...CommentFields\\n                                                    __typename\\n                                                  }\\n                                                  __typename\\n                                                }\\n                                                __typename\\n                                              }\\n                                              __typename\\n                                            }\\n                                            __typename\\n                                          }\\n                                          __typename\\n                                        }\\n                                        __typename\\n                                      }\\n                                      __typename\\n                                    }\\n                                    __typename\\n                                  }\\n                                  __typename\\n                                }\\n                                __typename\\n                              }\\n                              __typename\\n                            }\\n                            __typename\\n                          }\\n                          __typename\\n                        }\\n                        __typename\\n                      }\\n                      __typename\\n                    }\\n                    __typename\\n                  }\\n                  __typename\\n                }\\n                __typename\\n              }\\n              __typename\\n            }\\n            __typename\\n          }\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n  __typename\\n}\\n\\nmutation createComment(\$text: String!, \$parentId: ID!) {\\n  createComment(text: \$text, parentId: \$parentId) {\\n    ...CommentFields\\n    comments {\\n      ...CommentsRecursive\\n      __typename\\n    }\\n    __typename\\n  }\\n}\\n"}',
+          "{\"operationName\":\"upsertComment\",\"variables\":{\"parentId\":\"$parentId\",\"text\":\"$text\"},\"query\":\"fragment CommentFields on Item {\\n  id\\n  parentId\\n  createdAt\\n  deletedAt\\n  text\\n  user {\\n    name\\n    streak\\n    hideCowboyHat\\n    id\\n    meMute\\n    __typename\\n  }\\n  sats\\n  upvotes\\n  wvotes\\n  boost\\n  meSats\\n  meDontLike\\n  meBookmark\\n  meSubscription\\n  outlawed\\n  freebie\\n  path\\n  commentSats\\n  mine\\n  otsHash\\n  ncomments\\n  imgproxyUrls\\n  __typename\\n}\\n\\nfragment CommentsRecursive on Item {\\n  ...CommentFields\\n  comments {\\n    ...CommentFields\\n    comments {\\n      ...CommentFields\\n      comments {\\n        ...CommentFields\\n        comments {\\n          ...CommentFields\\n          comments {\\n            ...CommentFields\\n            comments {\\n              ...CommentFields\\n              comments {\\n                ...CommentFields\\n                __typename\\n              }\\n              __typename\\n            }\\n            __typename\\n          }\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n  __typename\\n}\\n\\nmutation upsertComment(\$text: String!, \$parentId: ID!, \$hash: String, \$hmac: String) {\\n  upsertComment(text: \$text, parentId: \$parentId, hash: \$hash, hmac: \$hmac) {\\n    ...CommentFields\\n    comments {\\n      ...CommentsRecursive\\n      __typename\\n    }\\n    __typename\\n  }\\n}\"}",
     );
 
     if (response.statusCode == 200) {

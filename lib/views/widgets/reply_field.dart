@@ -64,7 +64,7 @@ class _ReplyFieldState extends State<ReplyField> {
                           throw Exception('Parent ID is null');
                         }
 
-                        final comment = await locator<Api>().createComment(
+                        final comment = await locator<Api>().upsertComment(
                           parentId: parentId,
                           text: _text,
                         );
