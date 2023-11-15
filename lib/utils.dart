@@ -212,7 +212,7 @@ class Utils {
   static Future<Session?> getSession() async {
     final sessionData = await SharedPrefsManager.read('session');
 
-    if (sessionData == null) {
+    if (sessionData == null || sessionData == 'null' || sessionData == '{}') {
       return null;
     }
 

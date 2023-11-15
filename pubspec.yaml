@@ -14,8 +14,8 @@ description: A new Flutter project.
 version: 1.2.5+17
 
 environment:
-  sdk: ">=3.0.1 <4.0.0"
-  flutter: ">=3.10.0 <4.0.0"
+  sdk: ">=3.1.0 <4.0.0"
+  flutter: ">=3.13.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -37,6 +37,7 @@ dependencies:
   path_provider: ^2.0.15
   uni_links: ^0.5.1
   provider: ^6.0.5
+  barcode_scan2: ^4.3.0
 
 dependency_overrides:
   # Downgrade markdown to 7.0.2 to fix issue with flutter_markdown footnotes

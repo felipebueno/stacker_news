@@ -13,7 +13,7 @@ import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/models/session.dart';
 import 'package:stacker_news/data/models/user.dart';
 import 'package:stacker_news/utils.dart';
-import 'package:stacker_news/views/pages/auth/login_failed_page.dart';
+import 'package:stacker_news/views/pages/auth/sign_in_failed_page.dart';
 
 import 'shared_prefs_manager.dart';
 
@@ -340,7 +340,7 @@ final class Api {
         response.realUri.toString() ==
             'https://stacker.news/api/auth/error?error=Verification') {
       final sessionData = await SharedPrefsManager.read('session');
-      if (sessionData == null || sessionData == 'null') {
+      if (sessionData == null || sessionData == 'null' || sessionData == '{}') {
         _goToLoginFailedPage();
 
         return null;
@@ -362,6 +362,14 @@ final class Api {
     if (sessionResponse.statusCode != 200) {
       Utils.showError(
         '4 Error validating token (Expected sessionResponse.statusCode 200 but got ${sessionResponse.statusCode})',
+      );
+
+      return null;
+    }
+
+    if (sessionResponse.data == {}) {
+      Utils.showError(
+        '5 Error validating token (Expected sessionResponse.data != {})',
       );
 
       return null;

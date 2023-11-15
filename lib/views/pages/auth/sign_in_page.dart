@@ -22,7 +22,7 @@ class SignInPage extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: LoginForm(),
+            child: SignInForm(),
           ),
         ],
       ),
@@ -30,14 +30,14 @@ class SignInPage extends StatelessWidget {
   }
 }
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class SignInForm extends StatefulWidget {
+  const SignInForm({super.key});
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<SignInForm> createState() => _SignInFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _SignInFormState extends State<SignInForm> {
   final _busy = ValueNotifier<bool>(false);
   final _emailController = TextEditingController();
   final _tokenController = TextEditingController();
@@ -84,11 +84,23 @@ class _LoginFormState extends State<LoginForm> {
               },
               child: const Text('Request Magic Link'),
             ),
+            const SizedBox(height: 24),
+            // const Text('or'),
+            // const SizedBox(height: 24),
+            // ElevatedButton.icon(
+            //   onPressed: () async {
+            //     final ret = await BarcodeScanner.scan();
+
+            //     login(ret.rawContent);
+            //   },
+            //   icon: const Icon(Icons.qr_code),
+            //   label: const Text('Read QRCode'),
+            // ),
             if (!Platform.isAndroid && !Platform.isIOS)
               TextField(
                 controller: _tokenController,
                 decoration: const InputDecoration(
-                  labelText: 'Magic Link',
+                  labelText: 'Paste Magic Link',
                   hintText: 'https://stacker.news/api/auth/callback/email/...',
                 ),
               ),

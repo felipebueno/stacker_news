@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:stacker_news/data/api.dart';
+import 'package:stacker_news/data/auth_service.dart';
 import 'package:stacker_news/sn_router.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
@@ -61,38 +62,6 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
   bool _isLoginLink(String link) =>
       link.contains('https://stacker.news/api/auth/callback/email');
 
-  Future<void> _login(String link) async {
-    try {
-      // TODO: Show busy indicator while logging in
-      // Utils.showBusyModal(
-      //   context: context,
-      //   message: 'Logging in...',
-      // );
-
-      final session = await locator<Api>().login(link);
-
-      if (session != null) {
-        final ctx = Utils.navigatorKey.currentContext;
-
-        if (ctx == null) {
-          Utils.showError('Error going to home page. Context is null');
-
-          return;
-        }
-
-        if (ctx.mounted) {
-          Navigator.pushReplacementNamed(ctx, HomePage.id);
-        } else {
-          Utils.showError('Error going to home page. Context is not mounted');
-        }
-      }
-    } catch (e, st) {
-      Utils.showException('Error logging in $e', st);
-    } finally {
-      // Utils.hideBusyModal(context);
-    }
-  }
-
   void _handleIncomingLinks() {
     if (!kIsWeb) {
       // It will handle app links while the app is already started - be it in the foreground or in the background.
@@ -102,7 +71,7 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
           if (!_isLoginLink(link)) return;
           if (!mounted) return;
 
-          _login(link);
+          login(link);
         },
         onError: (Object err) {
           if (!mounted) return;
@@ -123,7 +92,7 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
       if (!_isLoginLink(link)) return;
       if (!mounted) return;
 
-      _login(link);
+      login(link);
     } on PlatformException {
       // Platform messages may fail but we ignore the exception
       Utils.showError('falied to get initial uri');
