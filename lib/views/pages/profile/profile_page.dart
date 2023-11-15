@@ -47,7 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
               label: const Text('Logout'),
               icon: const Icon(Icons.logout),
               onPressed: () async {
-                await SharedPrefsManager.delete('session');
+                await SharedPrefsManager.clear();
 
                 if (context.mounted) {
                   Navigator.pushReplacementNamed(

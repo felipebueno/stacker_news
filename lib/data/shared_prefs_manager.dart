@@ -31,4 +31,18 @@ class SharedPrefsManager {
 
     return prefs.remove(key);
   }
+
+  static Future<bool> clear() async {
+    // TODO: Clear cookies
+    // final appDocDir = await getApplicationDocumentsDirectory();
+    // final String appDocPath = appDocDir.path;
+    // await PersistCookieJar(
+    //   ignoreExpires: true,
+    //   storage: FileStorage('$appDocPath/.cookies/'),
+    // ).deleteAll();
+
+    final prefs = await SharedPreferences.getInstance();
+
+    return prefs.clear();
+  }
 }

@@ -213,7 +213,7 @@ final class Api {
     final response = await _dio.post(
       'https://stacker.news/api/graphql',
       data:
-          '{"variables":{},"query":"{\\n  me {\\n    id\\n    name\\n    streak\\n    sats\\n    stacked\\n    freePosts\\n    freeComments\\n    tipDefault\\n    turboTipping\\n    fiatCurrency\\n    bioId\\n    upvotePopover\\n    tipPopover\\n    noteItemSats\\n    noteEarning\\n    noteAllDescendants\\n    noteMentions\\n    noteDeposits\\n    noteInvites\\n    noteJobIndicator\\n    noteCowboyHat\\n    hideInvoiceDesc\\n    hideFromTopUsers\\n    hideCowboyHat\\n    wildWestMode\\n    greeterMode\\n    lastCheckedJobs\\n    __typename\\n  }\\n}\\n"}',
+          "{\"variables\":{},\"query\":\"{\\n  me {\\n    id\\n    name\\n    bioId\\n    privates {\\n      autoDropBolt11s\\n      diagnostics\\n      fiatCurrency\\n      greeterMode\\n      hideCowboyHat\\n      hideFromTopUsers\\n      hideInvoiceDesc\\n      hideIsContributor\\n      hideWalletBalance\\n      hideWelcomeBanner\\n      imgproxyOnly\\n      lastCheckedJobs\\n      nostrCrossposting\\n      noteAllDescendants\\n      noteCowboyHat\\n      noteDeposits\\n      noteEarning\\n      noteForwardedSats\\n      noteInvites\\n      noteItemSats\\n      noteJobIndicator\\n      noteMentions\\n      sats\\n      tipDefault\\n      tipPopover\\n      turboTipping\\n      upvotePopover\\n      wildWestMode\\n      withdrawMaxFeeDefault\\n      __typename\\n    }\\n    optional {\\n      isContributor\\n      stacked\\n      streak\\n      __typename\\n    }\\n    __typename\\n  }\\n}\"}",
     );
 
     if (response.statusCode != 200) {
@@ -327,6 +327,13 @@ final class Api {
     }
 
     final response = await _dio.get(value);
+
+    if (response.data is String &&
+        response.data.contains('This magic link has expired')) {
+      Utils.showError('This magic link has expired');
+
+      return null;
+    }
 
     if (response.statusCode != 200 &&
         response.statusCode != 302 &&
@@ -470,7 +477,7 @@ final class Api {
     final response = await _dio.post(
       'https://stacker.news/api/graphql',
       data:
-          '{"operationName":"act","variables":{"id":"$id","sats": $amount},"query":"mutation act(\$id: ID!, \$sats: Int!) {\\n  act(id: \$id, sats: \$sats) {\\n    vote\\n    sats\\n    __typename\\n  }\\n}\\n"}',
+          '{"operationName":"act","variables":{"id":"$id","sats": $amount},"query":"mutation act(\$id: ID!, \$sats: Int!) {\\n  act(id: \$id, sats: \$sats) {\\n    vote\\n        __typename\\n  }\\n}\\n"}',
     );
 
     if (response.statusCode == 200) {
@@ -500,7 +507,7 @@ final class Api {
     final response = await _dio.post(
       'https://stacker.news/api/graphql',
       data:
-          "{\"operationName\":\"upsertComment\",\"variables\":{\"parentId\":\"$parentId\",\"text\":\"$text\"},\"query\":\"fragment CommentFields on Item {\\n  id\\n  parentId\\n  createdAt\\n  deletedAt\\n  text\\n  user {\\n    name\\n    streak\\n    hideCowboyHat\\n    id\\n    meMute\\n    __typename\\n  }\\n  sats\\n  upvotes\\n  wvotes\\n  boost\\n  meSats\\n  meDontLike\\n  meBookmark\\n  meSubscription\\n  outlawed\\n  freebie\\n  path\\n  commentSats\\n  mine\\n  otsHash\\n  ncomments\\n  imgproxyUrls\\n  __typename\\n}\\n\\nfragment CommentsRecursive on Item {\\n  ...CommentFields\\n  comments {\\n    ...CommentFields\\n    comments {\\n      ...CommentFields\\n      comments {\\n        ...CommentFields\\n        comments {\\n          ...CommentFields\\n          comments {\\n            ...CommentFields\\n            comments {\\n              ...CommentFields\\n              comments {\\n                ...CommentFields\\n                __typename\\n              }\\n              __typename\\n            }\\n            __typename\\n          }\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n  __typename\\n}\\n\\nmutation upsertComment(\$text: String!, \$parentId: ID!, \$hash: String, \$hmac: String) {\\n  upsertComment(text: \$text, parentId: \$parentId, hash: \$hash, hmac: \$hmac) {\\n    ...CommentFields\\n    comments {\\n      ...CommentsRecursive\\n      __typename\\n    }\\n    __typename\\n  }\\n}\"}",
+          "{\"operationName\":\"upsertComment\",\"variables\":{\"parentId\":\"$parentId\",\"text\":\"$text\"},\"query\":\"fragment CommentFields on Item {\\n  id\\n  parentId\\n  createdAt\\n  deletedAt\\n  text\\n  user {\\n    name\\n        hideCowboyHat\\n    id\\n    meMute\\n    __typename\\n  }\\n    upvotes\\n  wvotes\\n  boost\\n  me  meDontLike\\n  meBookmark\\n  meSubscription\\n  outlawed\\n  freebie\\n  path\\n  comment  mine\\n  otsHash\\n  ncomments\\n  imgproxyUrls\\n  __typename\\n}\\n\\nfragment CommentsRecursive on Item {\\n  ...CommentFields\\n  comments {\\n    ...CommentFields\\n    comments {\\n      ...CommentFields\\n      comments {\\n        ...CommentFields\\n        comments {\\n          ...CommentFields\\n          comments {\\n            ...CommentFields\\n            comments {\\n              ...CommentFields\\n              comments {\\n                ...CommentFields\\n                __typename\\n              }\\n              __typename\\n            }\\n            __typename\\n          }\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n  __typename\\n}\\n\\nmutation upsertComment(\$text: String!, \$parentId: ID!, \$hash: String, \$hmac: String) {\\n  upsertComment(text: \$text, parentId: \$parentId, hash: \$hash, hmac: \$hmac) {\\n    ...CommentFields\\n    comments {\\n      ...CommentsRecursive\\n      __typename\\n    }\\n    __typename\\n  }\\n}\"}",
     );
 
     if (response.statusCode == 200) {

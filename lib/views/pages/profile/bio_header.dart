@@ -83,8 +83,8 @@ class BioHeader extends StatelessWidget {
                           style: label,
                         ),
                         Text(
-                          '#${user.since}',
-                          style: link,
+                          user.since == null ? 'never' : '#${user.since}',
+                          style: user.since == null ? label : link,
                         ),
                       ],
                     ),
@@ -98,7 +98,7 @@ class BioHeader extends StatelessWidget {
                         style: label,
                       ),
                       Text(
-                        '${user.maxStreak}',
+                        '${user.maxStreak ?? ''}',
                       ),
                     ],
                   ),
