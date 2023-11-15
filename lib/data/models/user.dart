@@ -1,11 +1,13 @@
 import 'dart:core';
 
+import 'package:intl/intl.dart';
 import 'package:stacker_news/data/models/post.dart';
 
 class User {
   final String? id;
   final String? name;
   final int? streak;
+  final int? maxStreak;
   final int? sats;
   final int? stacked;
   final int? freePosts;
@@ -31,6 +33,7 @@ class User {
   final bool? greeterMode;
   final String? lastCheckedJobs;
   final String? typename;
+  final bool isContributor;
 
   final Post? bio;
   final int? nItems;
@@ -43,6 +46,7 @@ class User {
     this.id,
     this.name,
     this.streak,
+    this.maxStreak,
     this.sats,
     this.stacked,
     this.freePosts,
@@ -74,15 +78,17 @@ class User {
     this.nBookmarks,
     this.photoId,
     this.since,
+    this.isContributor = false,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'] as String?,
       name: json['name'] as String?,
-      streak: json['streak'] as int?,
+      streak: json['optional']?['streak'] as int?,
+      maxStreak: json['optional']?['maxStreak'] as int?,
       sats: json['sats'] as int?,
-      stacked: json['stacked'] as int?,
+      stacked: json['optional']?['stacked'] as int?,
       freePosts: json['freePosts'] as int?,
       freeComments: json['freeComments'] as int?,
       tipDefault: json['tipDefault'] as int?,
@@ -112,8 +118,20 @@ class User {
       nBookmarks: json['nbookmarks'] as int?,
       photoId: json['photoId'] as int?,
       since: json['since'] as int?,
+      isContributor: (json['optional']?['isContributor']) == true,
     );
   }
 
   String get atName => '@$name';
+
+  String get satsStacked {
+    // TODO: Proper exception handling
+    try {
+      final f = NumberFormat('###,###,###,###', 'en_US');
+
+      return f.format(stacked);
+    } catch (e) {
+      return stacked?.toString() ?? '';
+    }
+  }
 }

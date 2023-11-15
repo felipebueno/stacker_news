@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:stacker_news/colors.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/user.dart';
+import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/widgets/cowboy_streak.dart';
 import 'package:stacker_news/views/widgets/markdown_item.dart';
@@ -61,7 +62,7 @@ class BioHeader extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    '${user.stacked} stacked',
+                    '${user.satsStacked} sats stacked',
                     style: textTheme.titleLarge?.copyWith(
                       color: snYellow.withRed(160),
                     ),
@@ -88,27 +89,44 @@ class BioHeader extends StatelessWidget {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      const SizedBox(width: 12),
+                      Text(
+                        'longest cowboy streak: ',
+                        style: label,
+                      ),
+                      Text(
+                        '${user.maxStreak}',
+                      ),
+                    ],
+                  ),
+                  if (user.isContributor) const SizedBox(height: 8),
+                  if (user.isContributor)
+                    Row(
+                      children: [
+                        const SizedBox(width: 12),
+                        const Icon(Icons.terminal, size: 16),
+                        Text(
+                          ' verified stacker.news contributor',
+                          style: label,
+                        ),
+                      ],
+                    ),
                 ],
               ),
             ],
           ),
           const SizedBox(height: 8.0),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '${user.nItems} posts',
-                style: label,
-              ),
-              Text(
-                '${user.nComments} comments',
-                style: label,
-              ),
-              Text(
-                '${user.nBookmarks} bookmarks',
-                style: label,
-              ),
-            ],
+          TextButton(
+            onPressed: () {
+              Utils.showInfo('Not implemented yet');
+            },
+            child: Text(
+              '${user.nItems} items',
+              style: link,
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
