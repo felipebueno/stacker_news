@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacker_news/utils.dart';
-import 'package:stacker_news/views/pages/new_post/new_bounty_page.dart';
 import 'package:stacker_news/views/pages/new_post/new_discussion_page.dart';
-import 'package:stacker_news/views/pages/new_post/new_job_page.dart';
-import 'package:stacker_news/views/pages/new_post/new_poll_page.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
-
-import 'new_link_page.dart';
 
 class NewPostPage extends StatefulWidget {
   static const String id = 'new_post';
@@ -53,21 +48,22 @@ class _NewPostPageState extends State<NewPostPage> {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              if (_selectedSub == null || _selectedSub!.isEmpty) {
-                Utils.showError('Pick a sub first');
+          const ElevatedButton(
+            onPressed: null,
+            // onPressed: () {
+            //   if (_selectedSub == null || _selectedSub!.isEmpty) {
+            //     Utils.showError('Pick a sub first');
 
-                return;
-              }
+            //     return;
+            //   }
 
-              Navigator.pushNamed(
-                context,
-                NewLinkPage.id,
-                arguments: _selectedSub,
-              );
-            },
-            child: const Text('Link'),
+            //   Navigator.pushNamed(
+            //     context,
+            //     NewLinkPage.id,
+            //     arguments: _selectedSub,
+            //   );
+            // },
+            child: Text('Link'),
           ),
           const SizedBox(height: 16),
           ElevatedButton(
@@ -87,50 +83,53 @@ class _NewPostPageState extends State<NewPostPage> {
             child: const Text('Discussion'),
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              if (_selectedSub == null || _selectedSub!.isEmpty) {
-                Utils.showError('Pick a sub first');
+          const ElevatedButton(
+            onPressed: null,
+            // onPressed: () {
+            //   if (_selectedSub == null || _selectedSub!.isEmpty) {
+            //     Utils.showError('Pick a sub first');
 
-                return;
-              }
+            //     return;
+            //   }
 
-              Navigator.pushNamed(
-                context,
-                NewPollPage.id,
-                arguments: _selectedSub,
-              );
-            },
-            child: const Text('Poll'),
+            //   Navigator.pushNamed(
+            //     context,
+            //     NewPollPage.id,
+            //     arguments: _selectedSub,
+            //   );
+            // },
+            child: Text('Poll'),
           ),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              if (_selectedSub == null || _selectedSub!.isEmpty) {
-                Utils.showError('Pick a sub first');
+          const ElevatedButton(
+            onPressed: null,
+            // onPressed: () {
+            //   if (_selectedSub == null || _selectedSub!.isEmpty) {
+            //     Utils.showError('Pick a sub first');
 
-                return;
-              }
+            //     return;
+            //   }
 
-              Navigator.pushNamed(
-                context,
-                NewBountyPage.id,
-                arguments: _selectedSub,
-              );
-            },
-            child: const Text('Bounty'),
+            //   Navigator.pushNamed(
+            //     context,
+            //     NewBountyPage.id,
+            //     arguments: _selectedSub,
+            //   );
+            // },
+            child: Text('Bounty'),
           ),
           const SizedBox(height: 16),
           const Divider(),
           const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(
-                context,
-                NewJobPage.id,
-              );
-            },
-            child: const Text('Job'),
+          const ElevatedButton(
+            onPressed: null,
+            // onPressed: () {
+            //   Navigator.pushNamed(
+            //     context,
+            //     NewJobPage.id,
+            //   );
+            // },
+            child: Text('Job'),
           ),
         ],
       ),

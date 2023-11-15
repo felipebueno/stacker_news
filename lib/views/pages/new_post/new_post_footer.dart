@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/utils.dart';
 
 class NewPostFooter extends StatefulWidget {
-  const NewPostFooter({super.key});
+  const NewPostFooter({
+    super.key,
+    this.onPostPressed,
+  });
+
+  final void Function()? onPostPressed;
 
   @override
   State<NewPostFooter> createState() => _NewPostFooterState();
@@ -111,9 +115,7 @@ class _NewPostFooterState extends State<NewPostFooter> {
           ),
         const SizedBox(height: 16),
         ElevatedButton(
-          onPressed: () {
-            Utils.showInfo('Not implemented yet');
-          },
+          onPressed: widget.onPostPressed,
           child: const Text('Post'),
         ),
       ],

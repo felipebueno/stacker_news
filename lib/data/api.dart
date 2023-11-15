@@ -498,6 +498,36 @@ final class Api {
   // #endregion Zap Things
 
   // #region Items & Comments
+  Future<Post?> upsertDiscussion({
+    required String sub,
+    required String title,
+    required String text,
+  }) async {
+    title = title.replaceAll('\n', '\\n');
+    text = text.replaceAll('\n', '\\n');
+
+    final response = await _dio.post(
+      'https://stacker.news/api/graphql',
+      data:
+          "{\"operationName\":\"upsertDiscussion\",\"variables\":{\"sub\":\"$sub\",\"title\":\"$title\",\"text\":\"$text\",\"forward\":[]},\"query\":\"mutation upsertDiscussion(\$sub: String, \$id: ID, \$title: String!, \$text: String, \$boost: Int, \$forward: [ItemForwardInput], \$hash: String, \$hmac: String) {\\n  upsertDiscussion(\\n    sub: \$sub\\n    id: \$id\\n    title: \$title\\n    text: \$text\\n    boost: \$boost\\n    forward: \$forward\\n    hash: \$hash\\n    hmac: \$hmac\\n  ) {\\n    id\\n    __typename\\n  }\\n}\"}",
+    );
+
+    if (response.statusCode == 200) {
+      final errors = (response.data['errors'] ?? []) as List;
+      final error = errors.isEmpty ? null : errors[0]?['message'];
+
+      if (error != null) {
+        Utils.showError(error);
+
+        throw Exception(error);
+      }
+
+      return Post.fromJson(response.data);
+    }
+
+    throw Exception('Failed to post discussion');
+  }
+
   Future<Post?> upsertComment({
     required String parentId,
     required String text,
