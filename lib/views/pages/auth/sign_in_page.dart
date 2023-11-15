@@ -1,11 +1,7 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/main.dart';
-import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/auth/check_email_page.dart';
-import 'package:stacker_news/views/pages/home_page.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 
 class SignInPage extends StatelessWidget {
@@ -76,9 +72,7 @@ class _SignInFormState extends State<SignInForm> {
                     .requestMagicLink(_emailController.text);
                 _busy.value = false;
 
-                if (ret &&
-                    (Platform.isAndroid || Platform.isIOS) &&
-                    context.mounted) {
+                if (ret && context.mounted) {
                   Navigator.pushNamed(context, CheckEmailPage.id);
                 }
               },
@@ -96,45 +90,6 @@ class _SignInFormState extends State<SignInForm> {
             //   icon: const Icon(Icons.qr_code),
             //   label: const Text('Read QRCode'),
             // ),
-            if (!Platform.isAndroid && !Platform.isIOS)
-              TextField(
-                controller: _tokenController,
-                decoration: const InputDecoration(
-                  labelText: 'Paste Magic Link',
-                  hintText: 'https://stacker.news/api/auth/callback/email/...',
-                ),
-              ),
-            if (!Platform.isAndroid && !Platform.isIOS)
-              const SizedBox(height: 24),
-            if (!Platform.isAndroid && !Platform.isIOS)
-              ElevatedButton(
-                onPressed: () async {
-                  if (_tokenController.text.isEmpty) {
-                    return;
-                  }
-
-                  try {
-                    _busy.value = true;
-                    final session =
-                        await locator<Api>().login(_tokenController.text);
-
-                    if (session != null) {
-                      if (context.mounted) {
-                        Navigator.pushReplacementNamed(context, HomePage.id);
-                      } else {
-                        Utils.showError(
-                          'Error going to home page. Context is not mounted',
-                        );
-                      }
-                    }
-                  } catch (e) {
-                    Utils.showError('Error logging in: ${e.toString()}');
-                  } finally {
-                    _busy.value = false;
-                  }
-                },
-                child: const Text('Login'),
-              ),
           ],
         ),
         ValueListenableBuilder<bool>(
