@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/models/session.dart';
-import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
@@ -209,11 +209,11 @@ class _MaybeZapButtonState extends State<MaybeZapButton> {
                     _busy.value = true;
                     final amount = await locator<Api>().zapPost(widget._id);
 
+                    if (amount == null) return;
+
                     Utils.showInfo('Zapped $amount sats');
 
-                    if (widget._onZapped != null) {
-                      widget._onZapped!(amount);
-                    }
+                    widget._onZapped?.call(amount);
                   } catch (e, st) {
                     Utils.showException('Error zapping $e', st);
                   } finally {

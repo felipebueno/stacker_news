@@ -463,7 +463,7 @@ final class Api {
   // #endregion Notifications
 
   // #region Zap Things
-  Future<int> zapPost(String id) async {
+  Future<int?> zapPost(String id) async {
     final me = await fetchMe();
 
     if (me == null) {
@@ -487,7 +487,7 @@ final class Api {
       if (error != null) {
         Utils.showError(error);
 
-        return 0;
+        return null;
       }
 
       return amount;
