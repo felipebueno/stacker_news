@@ -21,7 +21,6 @@ Get the latest APK from the [Releases Section](https://github.com/felipebueno/st
   <img src="./screenshots/dark/bitcoin_dark1.jpg" alt="drawing" width="200"/>
   <img src="./screenshots/dark/nostr_dark1.jpg" alt="drawing" width="200"/>
   <img src="./screenshots/dark/jobs_dark1.jpg" alt="drawing" width="200"/>
-  <img src="./screenshots/dark/comments_dark1.jpg" alt="drawing" width="200"/>
   <img src="./screenshots/dark/comments_dark2.jpg" alt="drawing" width="200"/>
   <img src="./screenshots/dark/about_dark1.jpg" alt="drawing" width="200"/>
 </p>
