@@ -42,7 +42,7 @@ Not implemented yet.
 
 - [ ] Write a better TODO list
 
-- [ ] Update screenshots [Issue 4](https://github.com/felipebueno/stacker_news/issues/4)
+- [ ] Update screenshots [Issue 14](https://github.com/felipebueno/stacker_news/issues/14)
 
 - [ ] Code
 
@@ -68,7 +68,7 @@ Not implemented yet.
 
     - [ ] Handle in_app_update errors
 
-  - [ ] Better light theme
+  - [ ] Light theme
 
   - [ ] Theme switcher
 
