@@ -6,7 +6,7 @@ import 'package:stacker_news/views/widgets/cowboy_streak.dart';
 class UserButton extends StatelessWidget {
   final User? user;
 
-  const UserButton(this.user, {Key? key}) : super(key: key);
+  const UserButton(this.user, {super.key});
 
   @override
   Widget build(BuildContext context) {

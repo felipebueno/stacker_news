@@ -63,9 +63,9 @@ class SNLogo extends StatelessWidget {
                       ),
                     ),
                   ),
-            if (_text != null && _text!.isNotEmpty) ...[
+            if (_text != null && _text.isNotEmpty) ...[
               const SizedBox(width: 8),
-              Text(_text!),
+              Text(_text),
             ],
           ],
         ),

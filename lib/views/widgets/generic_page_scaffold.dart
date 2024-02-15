@@ -27,14 +27,14 @@ class GenericPageScaffold extends StatelessWidget {
   final List<Widget>? moreActions;
 
   const GenericPageScaffold({
-    Key? key,
+    super.key,
     this.title,
     this.appBar,
     this.body,
     this.mainBody,
     this.fab,
     this.moreActions,
-  }) : super(key: key);
+  });
 
   String? _getHeroTag(String? route) {
     switch (route) {

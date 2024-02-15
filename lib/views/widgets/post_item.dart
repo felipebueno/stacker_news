@@ -18,11 +18,11 @@ class PostItem extends StatefulWidget {
 
   const PostItem(
     this.post, {
-    Key? key,
+    super.key,
     this.idx,
     this.postType,
     this.isCommentsPage = false,
-  }) : super(key: key);
+  });
 
   @override
   State<PostItem> createState() => _PostItemState();

@@ -10,8 +10,8 @@ class CommentItem extends StatefulWidget {
 
   const CommentItem(
     this.post, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<CommentItem> createState() => _CommentItemState();

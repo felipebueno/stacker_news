@@ -10,9 +10,9 @@ class BaseTab extends StatefulWidget {
   final PostType postType;
 
   const BaseTab({
-    Key? key,
+    super.key,
     required this.postType,
-  }) : super(key: key);
+  });
 
   @override
   State<BaseTab> createState() => _BaseTabState();

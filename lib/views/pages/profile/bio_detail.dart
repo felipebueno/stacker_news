@@ -6,9 +6,9 @@ import 'package:stacker_news/views/widgets/comment_item.dart';
 class BioDetail extends StatelessWidget {
   const BioDetail(
     this.user, {
-    Key? key,
+    super.key,
     this.onCommentCreated,
-  }) : super(key: key);
+  });
 
   final User user;
   final VoidCallback? onCommentCreated;

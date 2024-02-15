@@ -17,10 +17,10 @@ class BioHeader extends StatelessWidget {
 
   const BioHeader(
     this.user, {
-    Key? key,
+    super.key,
     this.idx,
     this.onCommentCreated,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

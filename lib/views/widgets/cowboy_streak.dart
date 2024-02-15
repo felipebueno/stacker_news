@@ -5,7 +5,7 @@ import 'package:stacker_news/colors.dart';
 class CowboyStreak extends StatelessWidget {
   final int? streak;
 
-  const CowboyStreak({this.streak, Key? key}) : super(key: key);
+  const CowboyStreak({this.streak, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +39,8 @@ class CowboyHat extends StatelessWidget {
   const CowboyHat({
     this.size,
     this.color,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final double? size;
   final Color? color;
