@@ -1,7 +1,8 @@
 import 'dart:core';
 
 import 'package:intl/intl.dart';
-import 'package:stacker_news/data/models/post.dart';
+
+import './post.dart';
 
 class User {
   final String? id;

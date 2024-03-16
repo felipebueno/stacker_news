@@ -8,14 +8,14 @@ import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:stacker_news/data/models/post.dart';
-import 'package:stacker_news/data/models/post_type.dart';
-import 'package:stacker_news/data/models/session.dart';
-import 'package:stacker_news/data/models/user.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_failed_page.dart';
 
-import 'shared_prefs_manager.dart';
+import './models/post.dart';
+import './models/post_type.dart';
+import './models/session.dart';
+import './models/user.dart';
+import './shared_prefs_manager.dart';
 
 final class Api {
   Api() {
@@ -46,6 +46,7 @@ final class Api {
 
   final Dio _dio = Dio(
     BaseOptions(
+      // TODO: Keep only the relevant values
       baseUrl: 'https://stacker.news/_next/data',
       headers: {
         'authority': 'stacker.news',
@@ -170,9 +171,10 @@ final class Api {
     }
 
     try {
+      final body = jsonDecode(postType.getGraphQLBody(cursor));
       final response = await _dio.post(
         'https://stacker.news/api/graphql',
-        data: postType.getGraphQLBody(cursor),
+        data: body,
       );
 
       if (response.statusCode == 200) {

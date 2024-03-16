@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefsManager {
@@ -16,7 +15,9 @@ class SharedPrefsManager {
     } else if (value is List<String>) {
       prefs.setStringList(key, value);
     } else {
-      debugPrint('Invalid Type');
+      print(
+        'SharedPrefsManager.create error: value => $value for key => $key has unexpected type.',
+      );
     }
   }
 
