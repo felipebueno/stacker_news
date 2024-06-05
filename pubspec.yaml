@@ -11,11 +11,11 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.2.8+19
+version: 1.2.9+20
 
 environment:
-  sdk: ">=3.2.0 <4.0.0"
-  flutter: ">=3.16.0 <4.0.0"
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.22.0 <4.0.0"
 
 dependencies:
   flutter:
@@ -23,14 +23,14 @@ dependencies:
   timeago: ^3.6.1
   url_launcher: ^6.2.4
   dio: ^5.4.0
-  flutter_markdown: ^0.6.19
+  flutter_markdown: ^0.7.1
   shared_preferences: ^2.1.2
   qr_flutter: ^4.1.0
   in_app_update: ^4.1.3
   flutter_svg: ^2.0.7
   cached_network_image: ^3.3.1
-  package_info_plus: ^5.0.1
-  markdown: ^7.0.2
+  package_info_plus: ^8.0.0
+  markdown: ^7.2.2
   get_it: ^7.6.7
   cookie_jar: ^4.0.5
   dio_cookie_manager: ^3.1.0
@@ -38,18 +38,19 @@ dependencies:
   uni_links: ^0.5.1
   provider: ^6.0.5
   intl: ^0.19.0
+  app_links: ^6.1.1
 
-dependency_overrides:
-  # Downgrade markdown to 7.0.2 to fix issue with flutter_markdown footnotes
-  # https://github.com/flutter/flutter/issues/127425
-  # TODO: Remove this when the above issue fixed
-  markdown: 7.0.2
+# dependency_overrides:
+# Downgrade markdown to 7.0.2 to fix issue with flutter_markdown footnotes
+# https://github.com/flutter/flutter/issues/127425
+# TODO: Remove this when the above issue fixed
+# markdown: 7.0.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_launcher_icons: ^0.13.1
-  flutter_lints: ^3.0.1
+  flutter_lints: ^4.0.0
   flutter_native_splash: ^2.3.11
 
 flutter_icons:

@@ -12,7 +12,7 @@ final class Post {
   final String? url;
   final int? fwdUserId;
   final String? otsHash;
-  final String? position;
+  final int? position;
   final int? sats;
   final int? boost;
   final int? bounty;
@@ -151,7 +151,7 @@ final class Post {
     String? url,
     int? fwdUserId,
     String? otsHash,
-    String? position,
+    int? position,
     int? sats,
     int? boost,
     int? bounty,

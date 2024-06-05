@@ -4,7 +4,7 @@ import 'package:stacker_news/colors.dart';
 import 'shared_prefs_manager.dart';
 
 class ThemeNotifier with ChangeNotifier {
-  final darkTheme = ThemeData(
+  final darkTheme = ThemeData.dark().copyWith(
     drawerTheme: const DrawerThemeData(
       backgroundColor: Colors.black,
       surfaceTintColor: Colors.black,
@@ -12,9 +12,8 @@ class ThemeNotifier with ChangeNotifier {
     colorScheme: ColorScheme.fromSeed(
       seedColor: snYellow,
       brightness: Brightness.dark,
-      background: Colors.black,
+      onSurface: Colors.black,
     ),
-    useMaterial3: true,
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.black,
       foregroundColor: snYellow,
@@ -30,29 +29,9 @@ class ThemeNotifier with ChangeNotifier {
     ),
   );
 
-  final lightTheme = ThemeData(
-    drawerTheme: const DrawerThemeData(
-      backgroundColor: Colors.white,
-      surfaceTintColor: Colors.white,
-    ),
+  final lightTheme = ThemeData.light().copyWith(
     colorScheme: ColorScheme.fromSeed(
       seedColor: snYellow,
-      brightness: Brightness.light,
-      background: Colors.white,
-    ),
-    useMaterial3: true,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.white,
-      foregroundColor: snYellow,
-    ),
-    tabBarTheme: const TabBarTheme(
-      labelColor: snYellow,
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: snYellow,
-        foregroundColor: Colors.black,
-      ),
     ),
   );
 
@@ -103,7 +82,7 @@ class ThemeNotifier with ChangeNotifier {
       default:
         _themeData = ThemeMode.dark;
     }
-    SharedPrefsManager.create('theme-mode', value);
+    SharedPrefsManager.create('theme-mode', themeMode);
 
     notifyListeners();
   }

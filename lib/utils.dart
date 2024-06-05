@@ -113,8 +113,8 @@ class Utils {
       builder: (context) {
         return Material(
           color: Colors.black12.withOpacity(.7),
-          child: WillPopScope(
-            onWillPop: () async => false,
+          child: PopScope(
+            canPop: false,
             child: Center(
               child: Container(
                 padding: const EdgeInsets.all(20),

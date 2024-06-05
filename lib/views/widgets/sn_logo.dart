@@ -102,24 +102,29 @@ class LogoText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      child: Text(
-        _logoText,
-        style: TextStyle(
-          fontFamily: 'lightning',
-          fontWeight: FontWeight.bold,
-          fontSize: _size ?? 32,
-          color: _color ?? snYellow,
-          shadows: _hideShadow
-              ? null
-              : [
-                  Shadow(
-                    offset: const Offset(-2.0, 1.0),
-                    blurRadius: _blurRadius ?? _size ?? 32,
-                    color: _color ?? snYellow,
-                  ),
-                ],
-        ),
-      ),
+      child: Builder(builder: (context) {
+        final color =
+            Theme.of(context).brightness == Brightness.dark ? snYellow : null;
+
+        return Text(
+          _logoText,
+          style: TextStyle(
+            fontFamily: 'lightning',
+            fontWeight: FontWeight.bold,
+            fontSize: _size ?? 32,
+            color: _color ?? color,
+            shadows: _hideShadow
+                ? null
+                : [
+                    Shadow(
+                      offset: const Offset(-2.0, 1.0),
+                      blurRadius: _blurRadius ?? _size ?? 32,
+                      color: _color ?? color ?? snYellow,
+                    ),
+                  ],
+          ),
+        );
+      }),
     );
   }
 }
