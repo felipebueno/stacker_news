@@ -49,20 +49,16 @@ final class Api {
       // TODO: Keep only the relevant values
       baseUrl: 'https://stacker.news/_next/data',
       headers: {
-        'authority': 'stacker.news',
-        'accept': '*/*',
-        'accept-language': 'en-US,en;q=0.9,pt;q=0.8',
-        'content-type': 'application/json',
-        'origin': 'https://stacker.news',
-        'sec-ch-ua':
-            '"Not.A/Brand";v="8", "Chromium";v="114", "Google Chrome";v="114"',
-        'sec-ch-ua-mobile': '?0',
-        'sec-ch-ua-platform': '"Linux"',
-        'sec-fetch-dest': 'empty',
-        'sec-fetch-mode': 'cors',
-        'sec-fetch-site': 'same-origin',
-        'user-agent':
-            'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36',
+        'User-Agent':
+            'Mozilla/5.0 (X11; Linux x86_64; rv:126.0) Gecko/20100101 Firefox/126.0',
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Content-Type': 'application/json',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+        'Sec-GPC': '1',
+        'Priority': 'u=4'
       },
     ),
   );
@@ -215,11 +211,11 @@ final class Api {
     final response = await _dio.post(
       'https://stacker.news/api/graphql',
       data:
-          "{\"variables\":{},\"query\":\"{\\n  me {\\n    id\\n    name\\n    bioId\\n    privates {\\n      autoDropBolt11s\\n      diagnostics\\n      fiatCurrency\\n      greeterMode\\n      hideCowboyHat\\n      hideFromTopUsers\\n      hideInvoiceDesc\\n      hideIsContributor\\n      hideWalletBalance\\n      hideWelcomeBanner\\n      imgproxyOnly\\n      lastCheckedJobs\\n      nostrCrossposting\\n      noteAllDescendants\\n      noteCowboyHat\\n      noteDeposits\\n      noteEarning\\n      noteForwardedSats\\n      noteInvites\\n      noteItemSats\\n      noteJobIndicator\\n      noteMentions\\n      sats\\n      tipDefault\\n      tipPopover\\n      turboTipping\\n      upvotePopover\\n      wildWestMode\\n      withdrawMaxFeeDefault\\n      __typename\\n    }\\n    optional {\\n      isContributor\\n      stacked\\n      streak\\n      __typename\\n    }\\n    __typename\\n  }\\n}\"}",
+          '{"variables":{},"query":"{\\n  me {\\n    id\\n    name\\n    bioId\\n    photoId\\n    privates {\\n      autoDropBolt11s\\n      diagnostics\\n      noReferralLinks\\n      fiatCurrency\\n      greeterMode\\n      hideCowboyHat\\n      hideFromTopUsers\\n      hideGithub\\n      hideNostr\\n      hideTwitter\\n      hideInvoiceDesc\\n      hideIsContributor\\n      hideWalletBalance\\n      hideWelcomeBanner\\n      imgproxyOnly\\n      lastCheckedJobs\\n      nostrCrossposting\\n      noteAllDescendants\\n      noteCowboyHat\\n      noteDeposits\\n      noteWithdrawals\\n      noteEarning\\n      noteForwardedSats\\n      noteInvites\\n      noteItemSats\\n      noteJobIndicator\\n      noteMentions\\n      noteItemMentions\\n      sats\\n      tipDefault\\n      tipPopover\\n      turboTipping\\n      zapUndos\\n      upvotePopover\\n      wildWestMode\\n      withdrawMaxFeeDefault\\n      lnAddr\\n      autoWithdrawMaxFeePercent\\n      autoWithdrawThreshold\\n      __typename\\n    }\\n    optional {\\n      isContributor\\n      stacked\\n      streak\\n      githubId\\n      nostrAuthPubkey\\n      twitterId\\n      __typename\\n    }\\n    __typename\\n  }\\n}"}',
     );
 
     if (response.statusCode != 200) {
-      Utils.showError('1 Error fetching profile');
+      Utils.showError('ERRN01 Error fetching profile');
 
       return null;
     }
@@ -227,7 +223,7 @@ final class Api {
     final me = response.data?['data']?['me'];
 
     if (me == null) {
-      Utils.showError('2 Error fetching profile');
+      Utils.showError('ERRN02 Error fetching profile');
 
       return null;
     }
@@ -479,7 +475,7 @@ final class Api {
     final response = await _dio.post(
       'https://stacker.news/api/graphql',
       data:
-          '{"operationName":"act","variables":{"id":"$id","sats": $amount},"query":"mutation act(\$id: ID!, \$sats: Int!) {\\n  act(id: \$id, sats: \$sats) {\\n    vote\\n        __typename\\n  }\\n}\\n"}',
+          "{\"operationName\":\"idempotentAct\",\"variables\":{\"id\":\"$id\",\"sats\":$amount,\"hash\":null,\"hmac\":null},\"query\":\"mutation idempotentAct(\$id: ID!, \$sats: Int!, \$hash: String, \$hmac: String) {\\n  act(id: \$id, sats: \$sats, hash: \$hash, hmac: \$hmac, idempotent: true) {\\n    id\\n    sats\\n    path\\n    __typename\\n  }\\n}\"}",
     );
 
     if (response.statusCode == 200) {
