@@ -45,10 +45,12 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
   void initState() {
     super.initState();
 
-    if (mounted && Platform.isAndroid) {
+    if (!kIsWeb && mounted && Platform.isAndroid) {
       _handleIncomingLinks();
       _handleInitialUri();
       Utils.checkForUpdate();
+    } else if (mounted && kIsWeb) {
+      // TODO: Utils.checkForWebUpdate();
     }
   }
 
