@@ -34,7 +34,7 @@ class PostItem extends StatefulWidget {
 class _PostItemState extends State<PostItem> {
   late Post _post = widget.post;
 
-  Widget _buildNormalItem({bool showIdx = true}) {
+  Widget _buildNormalItem({bool showIdx = false}) {
     final textTheme = Theme.of(context).textTheme;
     final link = textTheme.titleSmall?.copyWith(color: Colors.blue);
     final label = textTheme.titleSmall;

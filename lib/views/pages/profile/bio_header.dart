@@ -12,13 +12,11 @@ import 'package:stacker_news/views/widgets/stack_button.dart';
 
 class BioHeader extends StatelessWidget {
   final User user;
-  final int? idx;
   final VoidCallback? onCommentCreated;
 
   const BioHeader(
     this.user, {
     super.key,
-    this.idx,
     this.onCommentCreated,
   });
 
