@@ -112,6 +112,12 @@ Not implemented yet.
 
 - [ ] Releases
 
+  - [ ] Github Actions
+
+    - [ ] PWA
+
+    - [ ] Android
+
   - [ ] Android release
 
     - [ ] Instructions on how to build & install it yourself
