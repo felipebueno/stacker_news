@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacker_news/colors.dart';
@@ -8,6 +9,7 @@ import 'package:stacker_news/data/models/session.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
+import 'package:stacker_news/views/widgets/comment_item.dart';
 import 'package:stacker_news/views/widgets/markdown_item.dart';
 import 'package:stacker_news/views/widgets/user_button.dart';
 
@@ -30,26 +32,19 @@ class PostItem extends StatefulWidget {
 }
 
 class _PostItemState extends State<PostItem> {
-  late Post _post;
+  late Post _post = widget.post;
 
-  @override
-  void initState() {
-    super.initState();
-
-    _post = widget.post;
-  }
-
-  Widget _buildNormalItem(BuildContext context) {
+  Widget _buildNormalItem({bool showIdx = true}) {
     final textTheme = Theme.of(context).textTheme;
-
     final link = textTheme.titleSmall?.copyWith(color: Colors.blue);
     final label = textTheme.titleSmall;
+    final item = _post.item ?? _post;
 
     return InkWell(
       onTap: widget.isCommentsPage
-          ? _post.url != null && _post.url != ''
+          ? item.url != null && item.url != ''
               ? () {
-                  Utils.launchURL(_post.url!);
+                  Utils.launchURL(item.url!);
                 }
               : null
           : () {
@@ -62,17 +57,25 @@ class _PostItemState extends State<PostItem> {
         padding: const EdgeInsets.symmetric(horizontal: 4.0),
         child: Row(
           children: [
-            if (widget.isCommentsPage && _post.id != null && _post.id != '')
+            if (widget.isCommentsPage && item.id != null && item.id != '')
               SizedBox(
                 width: 32.0,
                 child: MaybeZapButton(
-                  _post.id!,
-                  meSats: _post.meSats,
+                  item.id!,
+                  meSats: item.meSats,
                   onZapped: (int amount) {
                     setState(() {
-                      _post = _post.copyWith(
-                        sats: (_post.sats ?? 0) + amount,
-                      );
+                      if (_post.item != null) {
+                        _post = _post.copyWith(
+                          item: _post.item!.copyWith(
+                            sats: (item.sats ?? 0) + amount,
+                          ),
+                        );
+                      } else {
+                        _post = _post.copyWith(
+                          sats: (item.sats ?? 0) + amount,
+                        );
+                      }
                     });
                   },
                 ),
@@ -82,18 +85,19 @@ class _PostItemState extends State<PostItem> {
                 width: 32.0,
                 child: Column(
                   children: [
-                    Text(
-                      '${widget.idx}.',
-                      textAlign: TextAlign.end,
-                      style: textTheme.titleSmall,
-                    ),
-                    if (_post.id != null && _post.id != '')
+                    if (showIdx)
+                      Text(
+                        '${widget.idx}.',
+                        textAlign: TextAlign.end,
+                        style: textTheme.titleSmall,
+                      ),
+                    if (item.id != null && item.id != '')
                       MaybeZapButton(
-                        _post.id!,
+                        item.id!,
                         onZapped: (int amount) {
                           setState(() {
-                            _post = _post.copyWith(
-                              sats: (_post.sats ?? 0) + amount,
+                            _post = item.copyWith(
+                              sats: (item.sats ?? 0) + amount,
                             );
                           });
                         },
@@ -107,45 +111,45 @@ class _PostItemState extends State<PostItem> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 4),
-                  if (_post.title != null && _post.title != '')
+                  if (item.title != null && item.title != '')
                     Text(
-                      _post.title!,
+                      item.title!,
                       style: textTheme.titleMedium,
                     ),
-                  if (_post.url != null && _post.url != '')
+                  if (item.url != null && item.url != '')
                     TextButton(
                       child: Text(
-                        _post.url!,
+                        item.url!,
                         style: link,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       onPressed: () {
-                        Utils.launchURL(_post.url!);
+                        Utils.launchURL(item.url!);
                       },
                     ),
                   if (widget.isCommentsPage &&
-                      _post.text != null &&
-                      _post.text != '')
-                    MarkdownItem(_post.text),
+                      item.text != null &&
+                      item.text != '')
+                    MarkdownItem(item.text),
                   const SizedBox(height: 8.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Text(
-                        _post.isJob == true
-                            ? '${_post.company}'
-                            : '${_post.sats} sats',
+                        item.isJob == true
+                            ? '${item.company}'
+                            : '${item.sats} sats',
                         style: label,
                       ),
                       Text(
-                        _post.isJob == true
-                            ? '${(_post.remote == true && _post.location == '') ? 'Remote' : _post.location}'
-                            : '${_post.ncomments} comments',
+                        item.isJob == true
+                            ? '${(item.remote == true && item.location == '') ? 'Remote' : item.location}'
+                            : '${item.ncomments} comments',
                         style: label,
                       ),
                       Text(
-                        _post.timeAgo,
+                        item.timeAgo,
                         style: label,
                         textAlign: TextAlign.end,
                       )
@@ -155,7 +159,7 @@ class _PostItemState extends State<PostItem> {
                     width: double.infinity,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: [UserButton(_post.user)],
+                      children: [UserButton(item.user)],
                     ),
                   ),
                 ],
@@ -167,17 +171,67 @@ class _PostItemState extends State<PostItem> {
     );
   }
 
-  Widget _buildNotificationItem(BuildContext context) {
-    return ListTile(
-      title: Text('$_post'),
+  Widget _buildNotificationItem() {
+    String txt = '';
+    Color? color;
+
+    switch (_post.typeName) {
+      case 'FollowActivity':
+        txt =
+            'a stacker you subscribe to ${_post.item?.parentId != null ? 'commented' : 'posted'}';
+
+        color = SNColors.info;
+
+        break;
+      case 'Votification':
+        txt =
+            'your ${_post.item?.title == null ? 'comment' : 'post'} stacked ${_post.earnedSats} sats';
+
+        color = SNColors.success;
+
+        break;
+      case 'Reply':
+        txt = 'you got a reply';
+
+        color = SNColors.info;
+
+        break;
+      case 'WithdrawlPaid':
+        txt = '${_post.earnedSats} sats where withdrawn from your account';
+
+        color = SNColors.info;
+
+        break;
+
+      default:
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Text(
+            kDebugMode ? '${_post.typeName} - $txt' : txt,
+            style: const TextStyle().copyWith(
+              color: color,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        if (_post.item != null)
+          _post.item != null && _post.item!.title == null
+              ? CommentItem(_post.item!)
+              : _buildNormalItem(showIdx: false),
+      ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return widget.postType == PostType.notifications
-        ? _buildNotificationItem(context)
-        : _buildNormalItem(context);
+        ? _buildNotificationItem()
+        : _buildNormalItem();
   }
 }
 

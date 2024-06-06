@@ -42,6 +42,9 @@ final class Post {
   final String? text;
   final List<Post>? comments;
   final String? pageTitle;
+  final Post? item;
+  final Post? root;
+  final int? earnedSats;
 
   Post({
     this.typeName,
@@ -83,6 +86,9 @@ final class Post {
     this.text,
     this.comments,
     this.pageTitle,
+    this.item,
+    this.root,
+    this.earnedSats,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -128,6 +134,9 @@ final class Post {
           ? (json['comments'] as List).map((i) => Post.fromJson(i)).toList()
           : null,
       pageTitle: json['pageTitle'],
+      item: json['item'] == null ? null : Post.fromJson(json['item']),
+      root: json['root'] == null ? null : Post.fromJson(json['root']),
+      earnedSats: json['earnedSats'],
     );
   }
 
@@ -142,45 +151,48 @@ final class Post {
 
   // copyWith
   Post copyWith({
-    String? typeName,
-    String? id,
-    int? parentId,
-    String? createdAt,
-    String? deletedAt,
-    String? title,
-    String? url,
-    int? fwdUserId,
-    String? otsHash,
-    int? position,
-    int? sats,
-    int? boost,
-    int? bounty,
-    List<dynamic>? bountyPaidTo,
-    String? path,
-    int? upvotes,
-    int? meSats,
-    bool? meDontLike,
-    bool? meBookmark,
-    bool? meSubscription,
-    bool? outlawed,
-    bool? freebie,
-    int? ncomments,
-    int? commentSats,
-    String? lastCommentAt,
-    int? maxBid,
-    bool? isJob,
-    String? company,
-    String? location,
-    bool? remote,
-    String? subName,
-    int? pollCost,
-    String? status,
-    int? uploadId,
-    bool? mine,
-    User? user,
-    String? text,
-    List<Post>? comments,
-    String? pageTitle,
+    final String? typeName,
+    final String? id,
+    final int? parentId,
+    final String? createdAt,
+    final String? deletedAt,
+    final String? title,
+    final String? url,
+    final int? fwdUserId,
+    final String? otsHash,
+    final int? position,
+    final int? sats,
+    final int? boost,
+    final int? bounty,
+    final List<dynamic>? bountyPaidTo,
+    final String? path,
+    final int? upvotes,
+    final int? meSats,
+    final bool? meDontLike,
+    final bool? meBookmark,
+    final bool? meSubscription,
+    final bool? outlawed,
+    final bool? freebie,
+    final int? ncomments,
+    final int? commentSats,
+    final String? lastCommentAt,
+    final int? maxBid,
+    final bool? isJob,
+    final String? company,
+    final String? location,
+    final bool? remote,
+    final String? subName,
+    final int? pollCost,
+    final String? status,
+    final int? uploadId,
+    final bool? mine,
+    final User? user,
+    final String? text,
+    final List<Post>? comments,
+    final String? pageTitle,
+    final Post? item,
+    final Post? root,
+    final int? earnedSats,
   }) {
     return Post(
       typeName: typeName ?? this.typeName,
@@ -222,6 +234,9 @@ final class Post {
       text: text ?? this.text,
       comments: comments ?? this.comments,
       pageTitle: pageTitle ?? this.pageTitle,
+      item: item ?? this.item,
+      root: root ?? this.root,
+      earnedSats: earnedSats ?? this.earnedSats,
     );
   }
 }
