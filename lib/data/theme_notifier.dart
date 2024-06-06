@@ -5,17 +5,11 @@ import 'shared_prefs_manager.dart';
 
 class ThemeNotifier with ChangeNotifier {
   final darkTheme = ThemeData.dark().copyWith(
-    drawerTheme: const DrawerThemeData(
-      backgroundColor: Colors.black,
-      surfaceTintColor: Colors.black,
-    ),
     colorScheme: ColorScheme.fromSeed(
       seedColor: SNColors.primary,
       brightness: Brightness.dark,
-      onSurface: Colors.black,
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.black,
       foregroundColor: SNColors.primary,
     ),
     tabBarTheme: const TabBarTheme(

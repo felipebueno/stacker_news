@@ -48,7 +48,7 @@ Not implemented yet.
 
   - [ ] Properly handle errors
 
-  - [ ] Refactor the code
+  - [ ] Refactor the api code
 
   - [ ] Add tests
 
@@ -106,6 +106,8 @@ Not implemented yet.
 
   - [x] More subs (tech, meta)
 
+  - [ ] More more subs (territories)
+
   - [ ] Filters (hot, recent, top)
 
 - [ ] Releases
@@ -118,11 +120,11 @@ Not implemented yet.
 
     - [ ] Put it back on Google Play
 
-    - [ ] F-Droid
+    - [ ] F-Droid (need help)
 
     - [ ] etc?
 
-  - [ ] iOS release (will Apple allow this?)
+  - [ ] iOS release (will Apple allow this?) (need help)
 
   - [ ] Linux release
 
@@ -138,4 +140,4 @@ Not implemented yet.
 
   - [ ] macOS release
 
-  - [ ] Web (pwa) release (is this necessary?)
+  - [ ] Web (pwa) release (github pages?)
