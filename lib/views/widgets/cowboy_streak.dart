@@ -10,7 +10,7 @@ class CowboyStreak extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: snYellow,
+      color: SNColors.primary,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           vertical: 4,

@@ -103,8 +103,9 @@ class LogoText extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: Builder(builder: (context) {
-        final color =
-            Theme.of(context).brightness == Brightness.dark ? snYellow : null;
+        final color = Theme.of(context).brightness == Brightness.dark
+            ? SNColors.primary
+            : null;
 
         return Text(
           _logoText,
@@ -119,7 +120,7 @@ class LogoText extends StatelessWidget {
                     Shadow(
                       offset: const Offset(-2.0, 1.0),
                       blurRadius: _blurRadius ?? _size ?? 32,
-                      color: _color ?? color ?? snYellow,
+                      color: _color ?? color ?? SNColors.primary,
                     ),
                   ],
           ),

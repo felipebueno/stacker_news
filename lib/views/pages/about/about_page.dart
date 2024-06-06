@@ -38,7 +38,7 @@ class AboutPage extends StatelessWidget {
               onTap: () {
                 Utils.launchURL('lightning:$addr');
               },
-              splashColor: snYellow,
+              splashColor: SNColors.primary,
               child: Card(
                 child: QrImageView(
                   data: addr,

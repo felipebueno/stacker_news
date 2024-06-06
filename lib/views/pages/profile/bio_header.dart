@@ -64,7 +64,7 @@ class BioHeader extends StatelessWidget {
                   Text(
                     '${user.satsStacked} sats stacked',
                     style: textTheme.titleLarge?.copyWith(
-                      color: snYellow.withRed(160),
+                      color: SNColors.primary.withRed(160),
                     ),
                   ),
                   const SizedBox(height: 8.0),

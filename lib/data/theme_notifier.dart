@@ -10,28 +10,28 @@ class ThemeNotifier with ChangeNotifier {
       surfaceTintColor: Colors.black,
     ),
     colorScheme: ColorScheme.fromSeed(
-      seedColor: snYellow,
+      seedColor: SNColors.primary,
       brightness: Brightness.dark,
       onSurface: Colors.black,
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: Colors.black,
-      foregroundColor: snYellow,
+      foregroundColor: SNColors.primary,
     ),
     tabBarTheme: const TabBarTheme(
-      labelColor: snYellow,
+      labelColor: SNColors.primary,
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.black,
-        backgroundColor: snYellow,
+        backgroundColor: SNColors.primary,
       ),
     ),
   );
 
   final lightTheme = ThemeData.light().copyWith(
     colorScheme: ColorScheme.fromSeed(
-      seedColor: snYellow,
+      seedColor: SNColors.primary,
     ),
   );
 

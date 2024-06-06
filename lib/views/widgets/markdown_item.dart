@@ -16,7 +16,7 @@ class MarkdownItem extends StatelessWidget {
       data: _text ?? '',
       styleSheet: MarkdownStyleSheet(
         blockquoteDecoration: BoxDecoration(
-          color: snYellow.withAlpha(32),
+          color: SNColors.primary.withAlpha(32),
         ),
       ),
       shrinkWrap: true,

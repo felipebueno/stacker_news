@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:stacker_news/colors.dart';
 import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/post_type.dart';
@@ -66,6 +67,7 @@ class _PostItemState extends State<PostItem> {
                 width: 32.0,
                 child: MaybeZapButton(
                   _post.id!,
+                  meSats: _post.meSats,
                   onZapped: (int amount) {
                     setState(() {
                       _post = _post.copyWith(
@@ -181,10 +183,16 @@ class _PostItemState extends State<PostItem> {
 
 class MaybeZapButton extends StatefulWidget {
   final String _id;
+  final int? _meSats;
   final void Function(int)? _onZapped;
 
-  const MaybeZapButton(String id, {void Function(int)? onZapped, super.key})
-      : _id = id,
+  const MaybeZapButton(
+    String id, {
+    int? meSats,
+    void Function(int)? onZapped,
+    super.key,
+  })  : _id = id,
+        _meSats = meSats,
         _onZapped = onZapped;
 
   @override
@@ -224,8 +232,8 @@ class _MaybeZapButtonState extends State<MaybeZapButton> {
                   'assets/upvote.svg',
                   width: 24,
                   height: 24,
-                  colorFilter: const ColorFilter.mode(
-                    Colors.grey,
+                  colorFilter: ColorFilter.mode(
+                    SNColors.getColor(widget._meSats) ?? Colors.grey,
                     BlendMode.srcIn,
                   ),
                 ),
