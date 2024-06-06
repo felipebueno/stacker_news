@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 enum PostType {
   top,
   bitcoin,
+  meta,
+  opensource,
   nostr,
   tech,
-  meta,
   notifications,
   job;
 
@@ -36,6 +37,9 @@ enum PostType {
       case PostType.meta:
         return 'meta';
 
+      case PostType.opensource:
+        return 'opensource';
+
       case PostType.job:
         return 'jobs';
 
@@ -64,6 +68,9 @@ enum PostType {
       case PostType.meta:
         return 'Meta';
 
+      case PostType.opensource:
+        return 'FOSS';
+
       case PostType.job:
         return 'Jobs';
 
@@ -91,6 +98,9 @@ enum PostType {
 
       case PostType.meta:
         return Icons.info;
+
+      case PostType.opensource:
+        return Icons.code;
 
       case PostType.job:
         return Icons.work;

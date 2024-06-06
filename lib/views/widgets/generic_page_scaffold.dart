@@ -25,6 +25,7 @@ class GenericPageScaffold extends StatelessWidget {
   final Widget? mainBody;
   final Widget? fab;
   final List<Widget>? moreActions;
+  final Widget? bottomNavigationBar;
 
   const GenericPageScaffold({
     super.key,
@@ -34,6 +35,7 @@ class GenericPageScaffold extends StatelessWidget {
     this.mainBody,
     this.fab,
     this.moreActions,
+    this.bottomNavigationBar,
   });
 
   String? _getHeroTag(String? route) {
@@ -143,6 +145,7 @@ class GenericPageScaffold extends StatelessWidget {
         ),
       ),
       body: Center(child: mainBody ?? body),
+      bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: fab,
     );
   }

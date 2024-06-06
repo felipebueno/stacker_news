@@ -136,11 +136,13 @@ class _PostItemState extends State<PostItem> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text(
-                        item.isJob == true
-                            ? '${item.company}'
-                            : '${item.sats} sats',
-                        style: label,
+                      Flexible(
+                        child: Text(
+                          item.isJob == true
+                              ? '${item.company}'
+                              : '${item.sats} sats',
+                          style: label,
+                        ),
                       ),
                       Text(
                         item.isJob == true

@@ -15,6 +15,11 @@ class ThemeNotifier with ChangeNotifier {
     tabBarTheme: const TabBarTheme(
       labelColor: SNColors.primary,
     ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      selectedItemColor: SNColors.primary,
+      unselectedItemColor: SNColors.light,
+      showUnselectedLabels: true,
+    ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         foregroundColor: Colors.black,

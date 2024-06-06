@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/models/session.dart';
-import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
@@ -18,40 +18,39 @@ class HomePage extends StatelessWidget {
   static const String id = 'home';
 
   const HomePage({super.key});
+  List<Tab> get tabs => PostType.values
+      .where((p) => p != PostType.notifications)
+      .map((t) => Tab(
+            icon: Icon(t.icon),
+            child: SizedBox(
+              width: 64,
+              child: Center(child: Text(t.title)),
+            ),
+          ))
+      .toList();
+
+  List<BaseTab> get tabViews => PostType.values
+      .where((p) => p != PostType.notifications)
+      .map((t) => BaseTab(postType: t))
+      .toList();
 
   @override
   Widget build(BuildContext context) {
-    final tabs = PostType.values
-        .where((p) => p != PostType.notifications)
-        .map((t) => Tab(
-              icon: Icon(t.icon),
-              child: SizedBox(
-                width: 64,
-                child: Center(child: Text(t.title)),
-              ),
-            ))
-        .toList();
-
-    final tabViews = PostType.values
-        .where((p) => p != PostType.notifications)
-        .map((t) => BaseTab(postType: t))
-        .toList();
-
     return DefaultTabController(
       length: tabs.length,
       child: GenericPageScaffold(
         appBar: AppBar(
           centerTitle: true,
           title: const SNLogo(),
-          bottom: TabBar(
-            isScrollable: true,
-            tabs: tabs,
-          ),
           actions: const [
             MaybeNotificationsButton(),
           ],
         ),
         mainBody: TabBarView(children: tabViews),
+        bottomNavigationBar: TabBar(
+          isScrollable: true,
+          tabs: tabs,
+        ),
         fab: const MaybeNewPostFab(),
       ),
     );
