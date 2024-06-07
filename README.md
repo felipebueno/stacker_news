@@ -52,7 +52,7 @@ Not implemented yet.
 
   - [ ] Properly handle errors
 
-  - [ ] Refactor the api code
+  - [ ] Build a propper api client [issue 15](https://github.com/felipebueno/stacker_news/issues/15)
 
   - [ ] Add tests
 
@@ -68,9 +68,11 @@ Not implemented yet.
 
     - [ ] Handle in_app_update errors
 
-  - [ ] Light theme
+  - [x] Light theme
 
-  - [ ] Theme switcher
+  - [ ] Better Light theme
+
+  - [x] Theme switcher
 
   - [ ] More themes
 
@@ -104,7 +106,7 @@ Not implemented yet.
 
     - [ ] Notifications (hasNewNotes icon, notifications page)
 
-    - [ ] Replace uni_links with flutter_appauth or app_links
+    - [ ] Replace deprecated uni_links with flutter_appauth or app_links
 
   - [ ] Search
 
