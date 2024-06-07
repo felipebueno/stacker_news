@@ -6,6 +6,10 @@ I started this project as a Hacker News app in the begining of 2020 to learn the
 
 The code is really hacky and fragile but it (mostly) works. I'll be slowly refactoring the code to make it more robust and easier to maintain.
 
+[<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png"
+     alt="Get it on Google Play"
+     height="80">](https://play.google.com/store/apps/details?id=news.stacker.app)
+
 Get the latest APK from the [Releases Section](https://github.com/felipebueno/stacker_news/releases/latest).
 
 ## Screenshots
@@ -23,14 +27,14 @@ Get the latest APK from the [Releases Section](https://github.com/felipebueno/st
 
 ### Light Theme
 
-<!-- <p float="left">
+<p float="left">
   <img src="./screenshots/light/top_light1.jpg" alt="drawing" width="200"/>
   <img src="./screenshots/light/bitcoin_light1.jpg" alt="drawing" width="200"/>
   <img src="./screenshots/light/nostr_light1.jpg" alt="drawing" width="200"/>
   <img src="./screenshots/light/jobs_light1.jpg" alt="drawing" width="200"/>
   <img src="./screenshots/light/comments_light1.jpg" alt="drawing" width="200"/>
   <img src="./screenshots/light/comments_light2.jpg" alt="drawing" width="200"/>
-</p> -->
+</p>
 
 Not implemented yet.
 
@@ -124,7 +128,7 @@ Not implemented yet.
 
     - [ ] Instructions on how to install it directly from github
 
-    - [ ] Put it back on Google Play
+    - [x] Put it back on Google Play
 
     - [ ] F-Droid (need help)
 
