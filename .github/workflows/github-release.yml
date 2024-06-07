@@ -1,11 +1,9 @@
-name: GitHub Release
+name: Create GitHub Release
 
 on:
   push:
     tags:
       - '*'
-
-  workflow_dispatch:
 
 jobs:
   build:
@@ -26,6 +24,18 @@ jobs:
           cache: true
       - name: Get dependencies
         run: flutter pub get
+      - name: Download Android keystore
+        id: android_keystore
+        uses: timheuer/base64-to-file@v1.0.3
+        with:
+          fileName: sn-upload-keystore.jks
+          encodedString: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+      - name: Create key.properties
+        run: |
+          echo "storePassword=${{ secrets.STORE_PASSWORD }}" > android/key.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "storeFile=../sn-upload-keystore.jks" >> android/key.properties
       - name: Build APK (split per ABI)
         run: flutter build apk --split-per-abi
       - name: Build App Bundle
