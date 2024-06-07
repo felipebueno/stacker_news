@@ -50,7 +50,6 @@ jobs:
             build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
             build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
             build/app/outputs/flutter-apk/app-x86_64-release.apk
-            build/app/outputs/bundle/release/app-release.aab
 
   release:
     name: Create GitHub Release
@@ -62,14 +61,12 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build-artifacts
-          path: ./build
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
             files: |
-                ./build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-                ./build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-                ./build/app/outputs/flutter-apk/app-x86_64-release.apk
-                ./build/app/outputs/bundle/release/app-release.aab
+                app-arm64-v8a-release.apk
+                app-armeabi-v7a-release.apk
+                app-x86_64-release.apk
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
