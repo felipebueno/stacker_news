@@ -33,10 +33,10 @@ jobs:
           encodedString: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
       - name: Create key.properties
         run: |
-          echo "storePassword=${{ secrets.STORE_PASSWORD }}" > android/key.properties
+          echo "storeFile=${{ steps.android_keystore.outputs.filePath }}" > android/key.properties
+          echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
-          echo "storeFile=../sn-upload-keystore.jks" >> android/key.properties
       - name: Build APK (split per ABI)
         run: flutter build apk --split-per-abi
       - name: Build App Bundle
