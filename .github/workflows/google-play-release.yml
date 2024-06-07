@@ -81,9 +81,9 @@ jobs:
         run: flutter build appbundle
 
       - name: Upload Android Release
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: android-release
+          name: app-release
           path: build/app/outputs/bundle/release/app-release.aab
 
   deploy:
@@ -92,14 +92,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    # - name: Get Android Build from artifacts
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: android-release
+    - name: Get Android Build from artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: app-release
     - name: Release Build to production track
       uses: r0adkll/upload-google-play@v1
       with:
         serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
         packageName: news.stacker.app
-        releaseFiles: build/app/outputs/bundle/release/app-release.aab
+        releaseFiles: ./app-release.aab
         track: production
