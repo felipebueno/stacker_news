@@ -101,4 +101,6 @@ jobs:
       with:
         serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
         packageName: news.stacker.app
-        releaseFiles: build/app/outputs/bundle/release/app-release.aab
+        releaseFiles: app-release.aab
+        track: production
+        status: completed
