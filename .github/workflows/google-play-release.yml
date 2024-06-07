@@ -95,7 +95,7 @@ jobs:
     - name: Get Android Build from artifacts
       uses: actions/download-artifact@v4
       with:
-        name: android-release
+        path: build/app/outputs/bundle/release/app-release.aab
     - name: Release Build to production track
       uses: r0adkll/upload-google-play@v1
       with:
