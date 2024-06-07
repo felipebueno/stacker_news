@@ -64,46 +64,13 @@ jobs:
         with:
           name: build-artifacts
           path: ./build
-      - name: Create GitHub Release
-        uses: elgohr/Github-Release-Action@v5
-        id: create_release
-        env:
-            GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v2
         with:
-            title: ${{ github.ref }}
-      - name: Upload APK (arm64-v8a)
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-          asset_name: app-arm64-v8a-release.apk
-          asset_content_type: application/vnd.android.package-archive
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload APK (armeabi-v7a)
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-          asset_name: app-armeabi-v7a-release.apk
-          asset_content_type: application/vnd.android.package-archive
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload APK (x86_64)
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/app/outputs/flutter-apk/app-x86_64-release.apk
-          asset_name: app-x86_64-release.apk
-          asset_content_type: application/vnd.android.package-archive
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload App Bundle
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/app/outputs/bundle/release/app-release.aab
-          asset_name: app-release.aab
-          asset_content_type: application/octet-stream
+            files: |
+                ./build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
+                ./build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
+                ./build/app/outputs/flutter-apk/app-x86_64-release.apk
+                ./build/app/outputs/bundle/release/app-release.aab
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
