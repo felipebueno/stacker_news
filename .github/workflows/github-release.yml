@@ -2,9 +2,8 @@ name: Create GitHub Release
 
 on:
   push:
-    branches: ["master"]
-    # tags:
-    #   - '*'
+    tags:
+      - '*'
 
   workflow_dispatch:
 
