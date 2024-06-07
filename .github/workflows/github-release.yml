@@ -2,8 +2,9 @@ name: Create GitHub Release
 
 on:
   push:
-    tags:
-      - '*'
+    branches: ["master"]
+    # tags:
+    #   - '*'
 
 jobs:
   build:
