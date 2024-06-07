@@ -118,9 +118,13 @@ Not implemented yet.
 
   - [ ] Github Actions
 
-    - [ ] PWA
+    - [x] PWA
 
-    - [ ] Android
+    - [x] Google Play
+
+    - [x] Github Releases
+
+    - [ ] F-droid?
 
   - [ ] Android release
 
