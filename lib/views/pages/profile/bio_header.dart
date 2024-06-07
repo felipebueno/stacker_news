@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacker_news/colors.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/user.dart';
@@ -55,12 +56,13 @@ class BioHeader extends StatelessWidget {
                         user.atName,
                         style: textTheme.titleLarge,
                       ),
-                      if (user.hideCowboyHat != true && user.streak != null)
-                        CowboyStreak(streak: user.streak!),
+                      if (user.hideCowboyHat != true &&
+                          user.optional?.streak != null)
+                        CowboyStreak(streak: user.optional?.streak!),
                     ],
                   ),
                   Text(
-                    '${user.satsStacked} sats stacked',
+                    '${user.optional?.satsStacked} sats stacked',
                     style: textTheme.titleLarge?.copyWith(
                       color: SNColors.primary.withRed(160),
                     ),
@@ -96,12 +98,13 @@ class BioHeader extends StatelessWidget {
                         style: label,
                       ),
                       Text(
-                        '${user.maxStreak ?? ''}',
+                        '${user.optional?.maxStreak ?? ''}',
                       ),
                     ],
                   ),
-                  if (user.isContributor) const SizedBox(height: 8),
-                  if (user.isContributor)
+                  if (user.optional?.isContributor == true)
+                    const SizedBox(height: 8),
+                  if (user.optional?.isContributor == true)
                     Row(
                       children: [
                         const SizedBox(width: 12),
@@ -111,6 +114,53 @@ class BioHeader extends StatelessWidget {
                           style: label,
                         ),
                       ],
+                    ),
+                  // TODO: Add nostr
+                  // if (user.optional?.nostr != null) const SizedBox(height: 8),
+                  // if (user.optional?.nostr != null)
+                  //   Row(
+                  //     children: [
+                  //       const SizedBox(width: 12),
+                  //       const Icon(FontAwesomeIcons.circleCheck, size: 16),
+                  //       Text(
+                  //         ' ${user.optional?.nostr}',
+                  //         style: link,
+                  //       ),
+                  //     ],
+                  //   ),
+                  if (user.optional?.githubId != null)
+                    TextButton.icon(
+                      onPressed: () {
+                        Utils.launchURL(
+                          'https://github.com/${user.optional?.githubId}',
+                        );
+                      },
+                      icon: const Icon(
+                        FontAwesomeIcons.github,
+                        size: 16,
+                        color: SNColors.light,
+                      ),
+                      label: Text(
+                        '${user.optional?.githubId}',
+                        style: link,
+                      ),
+                    ),
+                  if (user.optional?.twitterId != null)
+                    TextButton.icon(
+                      onPressed: () {
+                        Utils.launchURL(
+                          'https://twitter.com/${user.optional?.twitterId}',
+                        );
+                      },
+                      icon: const Icon(
+                        FontAwesomeIcons.twitter,
+                        size: 16,
+                        color: SNColors.light,
+                      ),
+                      label: Text(
+                        '${user.optional?.twitterId}',
+                        style: link,
+                      ),
                     ),
                 ],
               ),

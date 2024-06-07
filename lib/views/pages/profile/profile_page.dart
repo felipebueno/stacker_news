@@ -19,10 +19,10 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    final user = ModalRoute.of(context)?.settings.arguments as String;
+    final userName = ModalRoute.of(context)?.settings.arguments as String;
 
     return FutureBuilder(
-      future: locator<Api>().fetchProfile(user),
+      future: locator<Api>().fetchProfile(userName),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const GenericPageScaffold(

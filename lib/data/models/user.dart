@@ -7,10 +7,7 @@ import './post.dart';
 class User {
   final String? id;
   final String? name;
-  final int? streak;
-  final int? maxStreak;
   final int? sats;
-  final int? stacked;
   final int? freePosts;
   final int? freeComments;
   final int? tipDefault;
@@ -34,7 +31,6 @@ class User {
   final bool? greeterMode;
   final String? lastCheckedJobs;
   final String? typename;
-  final bool isContributor;
 
   final Post? bio;
   final int? nItems;
@@ -42,14 +38,12 @@ class User {
   final int? nBookmarks;
   final int? photoId;
   final int? since;
+  final UserOptional? optional;
 
   User({
     this.id,
     this.name,
-    this.streak,
-    this.maxStreak,
     this.sats,
-    this.stacked,
     this.freePosts,
     this.freeComments,
     this.tipDefault,
@@ -79,17 +73,14 @@ class User {
     this.nBookmarks,
     this.photoId,
     this.since,
-    this.isContributor = false,
+    this.optional,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
       id: json['id'] as String?,
       name: json['name'] as String?,
-      streak: json['optional']?['streak'] as int?,
-      maxStreak: json['optional']?['maxStreak'] as int?,
       sats: json['privates']?['sats'] as int?,
-      stacked: json['optional']?['stacked'] as int?,
       freePosts: json['freePosts'] as int?,
       freeComments: json['freeComments'] as int?,
       tipDefault: json['privates']?['tipDefault'] as int?,
@@ -119,11 +110,48 @@ class User {
       nBookmarks: json['nbookmarks'] as int?,
       photoId: json['photoId'] as int?,
       since: json['since'] as int?,
-      isContributor: (json['optional']?['isContributor']) == true,
+      optional: json['optional'] != null
+          ? UserOptional.fromJson(json['optional'])
+          : null,
     );
   }
 
   String get atName => '@$name';
+}
+
+class UserOptional {
+  final int? streak;
+  final int? maxStreak;
+  final int? stacked;
+  final bool isContributor;
+  final String? typename;
+  final String? githubId;
+  final String? nostrAuthPubkey;
+  final String? twitterId;
+
+  UserOptional({
+    this.streak,
+    this.maxStreak,
+    this.stacked,
+    this.isContributor = false,
+    this.typename,
+    this.githubId,
+    this.nostrAuthPubkey,
+    this.twitterId,
+  });
+
+  factory UserOptional.fromJson(Map<String, dynamic> json) {
+    return UserOptional(
+      streak: json['streak'] as int?,
+      maxStreak: json['maxStreak'] as int?,
+      isContributor: (json['isContributor']) == true,
+      stacked: json['stacked'] as int?,
+      typename: json['__typename'] as String?,
+      githubId: json['githubId'] as String?,
+      nostrAuthPubkey: json['nostrAuthPubkey'] as String?,
+      twitterId: json['twitterId'] as String?,
+    );
+  }
 
   String get satsStacked {
     // TODO: Proper exception handling
@@ -135,4 +163,8 @@ class User {
       return stacked?.toString() ?? '';
     }
   }
+
+  String get nostr => nostrAuthPubkey == null
+      ? ''
+      : '${nostrAuthPubkey!.substring(0, 8)}...${nostrAuthPubkey!.split('').reversed.join().substring(0, 8)}';
 }

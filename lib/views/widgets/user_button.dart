@@ -26,7 +26,7 @@ class UserButton extends StatelessWidget {
                 style: textTheme.titleSmall?.copyWith(color: Colors.blue),
               ),
               const SizedBox(width: 4),
-              if (user?.hideCowboyHat != true && user?.streak != null)
+              if (user?.hideCowboyHat != true && user?.optional?.streak != null)
                 CowboyHat(color: textTheme.titleSmall?.color),
             ],
           ),
