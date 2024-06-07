@@ -93,14 +93,13 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Get Android Build from artifacts
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: android-release
-    - name: Release Build to internal track
+    - name: Release Build to production track
       uses: r0adkll/upload-google-play@v1
       with:
         serviceAccountJsonPlainText: ${{ secrets.PLAYSTORE_ACCOUNT_KEY }}
         packageName: news.stacker.app
         releaseFiles: app-release.aab
         track: production
-        status: completed
