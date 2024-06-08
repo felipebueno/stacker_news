@@ -25,7 +25,7 @@ class _NewPostPageState extends State<NewPostPage> {
         children: [
           DropdownButton<String>(
             value: _selectedSub,
-            hint: const Text('pick sub'),
+            hint: const Text('pick territory'),
             isExpanded: true,
             onChanged: (String? val) {
               setState(() {
@@ -52,7 +52,7 @@ class _NewPostPageState extends State<NewPostPage> {
             onPressed: null,
             // onPressed: () {
             //   if (_selectedSub == null || _selectedSub!.isEmpty) {
-            //     Utils.showError('Pick a sub first');
+            //     Utils.showError('Pick a territory first');
 
             //     return;
             //   }
@@ -69,7 +69,7 @@ class _NewPostPageState extends State<NewPostPage> {
           ElevatedButton(
             onPressed: () {
               if (_selectedSub == null || _selectedSub!.isEmpty) {
-                Utils.showError('Pick a sub first');
+                Utils.showError('Pick a territory first');
 
                 return;
               }
@@ -87,7 +87,7 @@ class _NewPostPageState extends State<NewPostPage> {
             onPressed: null,
             // onPressed: () {
             //   if (_selectedSub == null || _selectedSub!.isEmpty) {
-            //     Utils.showError('Pick a sub first');
+            //     Utils.showError('Pick a territory first');
 
             //     return;
             //   }
@@ -105,7 +105,7 @@ class _NewPostPageState extends State<NewPostPage> {
             onPressed: null,
             // onPressed: () {
             //   if (_selectedSub == null || _selectedSub!.isEmpty) {
-            //     Utils.showError('Pick a sub first');
+            //     Utils.showError('Pick a territory first');
 
             //     return;
             //   }

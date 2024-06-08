@@ -46,7 +46,7 @@ final class Api {
 
   final Dio _dio = Dio(
     BaseOptions(
-      // TODO: Keep only the relevant values
+      // TODO: Keep only the necessary values
       baseUrl: 'https://stacker.news/_next/data',
       headers: {
         'User-Agent':
@@ -54,11 +54,6 @@ final class Api {
         'Accept': '*/*',
         'Accept-Language': 'en-US,en;q=0.5',
         'Content-Type': 'application/json',
-        'Sec-Fetch-Dest': 'empty',
-        'Sec-Fetch-Mode': 'cors',
-        'Sec-Fetch-Site': 'same-origin',
-        'Sec-GPC': '1',
-        'Priority': 'u=4'
       },
     ),
   );
