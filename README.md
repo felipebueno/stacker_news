@@ -96,6 +96,8 @@ Not implemented yet.
 
     - [ ] Bookmarking
 
+    - [ ] Push Notifications
+
     - [ ] Post
 
     - [x] Comment

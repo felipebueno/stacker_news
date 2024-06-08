@@ -43,7 +43,7 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
             controller: _tokenController,
             decoration: const InputDecoration(
               labelText: 'Paste Magic Link Here',
-              hintText: 'https://stacker.news/api/auth/callback/email/...',
+              hintText: '$baseUrl/api/auth/callback/email/...',
             ),
           ),
           const SizedBox(height: 24),

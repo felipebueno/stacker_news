@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/session.dart';
 import 'package:stacker_news/data/shared_prefs_manager.dart';
@@ -25,7 +26,7 @@ class Utils {
   }
 
   static launchURL(String url) async {
-    const snUrl = 'https://stacker.news/';
+    const snUrl = '$baseUrl/';
 
     if (url.contains('${snUrl}items/')) {
       final id = url.split('/').last;

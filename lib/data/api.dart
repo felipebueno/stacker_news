@@ -17,8 +17,15 @@ import './models/session.dart';
 import './models/user.dart';
 import './shared_prefs_manager.dart';
 
+const String baseUrl = String.fromEnvironment(
+  'BASE_URL',
+  defaultValue: '',
+);
+
 final class Api {
   Api() {
+    assert(baseUrl.isNotEmpty);
+
     _cookieJar();
 
     _dio.interceptors.add(
@@ -47,7 +54,7 @@ final class Api {
   final Dio _dio = Dio(
     BaseOptions(
       // TODO: Keep only the necessary values
-      baseUrl: 'https://stacker.news/_next/data',
+      baseUrl: '$baseUrl/_next/data',
       headers: {
         'User-Agent':
             'Mozilla/5.0 (X11; Linux x86_64; rv:126.0) Gecko/20100101 Firefox/126.0',
@@ -144,7 +151,7 @@ final class Api {
   }
 
   Future<void> _fetchAndSaveCurrBuildId() async {
-    final response = await _dio.get('https://stacker.news');
+    final response = await _dio.get(baseUrl);
 
     if (response.statusCode != 200) {
       throw Exception('Error fetching build id');
@@ -183,7 +190,7 @@ final class Api {
       );
       final body = jsonDecode(graphBody);
       final response = await _dio.post(
-        'https://stacker.news/api/graphql',
+        '$baseUrl/api/graphql',
         data: body,
       );
 
@@ -223,7 +230,7 @@ final class Api {
   // #region Profile
   Future<User?> fetchMe() async {
     final response = await _dio.post(
-      'https://stacker.news/api/graphql',
+      '$baseUrl/api/graphql',
       data:
           '{"variables":{},"query":"{\\n  me {\\n    id\\n    name\\n    bioId\\n    photoId\\n    privates {\\n      autoDropBolt11s\\n      diagnostics\\n      noReferralLinks\\n      fiatCurrency\\n      greeterMode\\n      hideCowboyHat\\n      hideFromTopUsers\\n      hideGithub\\n      hideNostr\\n      hideTwitter\\n      hideInvoiceDesc\\n      hideIsContributor\\n      hideWalletBalance\\n      hideWelcomeBanner\\n      imgproxyOnly\\n      lastCheckedJobs\\n      nostrCrossposting\\n      noteAllDescendants\\n      noteCowboyHat\\n      noteDeposits\\n      noteWithdrawals\\n      noteEarning\\n      noteForwardedSats\\n      noteInvites\\n      noteItemSats\\n      noteJobIndicator\\n      noteMentions\\n      noteItemMentions\\n      sats\\n      tipDefault\\n      tipPopover\\n      turboTipping\\n      zapUndos\\n      upvotePopover\\n      wildWestMode\\n      withdrawMaxFeeDefault\\n      lnAddr\\n      autoWithdrawMaxFeePercent\\n      autoWithdrawThreshold\\n      __typename\\n    }\\n    optional {\\n      isContributor\\n      stacked\\n      streak\\n      githubId\\n      nostrAuthPubkey\\n      twitterId\\n      __typename\\n    }\\n    __typename\\n  }\\n}"}',
     );
@@ -357,7 +364,7 @@ final class Api {
 
     if (response.statusCode == 403 &&
         response.realUri.toString() ==
-            'https://stacker.news/api/auth/error?error=Verification') {
+            '$baseUrl/api/auth/error?error=Verification') {
       final sessionData = await SharedPrefsManager.read('session');
       if (sessionData == null || sessionData == 'null' || sessionData == '{}') {
         _goToLoginFailedPage();
@@ -375,7 +382,7 @@ final class Api {
     }
 
     final sessionResponse = await _dio.get(
-      'https://stacker.news/api/auth/session',
+      '$baseUrl/api/auth/session',
     );
 
     if (sessionResponse.statusCode != 200) {
@@ -404,7 +411,7 @@ final class Api {
 
   Future<bool> requestMagicLink(String email) async {
     final csrfResponse = await _dio.get(
-      'https://stacker.news/api/auth/csrf',
+      '$baseUrl/api/auth/csrf',
       options: Options(
         headers: {
           'x-csrf-token': '1',
@@ -422,10 +429,10 @@ final class Api {
     _dio.options.headers['x-csrf-token'] = csrfToken;
 
     final response = await _dio.post(
-      'https://stacker.news/api/auth/signin/email?',
+      '$baseUrl/api/auth/signin/email?',
       data: {
         'email': email,
-        'callbackUrl': 'http://stacker.news/',
+        'callbackUrl': '$baseUrl/',
         'csrfToken': csrfToken,
         'json': true,
       },
@@ -456,7 +463,7 @@ final class Api {
     debugPrint('fetching hasNewNotes');
 
     final response = await _dio.post(
-      'https://stacker.news/api/graphql',
+      '$baseUrl/api/graphql',
       data: '{"variables":{},"query":"{\\n  hasNewNotes\\n}\\n"}',
     );
 
@@ -487,7 +494,7 @@ final class Api {
     final sats = me.tipDefault ?? 1;
 
     final response = await _dio.post(
-      'https://stacker.news/api/graphql',
+      '$baseUrl/api/graphql',
       data: jsonEncode(
         GqlBody(
           operationName: "idempotentAct",
@@ -534,7 +541,7 @@ final class Api {
     text = text.replaceAll('\n', '\\n');
 
     final response = await _dio.post(
-      'https://stacker.news/api/graphql',
+      '$baseUrl/api/graphql',
       data:
           "{\"operationName\":\"upsertDiscussion\",\"variables\":{\"sub\":\"$sub\",\"title\":\"$title\",\"text\":\"$text\",\"forward\":[]},\"query\":\"mutation upsertDiscussion(\$sub: String, \$id: ID, \$title: String!, \$text: String, \$boost: Int, \$forward: [ItemForwardInput], \$hash: String, \$hmac: String) {\\n  upsertDiscussion(\\n    sub: \$sub\\n    id: \$id\\n    title: \$title\\n    text: \$text\\n    boost: \$boost\\n    forward: \$forward\\n    hash: \$hash\\n    hmac: \$hmac\\n  ) {\\n    id\\n    __typename\\n  }\\n}\"}",
     );
@@ -562,7 +569,7 @@ final class Api {
     text = text.replaceAll('\n', '\\n');
 
     final response = await _dio.post(
-      'https://stacker.news/api/graphql',
+      '$baseUrl/api/graphql',
       options: Options(
         headers: {
           'Content-Type': 'application/json',

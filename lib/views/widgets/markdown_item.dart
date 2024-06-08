@@ -3,6 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:markdown/src/util.dart';
 import 'package:stacker_news/colors.dart';
+import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/utils.dart';
 
 class MarkdownItem extends StatelessWidget {
@@ -79,8 +80,7 @@ class SNAutolinkExtensionSyntax extends md.InlineSyntax {
 
     final text = match.match.substring(0, consumeLength);
 
-    final destination =
-        'https://stacker.news/${text.replaceAll('@', '')}?isUser=true';
+    final destination = '$baseUrl/${text.replaceAll('@', '')}?isUser=true';
 
     final anchor = md.Element.text('a', text)
       ..attributes['href'] = Uri.encodeFull(destination);

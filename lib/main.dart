@@ -62,7 +62,7 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
   }
 
   bool _isLoginLink(String link) =>
-      link.contains('https://stacker.news/api/auth/callback/email');
+      link.contains('$baseUrl/api/auth/callback/email');
 
   void _handleIncomingLinks() {
     if (!kIsWeb) {

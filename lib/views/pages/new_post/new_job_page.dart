@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/views/pages/new_post/text_with_preview.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 
@@ -33,7 +34,7 @@ class _NewJobPageState extends State<NewJobPage> {
                       radius: 64,
                       backgroundColor: Colors.grey,
                       child: CachedNetworkImage(
-                        imageUrl: 'https://stacker.news/jobs-default.png',
+                        imageUrl: '$baseUrl/jobs-default.png',
                         fit: BoxFit.cover,
                       ),
                     ),

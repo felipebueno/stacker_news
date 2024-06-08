@@ -25,9 +25,25 @@ class _ProfilePageState extends State<ProfilePage> {
       future: locator<Api>().fetchProfile(userName),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const GenericPageScaffold(
+          return GenericPageScaffold(
             title: 'Loading...',
-            body: Center(child: CircularProgressIndicator()),
+            moreActions: [
+              TextButton.icon(
+                label: const Text('Logout'),
+                icon: const Icon(Icons.logout),
+                onPressed: () async {
+                  await SharedPrefsManager.clear();
+
+                  if (context.mounted) {
+                    Navigator.pushReplacementNamed(
+                      context,
+                      HomePage.id,
+                    );
+                  }
+                },
+              )
+            ],
+            body: const Center(child: CircularProgressIndicator()),
           );
         }
 
