@@ -489,12 +489,27 @@ final class Api {
       return 0;
     }
 
-    final amount = me.tipDefault ?? 1;
+    final sats = me.tipDefault ?? 1;
 
     final response = await _dio.post(
       'https://stacker.news/api/graphql',
-      data:
-          "{\"operationName\":\"idempotentAct\",\"variables\":{\"id\":\"$id\",\"sats\":$amount,\"hash\":null,\"hmac\":null},\"query\":\"mutation idempotentAct(\$id: ID!, \$sats: Int!, \$hash: String, \$hmac: String) {\\n  act(id: \$id, sats: \$sats, hash: \$hash, hmac: \$hmac, idempotent: true) {\\n    id\\n    sats\\n    path\\n    __typename\\n  }\\n}\"}",
+      data: jsonEncode(
+        GqlBody(
+          operationName: "idempotentAct",
+          variables: {
+            "id": id,
+            "sats": sats,
+          },
+          query: '''
+            mutation idempotentAct(\$id: ID!, \$sats: Int!) {
+              act(id: \$id, sats: \$sats, idempotent: true) {
+                id
+                sats
+              }
+            }
+          ''',
+        ),
+      ),
     );
 
     if (response.statusCode == 200) {
@@ -507,7 +522,7 @@ final class Api {
         return null;
       }
 
-      return amount;
+      return sats;
     }
 
     return 0;
