@@ -553,8 +553,27 @@ final class Api {
 
     final response = await _dio.post(
       'https://stacker.news/api/graphql',
-      data:
-          "{\"operationName\":\"upsertComment\",\"variables\":{\"parentId\":\"$parentId\",\"text\":\"$text\"},\"query\":\"fragment CommentFields on Item {\\n  id\\n  parentId\\n  createdAt\\n  deletedAt\\n  text\\n  user {\\n    id\\n    name\\n    optional {\\n      streak\\n      __typename\\n    }\\n    meMute\\n    __typename\\n  }\\n  sats\\n  upvotes\\n  wvotes\\n  boost\\n  meSats\\n  meDontLike\\n  meBookmark\\n  meSubscription\\n  outlawed\\n  freebie\\n  path\\n  commentSats\\n  mine\\n  otsHash\\n  ncomments\\n  imgproxyUrls\\n  __typename\\n}\\n\\nfragment CommentsRecursive on Item {\\n  ...CommentFields\\n  comments {\\n    ...CommentFields\\n    comments {\\n      ...CommentFields\\n      comments {\\n        ...CommentFields\\n        comments {\\n          ...CommentFields\\n          comments {\\n            ...CommentFields\\n            comments {\\n              ...CommentFields\\n              comments {\\n                ...CommentFields\\n                __typename\\n              }\\n              __typename\\n            }\\n            __typename\\n          }\\n          __typename\\n        }\\n        __typename\\n      }\\n      __typename\\n    }\\n    __typename\\n  }\\n  __typename\\n}\\n\\nmutation upsertComment(\$text: String!, \$parentId: ID!, \$hash: String, \$hmac: String) {\\n  upsertComment(text: \$text, parentId: \$parentId, hash: \$hash, hmac: \$hmac) {\\n    ...CommentFields\\n    comments {\\n      ...CommentsRecursive\\n      __typename\\n    }\\n    __typename\\n  }\\n}\"}",
+      options: Options(
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      ),
+      data: jsonEncode(
+        GqlBody(
+          operationName: "upsertComment",
+          variables: {
+            "parentId": parentId,
+            "text": text,
+          },
+          query: """
+		mutation upsertComment(\$parentId: ID!, \$text: String!) {
+			upsertComment(parentId: \$parentId, text: \$text) {
+				id
+			}
+		}
+          """,
+        ),
+      ),
     );
 
     if (response.statusCode == 200) {
@@ -563,7 +582,6 @@ final class Api {
 
       if (error != null) {
         Utils.showError(error);
-
         throw Exception(error);
       }
 
@@ -573,4 +591,30 @@ final class Api {
     throw Exception('Failed to create comment');
   }
   // #endregion Items & Comments
+}
+
+class GqlBody {
+  final String? operationName;
+  final String? query;
+  final Map<String, dynamic>? variables;
+
+  GqlBody({
+    this.operationName,
+    this.query,
+    this.variables,
+  });
+
+  Map<String, dynamic> toJson() => {
+        'operationName': operationName,
+        'query': query,
+        'variables': variables,
+      };
+}
+
+class GqlError {
+  final String? message;
+
+  GqlError({
+    this.message,
+  });
 }
