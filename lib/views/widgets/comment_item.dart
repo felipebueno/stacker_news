@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/widgets/markdown_item.dart';
-import 'package:stacker_news/views/widgets/post_item.dart';
+import 'package:stacker_news/views/widgets/maybe_zap_button.dart';
 import 'package:stacker_news/views/widgets/user_button.dart';
 
 class CommentItem extends StatefulWidget {
@@ -46,18 +46,15 @@ class _CommentItemState extends State<CommentItem> {
         ),
         child: Row(
           children: [
-            SizedBox(
-              width: 40.0,
-              child: MaybeZapButton(
-                _post.id!,
-                onZapped: (int amount) {
-                  setState(() {
-                    _post = _post.copyWith(
-                      sats: (_post.sats ?? 0) + amount,
-                    );
-                  });
-                },
-              ),
+            MaybeZapButton(
+              _post.id!,
+              onZapped: (int amount) {
+                setState(() {
+                  _post = _post.copyWith(
+                    sats: (_post.sats ?? 0) + amount,
+                  );
+                });
+              },
             ),
             Expanded(
               child: Column(

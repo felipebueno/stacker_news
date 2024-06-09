@@ -1,16 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacker_news/colors.dart';
-import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/post_type.dart';
-import 'package:stacker_news/data/models/session.dart';
-import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/widgets/comment_item.dart';
 import 'package:stacker_news/views/widgets/markdown_item.dart';
+import 'package:stacker_news/views/widgets/maybe_zap_button.dart';
 import 'package:stacker_news/views/widgets/user_button.dart';
 
 class PostItem extends StatefulWidget {
@@ -58,52 +55,46 @@ class _PostItemState extends State<PostItem> {
         child: Row(
           children: [
             if (widget.isCommentsPage && item.id != null && item.id != '')
-              SizedBox(
-                width: 32.0,
-                child: MaybeZapButton(
-                  item.id!,
-                  meSats: item.meSats,
-                  onZapped: (int amount) {
-                    setState(() {
-                      if (_post.item != null) {
-                        _post = _post.copyWith(
-                          item: _post.item!.copyWith(
-                            sats: (item.sats ?? 0) + amount,
-                          ),
-                        );
-                      } else {
-                        _post = _post.copyWith(
+              MaybeZapButton(
+                item.id!,
+                meSats: item.meSats,
+                onZapped: (int amount) {
+                  setState(() {
+                    if (_post.item != null) {
+                      _post = _post.copyWith(
+                        item: _post.item!.copyWith(
                           sats: (item.sats ?? 0) + amount,
-                        );
-                      }
-                    });
-                  },
-                ),
+                        ),
+                      );
+                    } else {
+                      _post = _post.copyWith(
+                        sats: (item.sats ?? 0) + amount,
+                      );
+                    }
+                  });
+                },
               ),
             if (!widget.isCommentsPage)
-              SizedBox(
-                width: 32.0,
-                child: Column(
-                  children: [
-                    if (showIdx)
-                      Text(
-                        '${widget.idx}.',
-                        textAlign: TextAlign.end,
-                        style: textTheme.titleSmall,
-                      ),
-                    if (item.id != null && item.id != '')
-                      MaybeZapButton(
-                        item.id!,
-                        onZapped: (int amount) {
-                          setState(() {
-                            _post = item.copyWith(
-                              sats: (item.sats ?? 0) + amount,
-                            );
-                          });
-                        },
-                      ),
-                  ],
-                ),
+              Column(
+                children: [
+                  if (showIdx)
+                    Text(
+                      '${widget.idx}.',
+                      textAlign: TextAlign.end,
+                      style: textTheme.titleSmall,
+                    ),
+                  if (item.id != null && item.id != '')
+                    MaybeZapButton(
+                      item.id!,
+                      onZapped: (int amount) {
+                        setState(() {
+                          _post = item.copyWith(
+                            sats: (item.sats ?? 0) + amount,
+                          );
+                        });
+                      },
+                    ),
+                ],
               ),
             const SizedBox(width: 4),
             Flexible(
@@ -234,88 +225,5 @@ class _PostItemState extends State<PostItem> {
     return widget.postType == PostType.notifications
         ? _buildNotificationItem()
         : _buildNormalItem();
-  }
-}
-
-class MaybeZapButton extends StatefulWidget {
-  final String _id;
-  final int? _meSats;
-  final void Function(int)? _onZapped;
-
-  const MaybeZapButton(
-    String id, {
-    int? meSats,
-    void Function(int)? onZapped,
-    super.key,
-  })  : _id = id,
-        _meSats = meSats,
-        _onZapped = onZapped;
-
-  @override
-  State<MaybeZapButton> createState() => _MaybeZapButtonState();
-}
-
-class _MaybeZapButtonState extends State<MaybeZapButton> {
-  final _busy = ValueNotifier<bool>(false);
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Utils.getSession(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data is Session) {
-          return Stack(
-            alignment: Alignment.center,
-            children: [
-              IconButton(
-                onPressed: () async {
-                  try {
-                    _busy.value = true;
-                    final amount = await locator<Api>().zapPost(widget._id);
-
-                    if (amount == null) return;
-
-                    Utils.showInfo('Zapped $amount sats');
-
-                    widget._onZapped?.call(amount);
-                  } catch (e, st) {
-                    Utils.showException('Error zapping $e', st);
-                  } finally {
-                    _busy.value = false;
-                  }
-                },
-                icon: SvgPicture.asset(
-                  'assets/upvote.svg',
-                  width: 24,
-                  height: 24,
-                  colorFilter: ColorFilter.mode(
-                    SNColors.getColor(widget._meSats) ?? Colors.grey,
-                    BlendMode.srcIn,
-                  ),
-                ),
-              ),
-              ValueListenableBuilder<bool>(
-                valueListenable: _busy,
-                builder: (context, busy, child) {
-                  if (!busy) {
-                    return const SizedBox.shrink();
-                  }
-
-                  return const Center(
-                    child: SizedBox(
-                      width: 12.0,
-                      height: 12.0,
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                },
-              )
-            ],
-          );
-        }
-
-        return const SizedBox.shrink();
-      },
-    );
   }
 }
