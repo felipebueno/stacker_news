@@ -50,8 +50,9 @@ class _PostItemState extends State<PostItem> {
                 arguments: _post,
               );
             },
-      child: Padding(
+      child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        color: item.position == null ? null : SNColors.primary.withOpacity(.27),
         child: Row(
           children: [
             if (widget.isCommentsPage && item.id != null && item.id != '')
@@ -127,14 +128,15 @@ class _PostItemState extends State<PostItem> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Flexible(
-                        child: Text(
-                          item.isJob == true
-                              ? '${item.company}'
-                              : '${item.sats} sats',
-                          style: label,
+                      if (item.position == null)
+                        Flexible(
+                          child: Text(
+                            item.isJob == true
+                                ? '${item.company}'
+                                : '${item.sats} sats',
+                            style: label,
+                          ),
                         ),
-                      ),
                       Text(
                         item.isJob == true
                             ? '${(item.remote == true && item.location == '') ? 'Remote' : item.location}'

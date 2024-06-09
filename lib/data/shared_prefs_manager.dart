@@ -1,7 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefsManager {
-  static Future<void> create(String key, dynamic value) async {
+  static Future<void> set(String key, dynamic value) async {
     final prefs = await SharedPreferences.getInstance();
 
     if (value is int) {
@@ -16,12 +16,12 @@ class SharedPrefsManager {
       prefs.setStringList(key, value);
     } else {
       print(
-        'SharedPrefsManager.create error: value => $value for key => $key has unexpected type.',
+        'SharedPrefsManager.set error: value => $value for key => $key has unexpected type.',
       );
     }
   }
 
-  static Future<dynamic> read(String key) async {
+  static Future<dynamic> get(String key) async {
     final prefs = await SharedPreferences.getInstance();
 
     return prefs.get(key);

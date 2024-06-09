@@ -5,7 +5,7 @@ class SNEndpointVersion extends StatelessWidget {
   const SNEndpointVersion({super.key});
 
   Future<String> _getVersion() async =>
-      await SharedPrefsManager.read('build-id') ?? 'Unknown';
+      await SharedPrefsManager.get('build-id') ?? 'Unknown';
 
   @override
   Widget build(BuildContext context) {

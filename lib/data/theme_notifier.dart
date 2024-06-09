@@ -53,7 +53,7 @@ class ThemeNotifier with ChangeNotifier {
   }
 
   ThemeNotifier() {
-    SharedPrefsManager.read('theme-mode').then(
+    SharedPrefsManager.get('theme-mode').then(
       (value) {
         setThemeMode(value);
 
@@ -81,7 +81,7 @@ class ThemeNotifier with ChangeNotifier {
       default:
         _themeData = ThemeMode.dark;
     }
-    SharedPrefsManager.create('theme-mode', themeMode);
+    SharedPrefsManager.set('theme-mode', themeMode);
 
     notifyListeners();
   }

@@ -118,13 +118,24 @@ final class Api {
   ) async {
     final response = (responseData['pageProps'] ?? responseData);
     final data = response['ssrData'] ?? response['data'];
+
     final itemsMap =
         (data['items'] ?? data['topItems'] ?? data['notifications']);
     final List items = itemsMap['items'] ?? itemsMap['notifications'];
 
+    if (postType == PostType.home) {
+      // TODO: Temporary solution to get Stacker Saloon on the list
+      final List? pins = itemsMap['pins'];
+      if (pins != null && pins.isNotEmpty) {
+        for (var pin in pins) {
+          items.insert(pin['position'], pin);
+        }
+      }
+    }
+
     final cursor = itemsMap['cursor'];
     if (cursor != null) {
-      await SharedPrefsManager.create(
+      await SharedPrefsManager.set(
         '${postType.name}-cursor',
         cursor,
       );
@@ -169,15 +180,15 @@ final class Api {
   }
 
   Future<void> _saveBuildId(String newBuildId) async {
-    await SharedPrefsManager.create('build-id', newBuildId);
+    await SharedPrefsManager.set('build-id', newBuildId);
   }
 
   Future<String?> _getCurrBuildId() async {
-    return await SharedPrefsManager.read('build-id');
+    return await SharedPrefsManager.get('build-id');
   }
 
   Future<List<Post>> fetchMorePosts(PostType postType) async {
-    final cursor = await SharedPrefsManager.read('${postType.name}-cursor');
+    final cursor = await SharedPrefsManager.get('${postType.name}-cursor');
 
     if (cursor == null) {
       throw Exception('Error fetching more');
@@ -249,7 +260,7 @@ final class Api {
       return null;
     }
 
-    await SharedPrefsManager.create(
+    await SharedPrefsManager.set(
       'me',
       jsonEncode(me),
     );
@@ -365,7 +376,7 @@ final class Api {
     if (response.statusCode == 403 &&
         response.realUri.toString() ==
             '$baseUrl/api/auth/error?error=Verification') {
-      final sessionData = await SharedPrefsManager.read('session');
+      final sessionData = await SharedPrefsManager.get('session');
       if (sessionData == null || sessionData == 'null' || sessionData == '{}') {
         _goToLoginFailedPage();
 
@@ -401,7 +412,7 @@ final class Api {
       return null;
     }
 
-    await SharedPrefsManager.create(
+    await SharedPrefsManager.set(
       'session',
       jsonEncode(sessionResponse.data),
     );

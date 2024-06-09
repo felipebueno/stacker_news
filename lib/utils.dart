@@ -84,8 +84,7 @@ class Utils {
     } else if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
-      showError(
-          'Could not launch $url. Make sure you have a web browser installed');
+      showError('Could not launch $url');
 
       return;
     }
@@ -100,7 +99,7 @@ class Utils {
       return;
     }
 
-    // TODO: We should check if the modal is open before popping
+    // TODO: We should check if the modal is open before popping it
     if (Navigator.of(ctx).canPop()) {
       Navigator.of(ctx).pop();
     }
@@ -218,7 +217,7 @@ class Utils {
   }
 
   static Future<Session?> getSession() async {
-    final sessionData = await SharedPrefsManager.read('session');
+    final sessionData = await SharedPrefsManager.get('session');
 
     if (sessionData == null || sessionData == 'null' || sessionData == '{}') {
       return null;

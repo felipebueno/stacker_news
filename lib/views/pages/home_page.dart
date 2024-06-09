@@ -7,11 +7,11 @@ import 'package:stacker_news/data/models/session.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
-import 'package:stacker_news/views/pages/new_post/new_post_page.dart';
 import 'package:stacker_news/views/pages/notifications/notifications_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
 import 'package:stacker_news/views/widgets/base_tab.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
+import 'package:stacker_news/views/widgets/maybe_new_post_button.dart';
 import 'package:stacker_news/views/widgets/sn_logo.dart';
 
 class HomePage extends StatelessWidget {
@@ -137,35 +137,6 @@ class _MaybeNotificationsButtonState extends State<MaybeNotificationsButton> {
             Navigator.pushNamed(context, SignInPage.id);
           },
         );
-      },
-    );
-  }
-}
-
-class MaybeNewPostFab extends StatefulWidget {
-  const MaybeNewPostFab({super.key});
-
-  @override
-  State<MaybeNewPostFab> createState() => _MaybeNewPostFabState();
-}
-
-class _MaybeNewPostFabState extends State<MaybeNewPostFab> {
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Utils.getSession(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data is Session) {
-          return FloatingActionButton.extended(
-            onPressed: () {
-              Navigator.pushNamed(context, NewPostPage.id);
-            },
-            icon: const Icon(Icons.add),
-            label: const Text('New Post'),
-          );
-        }
-
-        return Container();
       },
     );
   }
