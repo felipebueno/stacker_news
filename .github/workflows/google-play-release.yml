@@ -77,13 +77,13 @@ jobs:
         run: flutter pub get
 
       - name: Start Android Release Build
-        run: flutter build appbundle
+        run: flutter build appbundle --flavor prod
 
       - name: Upload Android Release
         uses: actions/upload-artifact@v2
         with:
           name: android-release
-          path: build/app/outputs/bundle/release/app-release.aab
+          path: build/app/outputs/bundle/prodRelease/app-prod-release.aab
 
   deploy:
     name: Deploy Android Build

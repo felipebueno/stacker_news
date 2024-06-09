@@ -39,17 +39,18 @@ jobs:
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
       - name: Build APK (split per ABI)
-        run: flutter build apk --split-per-abi
+        run: flutter build apk --split-per-abi --flavor prod
       - name: Build App Bundle
-        run: flutter build appbundle
+        run: flutter build appbundle --flavor prod
       - name: Archive build artifacts
         uses: actions/upload-artifact@v2
         with:
           name: build-artifacts
           path: |
-            build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-            build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-            build/app/outputs/flutter-apk/app-x86_64-release.apk
+            build/app/outputs/flutter-apk/app-arm64-v8a-prod-release.apk
+            build/app/outputs/flutter-apk/app-armeabi-v7a-prod-release.apk
+            build/app/outputs/flutter-apk/app-x86_64-prod-release.apk
+            build/app/outputs/bundle/prodRelease/app-prod-release.aab
 
   release:
     name: Create GitHub Release
@@ -68,5 +69,6 @@ jobs:
                 app-arm64-v8a-release.apk
                 app-armeabi-v7a-release.apk
                 app-x86_64-release.apk
+                app-prod-release.aab
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

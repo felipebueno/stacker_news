@@ -82,6 +82,10 @@ android {
 
     flavorDimensions "default"
     productFlavors {
+        prod {
+            dimension "default"
+        }
+
         dbg {
             dimension "default"
             applicationIdSuffix ".dbg"
