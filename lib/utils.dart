@@ -26,9 +26,17 @@ class Utils {
     return '$currentVersion+$currentBuildNumber';
   }
 
-  static launchURL(String url, {BuildContext? context}) async {
+  static launchURL(String url) async {
+    final context = navigatorKey.currentContext;
+
+    if (context == null) {
+      showError('Could not launch $url because context is null');
+
+      return;
+    }
+
     try {
-      if (url.endsWith('.pdf') && context != null) {
+      if (url.endsWith('.pdf')) {
         Navigator.of(context).pushNamed(
           PdfReaderPage.id,
           arguments: url,
@@ -48,13 +56,6 @@ class Utils {
         return;
       }
 
-      final context = navigatorKey.currentContext;
-      if (context == null) {
-        showError('Could not launch $url because context is null');
-
-        return;
-      }
-
       Navigator.of(context).pushNamed(
         PostPage.id,
         arguments: Post(id: id),
@@ -65,13 +66,6 @@ class Utils {
 
     if (url.contains(snUrl) && url.contains('?isUser=true')) {
       final userName = url.split('/').last.split('?').first;
-
-      final context = navigatorKey.currentContext;
-      if (context == null) {
-        showError('Could not launch $url because context is null');
-
-        return;
-      }
 
       Navigator.of(context).pushNamed(
         ProfilePage.id,
@@ -90,7 +84,8 @@ class Utils {
     } else if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
     } else {
-      showError('Could not launch $url');
+      showError(
+          'Could not launch $url. Make sure you have a web browser installed');
 
       return;
     }
