@@ -19,7 +19,7 @@ import './shared_prefs_manager.dart';
 
 const String baseUrl = String.fromEnvironment(
   'BASE_URL',
-  defaultValue: '',
+  defaultValue: 'https://stacker.news',
 );
 
 final class Api {

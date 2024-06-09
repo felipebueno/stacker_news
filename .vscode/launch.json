@@ -1,7 +1,4 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
@@ -9,8 +6,8 @@
             "request": "launch",
             "type": "dart",
             "toolArgs": [
-                "--dart-define",
-                "BASE_URL=https://stacker.news",
+                "--flavor",
+                "dbg",
             ],
         },
         {
@@ -18,8 +15,21 @@
             "request": "launch",
             "type": "dart",
             "toolArgs": [
+                "--flavor",
+                "dbg",
                 "--dart-define",
                 "BASE_URL=http://localhost:3000",
+            ],
+        },
+        {
+            "name": "lan",
+            "request": "launch",
+            "type": "dart",
+            "toolArgs": [
+                "--flavor",
+                "dbg",
+                "--dart-define",
+                "BASE_URL=http://192.168.0.109:3000",
             ],
         },
     ]
