@@ -10,26 +10,28 @@ import 'package:stacker_news/views/pages/new_post/new_link_page.dart';
 import 'package:stacker_news/views/pages/new_post/new_poll_page.dart';
 import 'package:stacker_news/views/pages/new_post/new_post_page.dart';
 import 'package:stacker_news/views/pages/notifications/notifications_page.dart';
+import 'package:stacker_news/views/pages/pdf_reader/pdf_reader_page.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
 import 'package:stacker_news/views/pages/settings/settings_page.dart';
 
 class SNRouter {
   static final routes = {
-    HomePage.id: (context) => const HomePage(),
-    PostPage.id: (context) => const PostPage(),
-    SettingsPage.id: (context) => const SettingsPage(),
-    ProfilePage.id: (context) => const ProfilePage(),
-    AboutPage.id: (context) => const AboutPage(),
-    SignInPage.id: (context) => const SignInPage(),
-    CheckEmailPage.id: (context) => const CheckEmailPage(),
-    LoginFailedPage.id: (context) => const LoginFailedPage(),
-    NotificationsPage.id: (context) => const NotificationsPage(),
-    NewPostPage.id: (context) => const NewPostPage(),
-    NewLinkPage.id: (context) => const NewLinkPage(),
-    NewDiscussionPage.id: (context) => const NewDiscussionPage(),
-    NewPollPage.id: (context) => const NewPollPage(),
-    NewBountyPage.id: (context) => const NewBountyPage(),
-    NewJobPage.id: (context) => const NewJobPage(),
+    HomePage.id: (_) => const HomePage(),
+    PostPage.id: (_) => const PostPage(),
+    SettingsPage.id: (_) => const SettingsPage(),
+    ProfilePage.id: (_) => const ProfilePage(),
+    AboutPage.id: (_) => const AboutPage(),
+    SignInPage.id: (_) => const SignInPage(),
+    CheckEmailPage.id: (_) => const CheckEmailPage(),
+    LoginFailedPage.id: (_) => const LoginFailedPage(),
+    NotificationsPage.id: (_) => const NotificationsPage(),
+    NewPostPage.id: (_) => const NewPostPage(),
+    NewLinkPage.id: (_) => const NewLinkPage(),
+    NewDiscussionPage.id: (_) => const NewDiscussionPage(),
+    NewPollPage.id: (_) => const NewPollPage(),
+    NewBountyPage.id: (_) => const NewBountyPage(),
+    NewJobPage.id: (_) => const NewJobPage(),
+    PdfReaderPage.id: (_) => const PdfReaderPage(),
   };
 }

@@ -35,7 +35,7 @@ class MarkdownItem extends StatelessWidget {
           return;
         }
 
-        Utils.launchURL(href);
+        Utils.launchURL(href, context: context);
       },
     );
   }

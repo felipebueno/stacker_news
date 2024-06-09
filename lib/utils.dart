@@ -9,6 +9,7 @@ import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/session.dart';
 import 'package:stacker_news/data/shared_prefs_manager.dart';
+import 'package:stacker_news/views/pages/pdf_reader/pdf_reader_page.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -25,7 +26,18 @@ class Utils {
     return '$currentVersion+$currentBuildNumber';
   }
 
-  static launchURL(String url) async {
+  static launchURL(String url, {BuildContext? context}) async {
+    try {
+      if (url.endsWith('.pdf') && context != null) {
+        Navigator.of(context).pushNamed(
+          PdfReaderPage.id,
+          arguments: url,
+        );
+
+        return;
+      }
+    } catch (_) {}
+
     const snUrl = '$baseUrl/';
 
     if (url.contains('${snUrl}items/')) {
