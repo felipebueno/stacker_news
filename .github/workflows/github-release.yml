@@ -45,12 +45,8 @@ jobs:
       - name: Archive build artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: build-artifacts
-          path: |
-            build/app/outputs/flutter-apk/app-arm64-v8a-prod-release.apk
-            build/app/outputs/flutter-apk/app-armeabi-v7a-prod-release.apk
-            build/app/outputs/flutter-apk/app-x86_64-prod-release.apk
-            build/app/outputs/bundle/prodRelease/app-prod-release.aab
+          name: android-release
+          path: build/app/outputs/bundle/prodRelease/app-prod-release.aab
 
   release:
     name: Create GitHub Release
@@ -61,16 +57,12 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v2
         with:
-          name: build-artifacts
+          name: android-release
       - name: List downloaded files
         run: ls -R
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          files: |
-            build/app/outputs/flutter-apk/app-arm64-v8a-prod-release.apk
-            build/app/outputs/flutter-apk/app-armeabi-v7a-prod-release.apk
-            build/app/outputs/flutter-apk/app-x86_64-prod-release.apk
-            build/app/outputs/bundle/prodRelease/app-prod-release.aab
+          files: app-prod-release.aab
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
