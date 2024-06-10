@@ -11,10 +11,59 @@ class MarkdownItem extends StatelessWidget {
 
   final String? _text;
 
+  // Example:
+  // Input:
+  //   '''
+  //   https://i.imgur.com/9hwG6hZ.jpeg
+  //   https://i.imgur.com/qsyaiwT.jpeg
+  //   https://i.imgur.com/TQueRA8.jpeg
+  //   '''
+  // Output:
+  //   '''
+  //   ![Image 1](https://i.imgur.com/9hwG6hZ.jpeg)
+  //   ![Image 2](https://i.imgur.com/qsyaiwT.jpeg)
+  //   ![Image 3](https://i.imgur.com/TQueRA8.jpeg)
+  //   '''
+  String get _txtWithImages {
+    if (_text == null) return '';
+
+    final List<String> imageExtensions = [
+      'jpeg',
+      'jpg',
+      'png',
+      'gif',
+      'bmp',
+      'tiff',
+      'svg'
+    ];
+
+    List<String> lines = _text.split('\n');
+    List<String> markdownImages = [];
+
+    for (int i = 0; i < lines.length; i++) {
+      String line = lines[i].trim();
+      if (line.isNotEmpty) {
+        // Check if the line ends with one of the imageExtensions
+        bool isImage =
+            imageExtensions.any((ext) => line.toLowerCase().endsWith('.$ext'));
+
+        if (isImage) {
+          // If it is an image link, transform it to Markdown image syntax
+          markdownImages.add('![Image ${i + 1}]($line)');
+        } else {
+          // If it is not an image link, keep the line as is
+          markdownImages.add(line);
+        }
+      }
+    }
+    // Join the list into a single string with new lines
+    return markdownImages.join('\n');
+  }
+
   @override
   Widget build(BuildContext context) {
     return MarkdownBody(
-      data: _text ?? '',
+      data: _txtWithImages,
       styleSheet: MarkdownStyleSheet(
         blockquoteDecoration: BoxDecoration(
           color: SNColors.primary.withAlpha(32),
