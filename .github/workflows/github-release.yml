@@ -62,14 +62,15 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build-artifacts
-          path: ./build-artifacts
+      - name: List downloaded files
+        run: ls -R
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            ./build-artifacts/app-arm64-v8a-prod-release.apk
-            ./build-artifacts/app-armeabi-v7a-prod-release.apk
-            ./build-artifacts/app-x86_64-prod-release.apk
-            ./build-artifacts/app-prod-release.aab
+            build/app/outputs/flutter-apk/app-arm64-v8a-prod-release.apk
+            build/app/outputs/flutter-apk/app-armeabi-v7a-prod-release.apk
+            build/app/outputs/flutter-apk/app-x86_64-prod-release.apk
+            build/app/outputs/bundle/prodRelease/app-prod-release.aab
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
