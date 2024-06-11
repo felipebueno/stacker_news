@@ -44,8 +44,9 @@ class MarkdownItem extends StatelessWidget {
       String line = lines[i].trim();
       if (line.isNotEmpty) {
         // Check if the line ends with one of the imageExtensions
-        bool isImage =
-            imageExtensions.any((ext) => line.toLowerCase().endsWith('.$ext'));
+        bool isImage = imageExtensions.any((ext) =>
+            line.toLowerCase().endsWith('.$ext') ||
+            line.toLowerCase().startsWith('https://imgprxy.stacker.news/'));
 
         if (isImage) {
           // If it is an image link, transform it to Markdown image syntax
