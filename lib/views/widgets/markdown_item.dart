@@ -3,7 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:markdown/markdown.dart' as md;
 import 'package:markdown/src/util.dart';
 import 'package:stacker_news/colors.dart';
-import 'package:stacker_news/data/api.dart';
+import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/utils.dart';
 
 class MarkdownItem extends StatelessWidget {

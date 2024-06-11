@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/api.dart';
+import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/views/pages/new_post/text_with_preview.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 

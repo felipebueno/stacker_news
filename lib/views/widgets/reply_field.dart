@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/data/models/post.dart';
+import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 
@@ -64,7 +64,8 @@ class _ReplyFieldState extends State<ReplyField> {
                           throw Exception('Parent ID is null');
                         }
 
-                        final comment = await locator<Api>().upsertComment(
+                        final comment =
+                            await locator<SNApiClient>().upsertComment(
                           parentId: parentId,
                           text: _text,
                         );

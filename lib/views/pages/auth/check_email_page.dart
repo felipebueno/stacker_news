@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/api.dart';
+import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
@@ -56,7 +56,7 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
               try {
                 _busy.value = true;
                 final session =
-                    await locator<Api>().login(_tokenController.text);
+                    await locator<SNApiClient>().login(_tokenController.text);
 
                 if (session != null) {
                   if (context.mounted) {

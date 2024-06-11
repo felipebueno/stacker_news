@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/api.dart';
+import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
@@ -12,7 +12,7 @@ Future<void> login(String link) async {
     //   message: 'Logging in...',
     // );
 
-    final session = await locator<Api>().login(link);
+    final session = await locator<SNApiClient>().login(link);
 
     if (session != null) {
       final ctx = Utils.navigatorKey.currentContext;

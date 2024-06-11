@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacker_news/colors.dart';
-import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/data/models/session.dart';
+import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 
@@ -42,7 +42,8 @@ class _MaybeZapButtonState extends State<MaybeZapButton> {
                   onPressed: () async {
                     try {
                       _busy.value = true;
-                      final amount = await locator<Api>().zapPost(widget._id);
+                      final amount =
+                          await locator<SNApiClient>().zapPost(widget._id);
 
                       if (amount == null) return;
 

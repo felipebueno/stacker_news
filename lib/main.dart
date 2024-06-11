@@ -6,11 +6,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/data/auth_service.dart';
-import 'package:stacker_news/sn_router.dart';
+import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/utils.dart';
+import 'package:stacker_news/views/pages/about/about_page.dart';
+import 'package:stacker_news/views/pages/auth/check_email_page.dart';
+import 'package:stacker_news/views/pages/auth/sign_in_failed_page.dart';
+import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
+import 'package:stacker_news/views/pages/new_post/new_bounty_page.dart';
+import 'package:stacker_news/views/pages/new_post/new_discussion_page.dart';
+import 'package:stacker_news/views/pages/new_post/new_job_page.dart';
+import 'package:stacker_news/views/pages/new_post/new_link_page.dart';
+import 'package:stacker_news/views/pages/new_post/new_poll_page.dart';
+import 'package:stacker_news/views/pages/new_post/new_post_page.dart';
+import 'package:stacker_news/views/pages/notifications/notifications_page.dart';
+import 'package:stacker_news/views/pages/pdf_reader/pdf_reader_page.dart';
+import 'package:stacker_news/views/pages/post/post_page.dart';
+import 'package:stacker_news/views/pages/profile/profile_page.dart';
+import 'package:stacker_news/views/pages/settings/settings_page.dart';
 import 'package:uni_links/uni_links.dart';
 
 import 'data/theme_notifier.dart';
@@ -23,7 +37,7 @@ void main() {
     WidgetsFlutterBinding.ensureInitialized();
   }
 
-  locator.registerLazySingleton(Api.new);
+  locator.registerLazySingleton(SNApiClient.new);
 
   runApp(ChangeNotifierProvider<ThemeNotifier>(
     create: (_) => ThemeNotifier(),
@@ -116,7 +130,24 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
           theme: theme.lightTheme,
           darkTheme: theme.darkTheme,
           initialRoute: HomePage.id,
-          routes: SNRouter.routes,
+          routes: {
+            HomePage.id: (context) => const HomePage(),
+            PostPage.id: (context) => const PostPage(),
+            SettingsPage.id: (context) => const SettingsPage(),
+            ProfilePage.id: (context) => const ProfilePage(),
+            AboutPage.id: (context) => const AboutPage(),
+            SignInPage.id: (context) => const SignInPage(),
+            CheckEmailPage.id: (context) => const CheckEmailPage(),
+            LoginFailedPage.id: (context) => const LoginFailedPage(),
+            NotificationsPage.id: (context) => const NotificationsPage(),
+            NewPostPage.id: (context) => const NewPostPage(),
+            NewLinkPage.id: (context) => const NewLinkPage(),
+            NewDiscussionPage.id: (context) => const NewDiscussionPage(),
+            NewPollPage.id: (context) => const NewPollPage(),
+            NewBountyPage.id: (context) => const NewBountyPage(),
+            NewJobPage.id: (context) => const NewJobPage(),
+            PdfReaderPage.id: (context) => const PdfReaderPage(),
+          },
           home: const HomePage(),
         );
       },

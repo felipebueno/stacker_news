@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/post_type.dart';
+import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
-import 'package:stacker_news/views/widgets/post_list.dart';
-import 'package:stacker_news/views/widgets/post_list_error.dart';
+import 'package:stacker_news/views/widgets/post/post_list.dart';
+import 'package:stacker_news/views/widgets/post/post_list_error.dart';
 
 class NotificationsPage extends StatefulWidget {
   static const String id = 'notifications';
@@ -17,7 +17,7 @@ class NotificationsPage extends StatefulWidget {
 }
 
 class _NotificationsPageState extends State<NotificationsPage> {
-  final _api = locator<Api>();
+  final _api = locator<SNApiClient>();
 
   @override
   Widget build(BuildContext context) {

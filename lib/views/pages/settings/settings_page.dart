@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/user.dart';
-import 'package:stacker_news/data/api.dart';
+import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
@@ -23,7 +23,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return GenericPageScaffold(
       title: 'Settings',
       body: FutureBuilder(
-        future: locator<Api>().fetchMe(),
+        future: locator<SNApiClient>().fetchMe(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(

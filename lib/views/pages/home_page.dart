@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/data/models/session.dart';
+import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
@@ -73,7 +73,7 @@ class _MaybeNotificationsButtonState extends State<MaybeNotificationsButton> {
     _timer?.cancel();
 
     _timer = Timer.periodic(const Duration(seconds: 30), (timer) async {
-      final ret = await locator<Api>().hasNewNotes();
+      final ret = await locator<SNApiClient>().hasNewNotes();
 
       if (mounted) {
         setState(() {

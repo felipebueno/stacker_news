@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/api.dart';
+import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/new_post/new_post_footer.dart';
@@ -76,7 +76,8 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
                   _busy = true;
                 });
 
-                final discussion = await locator<Api>().upsertDiscussion(
+                final discussion =
+                    await locator<SNApiClient>().upsertDiscussion(
                   sub: _selectedSub!.toLowerCase(),
                   title: _titleController.text,
                   text: _text,

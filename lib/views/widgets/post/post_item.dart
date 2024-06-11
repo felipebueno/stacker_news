@@ -5,9 +5,9 @@ import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
-import 'package:stacker_news/views/widgets/comment_item.dart';
 import 'package:stacker_news/views/widgets/markdown_item.dart';
 import 'package:stacker_news/views/widgets/maybe_zap_button.dart';
+import 'package:stacker_news/views/widgets/post/comment_item.dart';
 import 'package:stacker_news/views/widgets/user_button.dart';
 
 class PostItem extends StatefulWidget {
@@ -52,6 +52,7 @@ class _PostItemState extends State<PostItem> {
             },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 4.0),
+        // Add color to special items (Stacker Saloon, for example)
         color: item.position == null ? null : SNColors.primary.withOpacity(.27),
         child: Row(
           children: [

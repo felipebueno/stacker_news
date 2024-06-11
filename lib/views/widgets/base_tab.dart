@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/post_type.dart';
-import 'package:stacker_news/data/api.dart';
+import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/main.dart';
-import 'package:stacker_news/views/widgets/post_list.dart';
-import 'package:stacker_news/views/widgets/post_list_error.dart';
+import 'package:stacker_news/views/widgets/post/post_list.dart';
+import 'package:stacker_news/views/widgets/post/post_list_error.dart';
 
 class BaseTab extends StatefulWidget {
   final PostType postType;
@@ -22,7 +22,7 @@ class _BaseTabState extends State<BaseTab> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
-  final Api _api = locator<Api>();
+  final SNApiClient _api = locator<SNApiClient>();
 
   Future<List<Post>> _fetchInitialPosts() async =>
       await _api.fetchInitialPosts(widget.postType);

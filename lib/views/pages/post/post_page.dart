@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/data/models/post.dart';
+import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
-import 'package:stacker_news/views/widgets/comment_item.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
-import 'package:stacker_news/views/widgets/post_item.dart';
-import 'package:stacker_news/views/widgets/post_list_error.dart';
+import 'package:stacker_news/views/widgets/post/comment_item.dart';
+import 'package:stacker_news/views/widgets/post/post_item.dart';
+import 'package:stacker_news/views/widgets/post/post_list_error.dart';
 import 'package:stacker_news/views/widgets/reply_field.dart';
 
 class PostPage extends StatefulWidget {
@@ -20,7 +20,7 @@ class PostPage extends StatefulWidget {
 
 class _PostPageState extends State<PostPage> {
   Future<Post> _fetchPostDetails(String id) async {
-    return await locator<Api>().fetchPostDetails(id);
+    return await locator<SNApiClient>().fetchPostDetails(id);
   }
 
   @override

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/api.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/post_type.dart';
+import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/main.dart';
-import 'package:stacker_news/views/widgets/post_item.dart';
+import 'package:stacker_news/views/widgets/post/post_item.dart';
 
 class PostList extends StatefulWidget {
   const PostList(
@@ -35,7 +35,8 @@ class _PostListState extends State<PostList> {
             _loadingMore = true;
           });
 
-          final posts = await locator<Api>().fetchMorePosts(widget.postType);
+          final posts =
+              await locator<SNApiClient>().fetchMorePosts(widget.postType);
 
           setState(() {
             widget.posts.addAll(posts);

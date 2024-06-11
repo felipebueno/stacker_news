@@ -22,8 +22,8 @@ const String baseUrl = String.fromEnvironment(
   defaultValue: 'https://stacker.news',
 );
 
-final class Api {
-  Api() {
+final class SNApiClient {
+  SNApiClient() {
     assert(baseUrl.isNotEmpty);
 
     _cookieJar();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/user.dart';
 import 'package:stacker_news/views/pages/profile/bio_header.dart';
-import 'package:stacker_news/views/widgets/comment_item.dart';
+import 'package:stacker_news/views/widgets/post/comment_item.dart';
 
 class BioDetail extends StatelessWidget {
   const BioDetail(
