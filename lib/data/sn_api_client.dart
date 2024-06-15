@@ -144,7 +144,7 @@ final class SNApiClient {
     }).toList();
   }
 
-  String getGraphQLBodyFor(
+  String _getGraphQLBodyFor(
     PostType postType, {
     required String cursor,
   }) {
@@ -192,7 +192,7 @@ final class SNApiClient {
     }
 
     try {
-      final graphBody = getGraphQLBodyFor(
+      final graphBody = _getGraphQLBodyFor(
         postType,
         cursor: cursor,
       );

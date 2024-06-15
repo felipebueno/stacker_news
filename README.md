@@ -36,8 +36,6 @@ Get the latest APK from the [Releases Section](https://github.com/felipebueno/st
   <img src="./screenshots/light/comments_light2.jpg" alt="drawing" width="200"/>
 </p>
 
-Not implemented yet.
-
 ## TODO
 
 - [ ] Write a better TODO list
