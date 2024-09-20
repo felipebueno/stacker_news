@@ -41,7 +41,7 @@ jobs:
       - name: Build APK (split per ABI)
         run: flutter build apk --split-per-abi --flavor prod
       - name: Archive build artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: android-release
           path: |
