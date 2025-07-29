@@ -62,8 +62,8 @@ class ThemeNotifier with ChangeNotifier {
     );
   }
 
-  void setThemeMode(String? value) async {
-    String? themeMode = value ?? 'Dark';
+  Future<void> setThemeMode(String? value) async {
+    final themeMode = value ?? 'Dark';
 
     switch (themeMode) {
       case 'Light':

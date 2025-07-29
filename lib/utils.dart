@@ -19,14 +19,14 @@ class Utils {
   static final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
   static Future<String> getAppVersion() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    final packageInfo = await PackageInfo.fromPlatform();
     final currentVersion = packageInfo.version;
     final currentBuildNumber = packageInfo.buildNumber;
 
     return '$currentVersion+$currentBuildNumber';
   }
 
-  static launchURL(String url) async {
+  static Future<void> launchURL(String url) async {
     final context = navigatorKey.currentContext;
 
     if (context == null) {
@@ -37,10 +37,7 @@ class Utils {
 
     try {
       if (url.endsWith('.pdf')) {
-        Navigator.of(context).pushNamed(
-          PdfReaderPage.id,
-          arguments: url,
-        );
+        Navigator.of(context).pushNamed(PdfReaderPage.id, arguments: url);
 
         return;
       }
@@ -56,10 +53,7 @@ class Utils {
         return;
       }
 
-      Navigator.of(context).pushNamed(
-        PostPage.id,
-        arguments: Post(id: id),
-      );
+      Navigator.of(context).pushNamed(PostPage.id, arguments: Post(id: id));
 
       return;
     }
@@ -67,10 +61,7 @@ class Utils {
     if (url.contains(snUrl) && url.contains('?isUser=true')) {
       final userName = url.split('/').last.split('?').first;
 
-      Navigator.of(context).pushNamed(
-        ProfilePage.id,
-        arguments: userName,
-      );
+      Navigator.of(context).pushNamed(ProfilePage.id, arguments: userName);
 
       return;
     }
@@ -157,10 +148,7 @@ class Utils {
     scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
 
     scaffoldMessengerKey.currentState?.showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.orange,
-      ),
+      SnackBar(content: Text(message), backgroundColor: Colors.orange),
     );
   }
 
@@ -170,28 +158,19 @@ class Utils {
 
     try {
       scaffoldMessengerKey.currentState?.showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(message), backgroundColor: Colors.red),
       );
     } catch (_) {}
   }
 
   static void showException(String message, StackTrace st) {
     debugPrint(message);
-    debugPrintStack(
-      label: message,
-      stackTrace: st,
-    );
+    debugPrintStack(label: message, stackTrace: st);
     scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
 
     try {
       scaffoldMessengerKey.currentState?.showSnackBar(
-        SnackBar(
-          content: Text(message),
-          backgroundColor: Colors.red,
-        ),
+        SnackBar(content: Text(message), backgroundColor: Colors.red),
       );
     } catch (_) {}
   }
@@ -203,15 +182,11 @@ class Utils {
 
     try {
       final info = await InAppUpdate.checkForUpdate();
-      if (info.updateAvailability == UpdateAvailability.updateAvailable &&
-          info.immediateUpdateAllowed) {
+      if (info.updateAvailability == UpdateAvailability.updateAvailable && info.immediateUpdateAllowed) {
         await InAppUpdate.performImmediateUpdate();
       }
     } catch (e, st) {
-      debugPrintStack(
-        label: e.toString(),
-        stackTrace: st,
-      );
+      debugPrintStack(label: e.toString(), stackTrace: st);
       // TODO: Do something with this error
     }
   }

@@ -18,7 +18,7 @@ class PdfReaderPage extends StatelessWidget {
           onPressed: url == null || url == ''
               ? null
               : () {
-                  Share.shareUri(Uri.parse(url));
+                  SharePlus.instance.share(ShareParams(uri: Uri.parse(url)));
                 },
           icon: const Icon(Icons.share),
         ),

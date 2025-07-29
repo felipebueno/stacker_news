@@ -34,19 +34,20 @@ class MarkdownItem extends StatelessWidget {
       'gif',
       'bmp',
       'tiff',
-      'svg'
+      'svg',
     ];
 
-    List<String> lines = _text.split('\n');
-    List<String> markdownImages = [];
+    final lines = _text.split('\n');
+    final markdownImages = [];
 
     for (int i = 0; i < lines.length; i++) {
-      String line = lines[i].trim();
+      final line = lines[i].trim();
       if (line.isNotEmpty) {
         // Check if the line ends with one of the imageExtensions
-        bool isImage = imageExtensions.any((ext) =>
-            line.toLowerCase().endsWith('.$ext') ||
-            line.toLowerCase().startsWith('https://imgprxy.stacker.news/'));
+        final isImage = imageExtensions.any(
+          (ext) =>
+              line.toLowerCase().endsWith('.$ext') || line.toLowerCase().startsWith('https://imgprxy.stacker.news/'),
+        );
 
         if (isImage) {
           // If it is an image link, transform it to Markdown image syntax
@@ -71,16 +72,13 @@ class MarkdownItem extends StatelessWidget {
         ),
       ),
       shrinkWrap: true,
-      extensionSet: md.ExtensionSet(
-        md.ExtensionSet.gitHubFlavored.blockSyntaxes,
-        [
-          md.EmojiSyntax(),
-          md.AutolinkExtensionSyntax(),
-          ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
-          SNAutolinkExtensionSyntax(),
-        ],
-      ),
-      onTapLink: (_, href, __) {
+      extensionSet: md.ExtensionSet(md.ExtensionSet.gitHubFlavored.blockSyntaxes, [
+        md.EmojiSyntax(),
+        md.AutolinkExtensionSyntax(),
+        ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes,
+        SNAutolinkExtensionSyntax(),
+      ]),
+      onTapLink: (_, href, _) {
         if (href == null) {
           return;
         }
@@ -95,11 +93,7 @@ class MarkdownItem extends StatelessWidget {
 class SNAutolinkExtensionSyntax extends md.InlineSyntax {
   static const _atUsernamePattern = r'@([a-zA-Z0-9_-]+)';
 
-  SNAutolinkExtensionSyntax()
-      : super(
-          '($_atUsernamePattern)',
-          caseSensitive: false,
-        );
+  SNAutolinkExtensionSyntax() : super('($_atUsernamePattern)', caseSensitive: false);
 
   @override
   bool tryMatch(md.InlineParser parser, [int? startMatchPos]) {
@@ -132,8 +126,7 @@ class SNAutolinkExtensionSyntax extends md.InlineSyntax {
 
     final destination = '$baseUrl/${text.replaceAll('@', '')}?isUser=true';
 
-    final anchor = md.Element.text('a', text)
-      ..attributes['href'] = Uri.encodeFull(destination);
+    final anchor = md.Element.text('a', text)..attributes['href'] = Uri.encodeFull(destination);
 
     parser
       ..addNode(anchor)

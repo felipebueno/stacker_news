@@ -54,8 +54,7 @@ final class SNApiClient {
       // TODO: Keep only the necessary values
       baseUrl: '$baseUrl/_next/data',
       headers: {
-        'User-Agent':
-            'Mozilla/5.0 (X11; Linux x86_64; rv:126.0) Gecko/20100101 Firefox/126.0',
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:126.0) Gecko/20100101 Firefox/126.0',
         'Accept': '*/*',
         'Accept-Language': 'en-US,en;q=0.5',
         'Content-Type': 'application/json',
@@ -76,7 +75,7 @@ final class SNApiClient {
   // #region Posts
   Future<List<Post>> fetchInitialPosts(PostType postType) async {
     try {
-      String endpoint = postType.endpoint;
+      final endpoint = postType.endpoint;
 
       String? currCommit = await _getCurrBuildId();
 
@@ -117,15 +116,14 @@ final class SNApiClient {
     final response = (responseData['pageProps'] ?? responseData);
     final data = response['ssrData'] ?? response['data'];
 
-    final itemsMap =
-        (data['items'] ?? data['topItems'] ?? data['notifications']);
+    final itemsMap = (data['items'] ?? data['topItems'] ?? data['notifications']);
     final List items = itemsMap['items'] ?? itemsMap['notifications'];
 
     if (postType == PostType.home) {
       // TODO: Temporary solution to get Stacker Saloon on the list
       final List? pins = itemsMap['pins'];
       if (pins != null && pins.isNotEmpty) {
-        for (var pin in pins) {
+        for (final pin in pins) {
           items.insert(pin['position'], pin);
         }
       }
@@ -148,9 +146,7 @@ final class SNApiClient {
     PostType postType, {
     required String cursor,
   }) {
-    if (postType == PostType.top ||
-        postType == PostType.home ||
-        postType == PostType.recent) {
+    if (postType == PostType.top || postType == PostType.home || postType == PostType.recent) {
       // TODO: Use GqlBody and keep only the required fields
       return '{"operationName":"SubItems","variables":{"includeComments":false,"cursor":"$cursor"},"query":"fragment SubFields on Sub {\\n  name\\n  postTypes\\n  allowFreebies\\n  rankingType\\n  billingType\\n  billingCost\\n  billingAutoRenew\\n  billedLastAt\\n  billPaidUntil\\n  baseCost\\n  userId\\n  desc\\n  status\\n  moderated\\n  moderatedCount\\n  meMuteSub\\n  meSubscription\\n  nsfw\\n  __typename\\n}\\n\\nfragment SubFullFields on Sub {\\n  ...SubFields\\n  user {\\n    name\\n    id\\n    optional {\\n      streak\\n      __typename\\n    }\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment ItemFields on Item {\\n  id\\n  parentId\\n  createdAt\\n  deletedAt\\n  title\\n  url\\n  user {\\n    id\\n    name\\n    optional {\\n      streak\\n      __typename\\n    }\\n    meMute\\n    __typename\\n  }\\n  sub {\\n    name\\n    userId\\n    moderated\\n    meMuteSub\\n    meSubscription\\n    nsfw\\n    __typename\\n  }\\n  otsHash\\n  position\\n  sats\\n  boost\\n  bounty\\n  bountyPaidTo\\n  noteId\\n  path\\n  upvotes\\n  meSats\\n  meDontLikeSats\\n  meBookmark\\n  meSubscription\\n  meForward\\n  outlawed\\n  freebie\\n  bio\\n  ncomments\\n  commentSats\\n  lastCommentAt\\n  maxBid\\n  isJob\\n  company\\n  location\\n  remote\\n  subName\\n  pollCost\\n  pollExpiresAt\\n  status\\n  uploadId\\n  mine\\n  imgproxyUrls\\n  rel\\n  __typename\\n}\\n\\nfragment CommentItemExtFields on Item {\\n  text\\n  root {\\n    id\\n    title\\n    bounty\\n    bountyPaidTo\\n    subName\\n    sub {\\n      name\\n      userId\\n      moderated\\n      meMuteSub\\n      __typename\\n    }\\n    user {\\n      name\\n      optional {\\n        streak\\n        __typename\\n      }\\n      id\\n      __typename\\n    }\\n    __typename\\n  }\\n  __typename\\n}\\n\\nquery SubItems(\$sub: String, \$sort: String, \$cursor: String, \$type: String, \$name: String, \$when: String, \$from: String, \$to: String, \$by: String, \$limit: Limit, \$includeComments: Boolean = false) {\\n  sub(name: \$sub) {\\n    ...SubFullFields\\n    __typename\\n  }\\n  items(\\n    sub: \$sub\\n    sort: \$sort\\n    cursor: \$cursor\\n    type: \$type\\n    name: \$name\\n    when: \$when\\n    from: \$from\\n    to: \$to\\n    by: \$by\\n    limit: \$limit\\n  ) {\\n    cursor\\n    items {\\n      ...ItemFields\\n      ...CommentItemExtFields @include(if: \$includeComments)\\n      position\\n      __typename\\n    }\\n    pins {\\n      ...ItemFields\\n      ...CommentItemExtFields @include(if: \$includeComments)\\n      position\\n      __typename\\n    }\\n    __typename\\n  }\\n}"}';
     } else if (postType == PostType.notifications) {
@@ -209,9 +205,7 @@ final class SNApiClient {
       debugPrint(e.toString());
       debugPrintStack(stackTrace: st);
 
-      final msg =
-          ((e is DioException) ? e.response?.data.toString() : e.toString()) ??
-              '';
+      final msg = ((e is DioException) ? e.response?.data.toString() : e.toString()) ?? '';
       Utils.showException(msg, st);
 
       rethrow;
@@ -221,7 +215,7 @@ final class SNApiClient {
   }
 
   Future<Post> fetchPostDetails(String id) async {
-    String? currCommit = await _getCurrBuildId();
+    final currCommit = await _getCurrBuildId();
     final response = await _dio.get('/$currCommit/items/$id.json');
     if (response.statusCode != 200) {
       throw Exception('Error fetching comments');
@@ -268,8 +262,7 @@ final class SNApiClient {
   Future<User> fetchProfile(String userName) async {
     String? currCommit = await _getCurrBuildId();
 
-    final response =
-        await _dio.get('/$currCommit/$userName.json?name=$userName');
+    final response = await _dio.get('/$currCommit/$userName.json?name=$userName');
 
     if (response.statusCode == 200) {
       return _parseProfile(response.data);
@@ -280,8 +273,7 @@ final class SNApiClient {
 
       currCommit = await _getCurrBuildId();
 
-      final retryResponse =
-          await _dio.get('/$currCommit/$userName.json?name=$userName');
+      final retryResponse = await _dio.get('/$currCommit/$userName.json?name=$userName');
 
       if (retryResponse.statusCode == 200) {
         return _parseProfile(retryResponse.data);
@@ -355,24 +347,19 @@ final class SNApiClient {
 
     final response = await _dio.get(value);
 
-    if (response.data is String &&
-        response.data.contains('This magic link has expired')) {
+    if (response.data is String && response.data.contains('This magic link has expired')) {
       Utils.showError('This magic link has expired');
 
       return null;
     }
 
-    if (response.statusCode != 200 &&
-        response.statusCode != 302 &&
-        response.statusCode != 403) {
+    if (response.statusCode != 200 && response.statusCode != 302 && response.statusCode != 403) {
       Utils.showError('3 Error validating token');
 
       return null;
     }
 
-    if (response.statusCode == 403 &&
-        response.realUri.toString() ==
-            '$baseUrl/api/auth/error?error=Verification') {
+    if (response.statusCode == 403 && response.realUri.toString() == '$baseUrl/api/auth/error?error=Verification') {
       final sessionData = await SharedPrefsManager.get('session');
       if (sessionData == null || sessionData == 'null' || sessionData == '{}') {
         _goToLoginFailedPage();
@@ -472,8 +459,7 @@ final class SNApiClient {
 
     final response = await _dio.post(
       '$baseUrl/api/graphql',
-      data:
-          '{"variables":{},"query":"{\\n  hasNewNotes\\n}\\n"}', // TODO: Use GqlBody
+      data: '{"variables":{},"query":"{\\n  hasNewNotes\\n}\\n"}', // TODO: Use GqlBody
     );
 
     if (response.statusCode == 200) {
@@ -616,6 +602,7 @@ final class SNApiClient {
 
     throw Exception('Failed to create comment');
   }
+
   // #endregion Items & Comments
 }
 
@@ -631,10 +618,10 @@ class GqlBody {
   });
 
   Map<String, dynamic> toJson() => {
-        'operationName': operationName,
-        'query': query,
-        'variables': variables,
-      };
+    'operationName': operationName,
+    'query': query,
+    'variables': variables,
+  };
 }
 
 class GqlError {

@@ -9,6 +9,10 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
+formatter:
+  page_width: 120
+  trailing_commas: preserve
+
 linter:
   # The lint rules applied to this project can be customized in the
   # section below to disable rules from the `package:flutter_lints/flutter.yaml`
@@ -23,7 +27,19 @@ linter:
   # producing the lint.
   rules:
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
+    # require_trailing_commas: true
     prefer_single_quotes: true
+    always_declare_return_types: true
+    avoid_unused_constructor_parameters: true
+    avoid_void_async: true
+    avoid_relative_lib_imports: true
+    prefer_final_fields: true
+    prefer_final_in_for_each: true
+    prefer_final_locals: true
+    invalid_case_patterns: true
+    prefer_void_to_null: true
+    unnecessary_statements: true
+    # prefer_final_parameters: true
     # Make constructors the first thing in every class
     # sort_constructors_first: true
     # Blindly follow the Flutter code style, which prefers types everywhere
@@ -52,3 +68,4 @@ dart_code_metrics:
     - prefer-conditional-expressions
     - no-equal-then-else
     - avoid-unused-parameters
+    - no-empty-block
