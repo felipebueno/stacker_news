@@ -19,7 +19,7 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
-  Future<Post>? _postFuture;
+  Future<Post?>? _postFuture;
   Post? _post;
   bool _isInitialized = false;
 
@@ -38,7 +38,7 @@ class _PostPageState extends State<PostPage> {
     }
   }
 
-  Future<Post> _fetchPostDetails(String id) async {
+  Future<Post?> _fetchPostDetails(String id) async {
     return await locator<SNApiClient>().fetchPostDetails(id);
   }
 
@@ -51,8 +51,7 @@ class _PostPageState extends State<PostPage> {
           : FutureBuilder(
               future: _postFuture,
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting ||
-                    !snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.waiting || !snapshot.hasData) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
@@ -84,8 +83,7 @@ class _PostPageState extends State<PostPage> {
                               item,
                               onCommentCreated: () {
                                 setState(() {
-                                  _postFuture =
-                                      _fetchPostDetails(_post!.id ?? '');
+                                  _postFuture = _fetchPostDetails(_post!.id ?? '');
                                 });
                               },
                             ),

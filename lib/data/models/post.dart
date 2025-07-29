@@ -130,8 +130,8 @@ final class Post {
       mine: json['mine'],
       user: json['user'] == null ? null : User.fromJson(json['user']),
       text: json['text'],
-      comments: json['comments'] != null
-          ? (json['comments'] as List).map((i) => Post.fromJson(i)).toList()
+      comments: json['comments'] != null && json['comments']['comments'] != null
+          ? (json['comments']['comments'] as List).map((i) => Post.fromJson(i)).toList()
           : null,
       pageTitle: json['pageTitle'],
       item: json['item'] == null ? null : Post.fromJson(json['item']),
@@ -141,8 +141,7 @@ final class Post {
   }
 
   // TODO: Protect against null or invalid createAt
-  String get timeAgo =>
-      createdAt == null ? '' : ta.format(DateTime.parse(createdAt!));
+  String get timeAgo => createdAt == null ? '' : ta.format(DateTime.parse(createdAt!));
 
   @override
   String toString() {
