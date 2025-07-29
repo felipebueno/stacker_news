@@ -53,7 +53,9 @@ class _PostItemState extends State<PostItem> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 4.0),
         // Add color to special items (Stacker Saloon, for example)
-        color: item.position == null ? null : SNColors.primary.withOpacity(.27),
+        color: item.position == null
+            ? null
+            : SNColors.primary.withValues(alpha: .27),
         child: Row(
           children: [
             if (widget.isCommentsPage && item.id != null && item.id != '')

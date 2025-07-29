@@ -104,7 +104,7 @@ class _NewDiscussionPageState extends State<NewDiscussionPage> {
           if (_busy)
             Container(
               height: 248,
-              color: Colors.black.withOpacity(.7),
+              color: Colors.black.withValues(alpha: .7),
               child: const Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,

@@ -12,7 +12,7 @@ class ThemeNotifier with ChangeNotifier {
     appBarTheme: const AppBarTheme(
       foregroundColor: SNColors.primary,
     ),
-    tabBarTheme: const TabBarTheme(
+    tabBarTheme: const TabBarThemeData(
       labelColor: SNColors.primary,
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(

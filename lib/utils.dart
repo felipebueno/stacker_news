@@ -119,7 +119,7 @@ class Utils {
       barrierDismissible: false,
       builder: (context) {
         return Material(
-          color: Colors.black12.withOpacity(.7),
+          color: Colors.black12.withValues(alpha: .7),
           child: PopScope(
             canPop: false,
             child: Center(

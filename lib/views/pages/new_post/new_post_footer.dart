@@ -49,7 +49,7 @@ class _NewPostFooterState extends State<NewPostFooter> {
                         barrierDismissible: true,
                         builder: (context) {
                           return Material(
-                            color: Colors.black12.withOpacity(.7),
+                            color: Colors.black12.withValues(alpha: .7),
                             child: Center(
                               child: Padding(
                                 padding: const EdgeInsets.all(20),

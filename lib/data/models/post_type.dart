@@ -61,9 +61,6 @@ enum PostType {
 
       case PostType.notifications:
         return 'notifications';
-
-      default:
-        return '';
     }
   }
 
@@ -101,9 +98,6 @@ enum PostType {
 
       case PostType.notifications:
         return 'Notifications';
-
-      default:
-        return '';
     }
   }
 
@@ -141,9 +135,6 @@ enum PostType {
 
       case PostType.notifications:
         return Icons.notifications;
-
-      default:
-        return Icons.new_releases;
     }
   }
 }
