@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:app_links/app_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,12 +26,11 @@ import 'package:stacker_news/views/pages/pdf_reader/pdf_reader_page.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
 import 'package:stacker_news/views/pages/settings/settings_page.dart';
-import 'package:uni_links/uni_links.dart';
 
 import 'data/theme_notifier.dart';
 
 final locator = GetIt.instance;
-bool _initialUriIsHandled = false;
+bool _initialUriAlreadyHandled = false;
 
 void main() {
   if (!kIsWeb) {
@@ -39,10 +39,12 @@ void main() {
 
   locator.registerLazySingleton(SNApiClient.new);
 
-  runApp(ChangeNotifierProvider<ThemeNotifier>(
-    create: (_) => ThemeNotifier(),
-    child: const StackerNewsApp(),
-  ));
+  runApp(
+    ChangeNotifierProvider<ThemeNotifier>(
+      create: (_) => ThemeNotifier(),
+      child: const StackerNewsApp(),
+    ),
+  );
 }
 
 class StackerNewsApp extends StatefulWidget {
@@ -75,19 +77,19 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
     super.dispose();
   }
 
-  bool _isLoginLink(String link) =>
-      link.contains('$baseUrl/api/auth/callback/email');
+  bool _isLoginLink(String link) => link.contains('$baseUrl/api/auth/callback/email');
 
   void _handleIncomingLinks() {
     if (!kIsWeb) {
+      final appLinks = AppLinks(); // AppLinks is singleton
       // It will handle app links while the app is already started - be it in the foreground or in the background.
-      _sub = linkStream.listen(
-        (String? link) async {
-          if (link == null) return;
-          if (!_isLoginLink(link)) return;
+      _sub = appLinks.uriLinkStream.listen(
+        (uri) async {
+          final url = uri.toString();
+          if (!_isLoginLink(url)) return;
           if (!mounted) return;
 
-          login(link);
+          login(url);
         },
         onError: (Object err) {
           if (!mounted) return;
@@ -99,16 +101,17 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
   }
 
   Future<void> _handleInitialUri() async {
-    if (_initialUriIsHandled) return;
+    if (_initialUriAlreadyHandled) return;
 
-    _initialUriIsHandled = true;
+    _initialUriAlreadyHandled = true;
     try {
-      final link = await getInitialLink();
-      if (link == null) return;
-      if (!_isLoginLink(link)) return;
+      final uri = await AppLinks().getInitialLink();
+      if (uri == null) return;
+      final url = uri.toString();
+      if (!_isLoginLink(url)) return;
       if (!mounted) return;
 
-      login(link);
+      login(url);
     } on PlatformException {
       // Platform messages may fail but we ignore the exception
       Utils.showError('falied to get initial uri');
