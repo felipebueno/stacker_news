@@ -1,0 +1,5 @@
+[keys.normal]
+C-r = { d = ":sh ./launch.sh dev", D = ":sh alacritty --title 'i3floati3' -e ./launch.sh dev" }
+
+[keys.insert]
+C-r = { d = ":sh ./launch.sh dev", D = ":sh alacritty --title 'i3floati3' -e ./launch.sh dev" }
