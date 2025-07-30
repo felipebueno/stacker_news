@@ -72,7 +72,13 @@ class _SignInFormState extends State<SignInForm> {
                 _busy.value = false;
 
                 if (ret && context.mounted) {
-                  Navigator.pushNamed(context, CheckEmailPage.id);
+                  Navigator.pushNamed(
+                    context,
+                    CheckEmailPage.id,
+                    arguments: {
+                      'email': _emailController.text,
+                    },
+                  );
                 }
               },
               child: const Text('Request Magic Code'),

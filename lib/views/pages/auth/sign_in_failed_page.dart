@@ -13,15 +13,10 @@ class LoginFailedPage extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
-            'Unable to sign in',
-            style: TextStyle(
-              fontSize: 24,
-            ),
-          ),
+          Image.asset('assets/double.gif'),
           const SizedBox(height: 8),
           const Text(
-            'The sign in link is no longer valid.\nIt may have been used already\nor it may have expired.',
+            'Incorrect magic code',
             style: TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),
@@ -30,7 +25,7 @@ class LoginFailedPage extends StatelessWidget {
             onPressed: () {
               Navigator.pushReplacementNamed(context, SignInPage.id);
             },
-            child: const Text('Login Again'),
+            child: const Text('try again'),
           ),
         ],
       ),

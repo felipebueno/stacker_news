@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:app_links/app_links.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-import 'package:stacker_news/data/auth_service.dart';
 import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/about/about_page.dart';
@@ -77,48 +74,48 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
     super.dispose();
   }
 
-  bool _isLoginLink(String link) => link.contains('$baseUrl/api/auth/callback/email');
+  // bool _isLoginLink(String link) => link.contains('$baseUrl/api/auth/callback/email');
 
   void _handleIncomingLinks() {
-    if (!kIsWeb) {
-      final appLinks = AppLinks(); // AppLinks is singleton
-      // It will handle app links while the app is already started - be it in the foreground or in the background.
-      _sub = appLinks.uriLinkStream.listen(
-        (uri) async {
-          final url = uri.toString();
-          if (!_isLoginLink(url)) return;
-          if (!mounted) return;
+    // if (!kIsWeb) {
+    //   final appLinks = AppLinks(); // AppLinks is singleton
+    //   // It will handle app links while the app is already started - be it in the foreground or in the background.
+    //   _sub = appLinks.uriLinkStream.listen(
+    //     (uri) async {
+    //       final url = uri.toString();
+    //       if (!_isLoginLink(url)) return;
+    //       if (!mounted) return;
 
-          login(url);
-        },
-        onError: (Object err) {
-          if (!mounted) return;
+    //       login(url);
+    //     },
+    //     onError: (Object err) {
+    //       if (!mounted) return;
 
-          Utils.showError('Unilinks Error: $err');
-        },
-      );
-    }
+    //       Utils.showError('Unilinks Error: $err');
+    //     },
+    //   );
+    // }
   }
 
   Future<void> _handleInitialUri() async {
     if (_initialUriAlreadyHandled) return;
 
     _initialUriAlreadyHandled = true;
-    try {
-      final uri = await AppLinks().getInitialLink();
-      if (uri == null) return;
-      final url = uri.toString();
-      if (!_isLoginLink(url)) return;
-      if (!mounted) return;
+    // try {
+    //   final uri = await AppLinks().getInitialLink();
+    //   if (uri == null) return;
+    //   final url = uri.toString();
+    //   if (!_isLoginLink(url)) return;
+    //   if (!mounted) return;
 
-      login(url);
-    } on PlatformException {
-      // Platform messages may fail but we ignore the exception
-      Utils.showError('falied to get initial uri');
-    } on FormatException catch (_) {
-      if (!mounted) return;
-      Utils.showError('malformed initial uri');
-    }
+    //   login(url);
+    // } on PlatformException {
+    //   // Platform messages may fail but we ignore the exception
+    //   Utils.showError('falied to get initial uri');
+    // } on FormatException catch (_) {
+    //   if (!mounted) return;
+    //   Utils.showError('malformed initial uri');
+    // }
   }
 
   @override

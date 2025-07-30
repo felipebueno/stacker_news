@@ -17,6 +17,7 @@ class CheckEmailPage extends StatefulWidget {
 class _CheckEmailPageState extends State<CheckEmailPage> {
   final _busy = ValueNotifier<bool>(false);
   final _tokenController = TextEditingController();
+  late final String _email = (ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>)['email'];
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +33,8 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'A magic code has been sent to your email address',
+          Text(
+            'A magic code has been sent to your email address ($_email}',
             style: TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),
@@ -42,8 +43,7 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
           TextField(
             controller: _tokenController,
             decoration: const InputDecoration(
-              labelText: 'Paste Magic Code Here',
-              hintText: '$baseUrl/api/auth/callback/email/...',
+              labelText: 'Type or Paste Magic Code Here',
             ),
           ),
           const SizedBox(height: 24),
@@ -55,7 +55,10 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
 
               try {
                 _busy.value = true;
-                final session = await locator<SNApiClient>().login(_tokenController.text);
+                final session = await locator<SNApiClient>().loginWithMagicCode(
+                  email: _email,
+                  magicCode: _tokenController.text,
+                );
 
                 if (session != null) {
                   if (context.mounted) {

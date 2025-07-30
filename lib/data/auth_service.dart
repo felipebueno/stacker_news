@@ -4,7 +4,10 @@ import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
 
-Future<void> login(String link) async {
+Future<void> login({
+  required String email,
+  required String magicCode,
+}) async {
   try {
     // TODO: Show busy indicator while logging in
     // Utils.showBusyModal(
@@ -12,13 +15,16 @@ Future<void> login(String link) async {
     //   message: 'Logging in...',
     // );
 
-    final session = await locator<SNApiClient>().login(link);
+    final session = await locator<SNApiClient>().loginWithMagicCode(
+      email: email,
+      magicCode: magicCode,
+    );
 
     if (session != null) {
       final ctx = Utils.navigatorKey.currentContext;
 
       if (ctx == null) {
-        Utils.showError('Error going to home page. Context is null');
+        Utils.showError('Error going home. Context is null');
 
         return;
       }
@@ -26,7 +32,7 @@ Future<void> login(String link) async {
       if (ctx.mounted) {
         Navigator.pushReplacementNamed(ctx, HomePage.id);
       } else {
-        Utils.showError('Error going to home page. Context is not mounted');
+        Utils.showError('Error going home. Context is not mounted');
       }
     }
   } catch (e, st) {

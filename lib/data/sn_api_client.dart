@@ -323,98 +323,115 @@ final class SNApiClient {
     }
   }
 
-  Future<Session?> login(String link) async {
-    final uri = Uri.parse(link);
-    final queryParams = uri.queryParameters;
-
-    final email = queryParams['email'];
-    final token = queryParams['token'];
-
-    if (email == null || token == null) {
-      Utils.showError('1 Error validating token');
-
+  Future<Session?> loginWithMagicCode({
+    required String email,
+    required String magicCode,
+  }) async {
+    if (magicCode.isEmpty) {
+      Utils.showError('Error: Magic Code is empty');
       return null;
     }
 
-    final redirected = await _dio.get(
-      uri.toString(),
-      options: Options(
-        followRedirects: false,
-        validateStatus: (status) {
-          if (status == null) {
-            return false;
-          }
+    try {
+      // First request to the callback endpoint with minimal headers
+      final callbackResponse = await _dio.get(
+        '$baseUrl/api/auth/callback/email?callbackUrl=${Uri.encodeComponent(baseUrl)}&token=$magicCode&email=${Uri.encodeComponent(email)}',
+        options: Options(
+          headers: {
+            'Accept':
+                'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+            'Service-Worker-Navigation-Preload': 'true',
+            'Upgrade-Insecure-Requests': '1',
+            'User-Agent':
+                'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+            'sec-ch-prefers-color-scheme': 'dark',
+            'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Linux"',
+          },
+          followRedirects: false,
+          validateStatus: (status) => status != null && status < 500,
+        ),
+      );
 
-          return status < 500;
-        },
-      ),
-    );
-
-    final value = redirected.headers.value(HttpHeaders.locationHeader);
-
-    if (value == null) {
-      Utils.showError('2 Error validating token');
-
-      return null;
-    }
-
-    final response = await _dio.get(value);
-
-    if (response.data is String && response.data.contains('This magic link has expired')) {
-      Utils.showError('This magic link has expired');
-
-      return null;
-    }
-
-    if (response.statusCode != 200 && response.statusCode != 302 && response.statusCode != 403) {
-      Utils.showError('3 Error validating token');
-
-      return null;
-    }
-
-    if (response.statusCode == 403 && response.realUri.toString() == '$baseUrl/api/auth/error?error=Verification') {
-      final sessionData = await SharedPrefsManager.get('session');
-      if (sessionData == null || sessionData == 'null' || sessionData == '{}') {
-        _goToLoginFailedPage();
-
+      // Handle redirect location
+      final location = callbackResponse.headers.value(HttpHeaders.locationHeader);
+      if (location == null) {
+        Utils.showError('Error validating token: No redirect location');
         return null;
       }
 
-      final session = Session.fromJson(jsonDecode(sessionData));
+      // Check if we got redirected to the error page
+      if (location.contains('/api/auth/error?error=Verification')) {
+        // Try to get existing session
+        final sessionData = await SharedPrefsManager.get('session');
+        if (sessionData == null || sessionData == 'null' || sessionData == '{}') {
+          _goToLoginFailedPage();
+          return null;
+        }
 
-      if (email != session.user?.email) {
-        _goToLoginFailedPage();
+        final session = Session.fromJson(jsonDecode(sessionData));
+        if (email != session.user?.email) {
+          _goToLoginFailedPage();
+          return null;
+        }
 
+        // If we have a valid session, return it
+        return session;
+      }
+
+      // If we got redirected to a success page, follow it
+      final response = await _dio.get(
+        location,
+        options: Options(
+          headers: {
+            'Accept':
+                'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+            'User-Agent':
+                'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+          },
+        ),
+      );
+
+      // Check for expired magic link
+      if (response.data is String && response.data.contains('This magic link has expired')) {
+        Utils.showError('This magic link has expired');
         return null;
       }
-    }
 
-    final sessionResponse = await _dio.get(
-      '$baseUrl/api/auth/session',
-    );
-
-    if (sessionResponse.statusCode != 200) {
-      Utils.showError(
-        '4 Error validating token (Expected sessionResponse.statusCode 200 but got ${sessionResponse.statusCode})',
+      // Get the session after successful login
+      final sessionResponse = await _dio.get(
+        '$baseUrl/api/auth/session',
+        options: Options(
+          headers: {
+            'Accept': 'application/json',
+          },
+        ),
       );
 
-      return null;
-    }
+      if (sessionResponse.statusCode != 200) {
+        Utils.showError(
+          'Error validating token (Expected sessionResponse.statusCode 200 but got ${sessionResponse.statusCode})',
+        );
+        return null;
+      }
 
-    if (sessionResponse.data == {}) {
-      Utils.showError(
-        '5 Error validating token (Expected sessionResponse.data != {})',
+      if (sessionResponse.data == null || sessionResponse.data.isEmpty) {
+        Utils.showError('Error validating token: Empty session data');
+        return null;
+      }
+
+      // Save the session
+      await SharedPrefsManager.set(
+        'session',
+        jsonEncode(sessionResponse.data),
       );
 
+      return Session.fromJson(sessionResponse.data);
+    } catch (e) {
+      Utils.showError('Login failed: ${e.toString()}');
       return null;
     }
-
-    await SharedPrefsManager.set(
-      'session',
-      jsonEncode(sessionResponse.data),
-    );
-
-    return Session.fromJson(sessionResponse.data);
   }
 
   Future<bool> requestMagicToken(String email) async {
