@@ -41,7 +41,7 @@ final class SNApiClient {
               ),
             );
           } else {
-            debugPrint(error.response?.data.toString());
+            debugPrint(error.toString());
             handler.next(error);
           }
         },
@@ -613,7 +613,7 @@ final class SNApiClient {
           query: '''
 		mutation upsertComment(\$parentId: ID!, \$text: String!) {
 			upsertComment(parentId: \$parentId, text: \$text) {
-				id
+        __typename
 			}
 		}
           ''',
