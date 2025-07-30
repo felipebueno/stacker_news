@@ -417,48 +417,51 @@ final class SNApiClient {
     return Session.fromJson(sessionResponse.data);
   }
 
-  Future<bool> requestMagicLink(String email) async {
+  Future<bool> requestMagicToken(String email) async {
+    // Fetch CSRF token
     final csrfResponse = await _dio.get(
       '$baseUrl/api/auth/csrf',
       options: Options(
-        headers: {
-          'x-csrf-token': '1',
-        },
+        headers: {'x-csrf-token': '1'},
       ),
     );
 
     if (csrfResponse.statusCode != 200) {
-      Utils.showError('Error fetching csrf token');
-
+      Utils.showError('Error fetching CSRF token');
       return false;
     }
 
     final csrfToken = csrfResponse.data['csrfToken'];
-    _dio.options.headers['x-csrf-token'] = csrfToken;
+
+    final formData =
+        'email=${Uri.encodeComponent(email)}'
+        '&callbackUrl=${Uri.encodeComponent('$baseUrl/')}'
+        '&multiAuth=false'
+        '&csrfToken=${Uri.encodeComponent(csrfToken)}'
+        '&json=true';
 
     final response = await _dio.post(
-      '$baseUrl/api/auth/signin/email?',
-      data: {
-        'email': email,
-        'callbackUrl': '$baseUrl/',
-        'csrfToken': csrfToken,
-        'json': true,
-      },
+      '$baseUrl/api/auth/signin/email',
+      data: formData,
       options: Options(
-        followRedirects: false,
-        validateStatus: (status) {
-          if (status == null) {
-            return false;
-          }
-
-          return status < 500;
+        contentType: 'application/x-www-form-urlencoded',
+        headers: {
+          'origin': baseUrl,
+          'referer': '$baseUrl/login?callbackUrl=${Uri.encodeComponent('$baseUrl/')}',
+          'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138"',
+          'sec-ch-ua-mobile': '?0',
+          'sec-ch-ua-platform': '"Linux"',
+          'sec-fetch-dest': 'empty',
+          'sec-fetch-mode': 'cors',
+          'sec-fetch-site': 'same-origin',
         },
+        followRedirects: false,
+        validateStatus: (status) => status != null && status < 500,
       ),
     );
 
     if (response.statusCode != 200 && response.statusCode != 302) {
-      Utils.showError('Unknonw Error ');
-
+      Utils.showError('Failed with status: ${response.statusCode}');
       return false;
     }
 

@@ -68,15 +68,14 @@ class _SignInFormState extends State<SignInForm> {
                 }
 
                 _busy.value = true;
-                final ret = await locator<SNApiClient>()
-                    .requestMagicLink(_emailController.text);
+                final ret = await locator<SNApiClient>().requestMagicToken(_emailController.text);
                 _busy.value = false;
 
                 if (ret && context.mounted) {
                   Navigator.pushNamed(context, CheckEmailPage.id);
                 }
               },
-              child: const Text('Request Magic Link'),
+              child: const Text('Request Magic Code'),
             ),
             const SizedBox(height: 24),
             // const Text('or'),

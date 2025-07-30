@@ -33,16 +33,16 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
           ),
           const SizedBox(height: 8),
           const Text(
-            'A sign in link has been sent to your email address.\nYou can click it to open directly in the app or, if it doesn\'t work, you can copy the link and paste below.',
+            'A magic code has been sent to your email address',
             style: TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
-          Image.asset('assets/hello.gif'),
+          Image.asset('assets/cowboy-saloon.gif'),
           TextField(
             controller: _tokenController,
             decoration: const InputDecoration(
-              labelText: 'Paste Magic Link Here',
+              labelText: 'Paste Magic Code Here',
               hintText: '$baseUrl/api/auth/callback/email/...',
             ),
           ),
@@ -55,8 +55,7 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
 
               try {
                 _busy.value = true;
-                final session =
-                    await locator<SNApiClient>().login(_tokenController.text);
+                final session = await locator<SNApiClient>().login(_tokenController.text);
 
                 if (session != null) {
                   if (context.mounted) {
