@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17.x'
@@ -26,6 +26,16 @@ jobs:
           cache: true
       - name: Get dependencies
         run: flutter pub get
+      - name: Configure Gradle for CI
+        run: |
+          # Increase heap size for Gradle daemon
+          echo "org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError" >> android/gradle.properties
+          # Enable Gradle daemon and configure for CI
+          echo "org.gradle.daemon=false" >> android/gradle.properties
+          echo "org.gradle.parallel=true" >> android/gradle.properties
+          echo "org.gradle.caching=true" >> android/gradle.properties
+          # Disable incremental compilation to save memory
+          echo "kotlin.incremental=false" >> android/gradle.properties
       - name: Download Android keystore
         id: android_keystore
         uses: timheuer/base64-to-file@v1.0.3
@@ -39,7 +49,9 @@ jobs:
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
           echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
       - name: Build APK (split per ABI)
-        run: flutter build apk --split-per-abi --flavor prod
+        run: flutter build apk --split-per-abi --flavor prod --release
+        env:
+          GRADLE_OPTS: '-Xmx4g -Dfile.encoding=UTF-8'
       - name: Archive build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -48,7 +60,6 @@ jobs:
             build/app/outputs/flutter-apk/app-arm64-v8a-prod-release.apk
             build/app/outputs/flutter-apk/app-armeabi-v7a-prod-release.apk
             build/app/outputs/flutter-apk/app-x86_64-prod-release.apk
-
   release:
     name: Create GitHub Release
     needs: build
