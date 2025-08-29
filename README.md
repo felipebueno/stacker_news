@@ -116,9 +116,9 @@ Get the latest APK from the [Releases Section](https://github.com/felipebueno/st
 
   - [ ] Github Actions
 
-    - [x] PWA
+    - [ ] PWA
 
-    - [x] Google Play
+    - [ ] Google Play
 
     - [x] Github Releases
 
@@ -130,7 +130,7 @@ Get the latest APK from the [Releases Section](https://github.com/felipebueno/st
 
     - [ ] Instructions on how to install it directly from github
 
-    - [x] Put it back on Google Play
+    - [ ] Put it back on Google Play
 
     - [ ] F-Droid (need help)
 
