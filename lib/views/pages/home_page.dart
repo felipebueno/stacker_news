@@ -10,26 +10,37 @@ class HomePage extends StatelessWidget {
   static const String id = 'home';
 
   const HomePage({super.key});
-  List<Tab> get tabs => PostType.values
+  List<Tab> get _tabs => PostType.values
       .where((p) => p != PostType.notifications)
-      .map((t) => Tab(
-            icon: Icon(t.icon),
-            child: SizedBox(
-              width: 64,
-              child: Center(child: Text(t.title)),
+      .map(
+        (t) => Tab(
+          icon: Icon(t.icon),
+          child: SizedBox(
+            width: 72,
+            child: Center(
+              child: Text(
+                t.title,
+                textAlign: TextAlign.center,
+              ),
             ),
-          ))
+          ),
+        ),
+      )
       .toList();
 
-  List<BaseTab> get tabViews => PostType.values
-      .where((p) => p != PostType.notifications)
-      .map((t) => BaseTab(postType: t))
+  List<BaseTab> get _tabViews => PostType.values
+      .where(
+        (p) => p != PostType.notifications,
+      )
+      .map(
+        (t) => BaseTab(postType: t),
+      )
       .toList();
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: tabs.length,
+      length: _tabs.length,
       child: GenericPageScaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -38,10 +49,10 @@ class HomePage extends StatelessWidget {
             MaybeNotificationsButton(),
           ],
         ),
-        mainBody: TabBarView(children: tabViews),
+        mainBody: TabBarView(children: _tabViews),
         bottomNavigationBar: TabBar(
           isScrollable: true,
-          tabs: tabs,
+          tabs: _tabs,
         ),
         fab: const MaybeNewPostFab(),
       ),

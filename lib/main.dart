@@ -120,37 +120,39 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeNotifier>(
-      builder: (context, theme, _) {
-        return MaterialApp(
-          navigatorKey: Utils.navigatorKey,
-          scaffoldMessengerKey: Utils.scaffoldMessengerKey,
-          title: 'Stacker News',
-          themeMode: theme.themeMode,
-          theme: theme.lightTheme,
-          darkTheme: theme.darkTheme,
-          initialRoute: HomePage.id,
-          routes: {
-            HomePage.id: (context) => const HomePage(),
-            PostPage.id: (context) => const PostPage(),
-            SettingsPage.id: (context) => const SettingsPage(),
-            ProfilePage.id: (context) => const ProfilePage(),
-            AboutPage.id: (context) => const AboutPage(),
-            SignInPage.id: (context) => const SignInPage(),
-            CheckEmailPage.id: (context) => const CheckEmailPage(),
-            LoginFailedPage.id: (context) => const LoginFailedPage(),
-            NotificationsPage.id: (context) => const NotificationsPage(),
-            NewPostPage.id: (context) => const NewPostPage(),
-            NewLinkPage.id: (context) => const NewLinkPage(),
-            NewDiscussionPage.id: (context) => const NewDiscussionPage(),
-            NewPollPage.id: (context) => const NewPollPage(),
-            NewBountyPage.id: (context) => const NewBountyPage(),
-            NewJobPage.id: (context) => const NewJobPage(),
-            PdfReaderPage.id: (context) => const PdfReaderPage(),
-          },
-          home: const HomePage(),
-        );
-      },
+    return SafeArea(
+      child: Consumer<ThemeNotifier>(
+        builder: (context, theme, _) {
+          return MaterialApp(
+            navigatorKey: Utils.navigatorKey,
+            scaffoldMessengerKey: Utils.scaffoldMessengerKey,
+            title: 'Stacker News',
+            themeMode: theme.themeMode,
+            theme: theme.lightTheme,
+            darkTheme: theme.darkTheme,
+            initialRoute: HomePage.id,
+            routes: {
+              HomePage.id: (context) => const HomePage(),
+              PostPage.id: (context) => const PostPage(),
+              SettingsPage.id: (context) => const SettingsPage(),
+              ProfilePage.id: (context) => const ProfilePage(),
+              AboutPage.id: (context) => const AboutPage(),
+              SignInPage.id: (context) => const SignInPage(),
+              CheckEmailPage.id: (context) => const CheckEmailPage(),
+              LoginFailedPage.id: (context) => const LoginFailedPage(),
+              NotificationsPage.id: (context) => const NotificationsPage(),
+              NewPostPage.id: (context) => const NewPostPage(),
+              NewLinkPage.id: (context) => const NewLinkPage(),
+              NewDiscussionPage.id: (context) => const NewDiscussionPage(),
+              NewPollPage.id: (context) => const NewPollPage(),
+              NewBountyPage.id: (context) => const NewBountyPage(),
+              NewJobPage.id: (context) => const NewJobPage(),
+              PdfReaderPage.id: (context) => const PdfReaderPage(),
+            },
+            home: const HomePage(),
+          );
+        },
+      ),
     );
   }
 }

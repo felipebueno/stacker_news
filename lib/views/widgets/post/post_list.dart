@@ -27,16 +27,14 @@ class _PostListState extends State<PostList> {
   void initState() {
     super.initState();
 
-    if (widget.postType != PostType.job) {
+    if (widget.postType != PostType.jobs) {
       _scrollController.addListener(() async {
-        if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent) {
+        if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
           setState(() {
             _loadingMore = true;
           });
 
-          final posts =
-              await locator<SNApiClient>().fetchMorePosts(widget.postType);
+          final posts = await locator<SNApiClient>().fetchMorePosts(widget.postType);
 
           setState(() {
             widget.posts.addAll(posts);
