@@ -31,7 +31,7 @@ dependencies:
   in_app_update: ^4.2.3
   flutter_svg: ^2.2.0
   cached_network_image: ^3.4.1
-  package_info_plus: ^8.3.0
+  package_info_plus: ^9.0.0
   markdown: ^7.3.0
   get_it: ^8.0.3
   cookie_jar: ^4.0.8
@@ -42,7 +42,7 @@ dependencies:
   app_links: ^6.4.0
   font_awesome_flutter: ^10.8.0
   flutter_cached_pdfview: ^0.4.3
-  share_plus: ^11.0.0
+  share_plus: ^12.0.0
 
 dependency_overrides:
   flutter_pdfview: 1.4.1
