@@ -1268,16 +1268,15 @@ final class SNApiClient {
       '$baseUrl/api/graphql',
       data: jsonEncode(
         GqlBody(
-          operationName: 'idempotentAct',
+          operationName: 'Act',
           variables: {
             'id': id,
             'sats': sats,
           },
           query: '''
-            mutation idempotentAct(\$id: ID!, \$sats: Int!) {
-              act(id: \$id, sats: \$sats, idempotent: true) {
+            mutation Act(\$id: ID!, \$sats: Int!) {
+              act(id: \$id, sats: \$sats) {
                 id
-                sats
               }
             }
           ''',
