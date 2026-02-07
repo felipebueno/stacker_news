@@ -41,7 +41,24 @@ final class SNApiClient {
               ),
             );
           } else {
-            debugPrint(error.toString());
+            final requestUrl = error.requestOptions.uri.toString();
+            final requestMethod = error.requestOptions.method;
+
+            debugPrint('=== DIO Error Interceptor ===');
+            debugPrint('Status Code: $statusCode');
+            debugPrint('Request: $requestMethod $requestUrl');
+            debugPrint('Error Message: ${error.message}');
+
+            // Log response body/data for debugging GraphQL errors
+            if (error.response?.data != null) {
+              debugPrint('Response Data: ${error.response!.data}');
+            }
+
+            // Log request data if available (for debugging what was sent)
+            if (error.requestOptions.data != null) {
+              debugPrint('Request Data: ${error.requestOptions.data}');
+            }
+   
             handler.next(error);
           }
         },
@@ -923,18 +940,13 @@ final class SNApiClient {
                   diagnostics
                   noReferralLinks
                   fiatCurrency
-                  greeterMode
                   hideCowboyHat
                   hideFromTopUsers
                   hideGithub
                   hideNostr
                   hideTwitter
                   hideInvoiceDesc
-                  hideIsContributor
-                  hideWalletBalance
-                  hideWelcomeBanner
                   imgproxyOnly
-                  lastCheckedJobs
                   nostrCrossposting
                   noteAllDescendants
                   noteCowboyHat
@@ -944,7 +956,6 @@ final class SNApiClient {
                   noteForwardedSats
                   noteInvites
                   noteItemSats
-                  noteJobIndicator
                   noteMentions
                   noteItemMentions
                   sats
@@ -953,10 +964,6 @@ final class SNApiClient {
                   turboTipping
                   zapUndos
                   upvotePopover
-                  wildWestMode
-                  withdrawMaxFeeDefault
-                  lnAddr
-                  autoWithdrawMaxFeePercent
                   autoWithdrawThreshold
                   __typename
                 }
