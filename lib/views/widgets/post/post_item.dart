@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacker_news/colors.dart';
 import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/post_type.dart';
@@ -58,7 +59,16 @@ class _PostItemState extends State<PostItem> {
             : SNColors.primary.withValues(alpha: .27),
         child: Row(
           children: [
-            if (widget.isCommentsPage && item.id != null && item.id != '')
+            if (item.position != null)
+              SizedBox(
+                width: 32.0,
+                child: Icon(
+                  FontAwesomeIcons.thumbtack,
+                  size: 24,
+                  color: Colors.white54,
+                ),
+              ),
+            if (item.position == null && widget.isCommentsPage && item.id != null && item.id != '')
               MaybeZapButton(
                 item.id!,
                 meSats: item.meSats,
@@ -87,7 +97,7 @@ class _PostItemState extends State<PostItem> {
                       textAlign: TextAlign.end,
                       style: textTheme.titleSmall,
                     ),
-                  if (item.id != null && item.id != '')
+                  if (item.position == null && item.id != null && item.id != '')
                     MaybeZapButton(
                       item.id!,
                       onZapped: (int amount) {
@@ -129,7 +139,7 @@ class _PostItemState extends State<PostItem> {
                     MarkdownItem(item.text),
                   const SizedBox(height: 8.0),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       if (item.position == null)
                         Flexible(
