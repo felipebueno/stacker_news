@@ -147,15 +147,677 @@ final class SNApiClient {
     required String cursor,
   }) {
     if (postType == PostType.top || postType == PostType.home || postType == PostType.recent) {
-      // TODO: Use GqlBody and keep only the required fields
-      return '{"operationName":"SubItems","variables":{"includeComments":false,"cursor":"$cursor"},"query":"fragment SubFields on Sub {\\n  name\\n  postTypes\\n  allowFreebies\\n  rankingType\\n  billingType\\n  billingCost\\n  billingAutoRenew\\n  billedLastAt\\n  billPaidUntil\\n  baseCost\\n  userId\\n  desc\\n  status\\n  moderated\\n  moderatedCount\\n  meMuteSub\\n  meSubscription\\n  nsfw\\n  __typename\\n}\\n\\nfragment SubFullFields on Sub {\\n  ...SubFields\\n  user {\\n    name\\n    id\\n    optional {\\n      streak\\n      __typename\\n    }\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment ItemFields on Item {\\n  id\\n  parentId\\n  createdAt\\n  deletedAt\\n  title\\n  url\\n  user {\\n    id\\n    name\\n    optional {\\n      streak\\n      __typename\\n    }\\n    meMute\\n    __typename\\n  }\\n  sub {\\n    name\\n    userId\\n    moderated\\n    meMuteSub\\n    meSubscription\\n    nsfw\\n    __typename\\n  }\\n  otsHash\\n  position\\n  sats\\n  boost\\n  bounty\\n  bountyPaidTo\\n  noteId\\n  path\\n  upvotes\\n  meSats\\n  meDontLikeSats\\n  meBookmark\\n  meSubscription\\n  meForward\\n  outlawed\\n  freebie\\n  bio\\n  ncomments\\n  commentSats\\n  lastCommentAt\\n  isJob\\n  company\\n  location\\n  remote\\n  subName\\n  pollCost\\n  pollExpiresAt\\n  status\\n  uploadId\\n  mine\\n  imgproxyUrls\\n  rel\\n  __typename\\n}\\n\\nfragment CommentItemExtFields on Item {\\n  text\\n  root {\\n    id\\n    title\\n    bounty\\n    bountyPaidTo\\n    subName\\n    sub {\\n      name\\n      userId\\n      moderated\\n      meMuteSub\\n      __typename\\n    }\\n    user {\\n      name\\n      optional {\\n        streak\\n        __typename\\n      }\\n      id\\n      __typename\\n    }\\n    __typename\\n  }\\n  __typename\\n}\\n\\nquery SubItems(\$sub: String, \$sort: String, \$cursor: String, \$type: String, \$name: String, \$when: String, \$from: String, \$to: String, \$by: String, \$limit: Limit, \$includeComments: Boolean = false) {\\n  sub(name: \$sub) {\\n    ...SubFullFields\\n    __typename\\n  }\\n  items(\\n    sub: \$sub\\n    sort: \$sort\\n    cursor: \$cursor\\n    type: \$type\\n    name: \$name\\n    when: \$when\\n    from: \$from\\n    to: \$to\\n    by: \$by\\n    limit: \$limit\\n  ) {\\n    cursor\\n    items {\\n      ...ItemFields\\n      ...CommentItemExtFields @include(if: \$includeComments)\\n      position\\n      __typename\\n    }\\n    pins {\\n      ...ItemFields\\n      ...CommentItemExtFields @include(if: \$includeComments)\\n      position\\n      __typename\\n    }\\n    __typename\\n  }\\n}"}';
+      return jsonEncode(
+        GqlBody(
+          operationName: 'SubItems',
+          variables: {
+            'includeComments': false,
+            'cursor': cursor,
+          },
+          query: '''
+            fragment SubFields on Sub {
+              name
+              postTypes
+              allowFreebies
+              rankingType
+              billingType
+              billingCost
+              billingAutoRenew
+              billedLastAt
+              billPaidUntil
+              baseCost
+              userId
+              desc
+              status
+              meMuteSub
+              meSubscription
+              nsfw
+              __typename
+            }
+
+            fragment SubFullFields on Sub {
+              ...SubFields
+              user {
+                name
+                id
+                optional {
+                  streak
+                  __typename
+                }
+                __typename
+              }
+              __typename
+            }
+
+            fragment ItemFields on Item {
+              id
+              parentId
+              createdAt
+              deletedAt
+              title
+              url
+              user {
+                id
+                name
+                optional {
+                  streak
+                  __typename
+                }
+                meMute
+                __typename
+              }
+              sub {
+                name
+                userId
+                meMuteSub
+                meSubscription
+                nsfw
+                __typename
+              }
+              otsHash
+              position
+              sats
+              boost
+              bounty
+              bountyPaidTo
+              noteId
+              path
+              upvotes
+              meSats
+              meDontLikeSats
+              meBookmark
+              meSubscription
+              meForward
+              freebie
+              bio
+              ncomments
+              commentSats
+              lastCommentAt
+              isJob
+              company
+              location
+              remote
+              subName
+              pollCost
+              pollExpiresAt
+              status
+              uploadId
+              mine
+              imgproxyUrls
+              rel
+              __typename
+            }
+
+            fragment CommentItemExtFields on Item {
+              text
+              root {
+                id
+                title
+                bounty
+                bountyPaidTo
+                subName
+                sub {
+                  name
+                  userId
+                  meMuteSub
+                  __typename
+                }
+                user {
+                  name
+                  optional {
+                    streak
+                    __typename
+                  }
+                  id
+                  __typename
+                }
+                __typename
+              }
+              __typename
+            }
+
+            query SubItems(\$sub: String, \$sort: String, \$cursor: String, \$type: String, \$name: String, \$when: String, \$from: String, \$to: String, \$by: String, \$limit: Limit, \$includeComments: Boolean = false) {
+              sub(name: \$sub) {
+                ...SubFullFields
+                __typename
+              }
+              items(
+                sub: \$sub
+                sort: \$sort
+                cursor: \$cursor
+                type: \$type
+                name: \$name
+                when: \$when
+                from: \$from
+                to: \$to
+                by: \$by
+                limit: \$limit
+              ) {
+                cursor
+                items {
+                  ...ItemFields
+                  ...CommentItemExtFields @include(if: \$includeComments)
+                  position
+                  __typename
+                }
+                pins {
+                  ...ItemFields
+                  ...CommentItemExtFields @include(if: \$includeComments)
+                  position
+                  __typename
+                }
+                __typename
+              }
+            }
+          ''',
+        ),
+      );
     } else if (postType == PostType.notifications) {
-      // TODO: Use GqlBody and keep only the required fields
-      return '{"operationName":"Notifications","variables":{"cursor":"$cursor"},"query":"fragment ItemFields on Item {\\n  id\\n  parentId\\n  createdAt\\n  deletedAt\\n  title\\n  url\\n  user {\\n    id\\n    name\\n    optional {\\n      streak\\n      __typename\\n    }\\n    meMute\\n    __typename\\n  }\\n  sub {\\n    name\\n    userId\\n    moderated\\n    meMuteSub\\n    meSubscription\\n    nsfw\\n    __typename\\n  }\\n  otsHash\\n  position\\n  sats\\n  boost\\n  bounty\\n  bountyPaidTo\\n  noteId\\n  path\\n  upvotes\\n  meSats\\n  meDontLikeSats\\n  meBookmark\\n  meSubscription\\n  meForward\\n  outlawed\\n  freebie\\n  bio\\n  ncomments\\n  commentSats\\n  lastCommentAt\\n  isJob\\n  company\\n  location\\n  remote\\n  subName\\n  pollCost\\n  pollExpiresAt\\n  status\\n  uploadId\\n  mine\\n  imgproxyUrls\\n  rel\\n  apiKey\\n  __typename\\n}\\n\\nfragment ItemFullFields on Item {\\n  ...ItemFields\\n  text\\n  root {\\n    id\\n    title\\n    bounty\\n    bountyPaidTo\\n    subName\\n    user {\\n      id\\n      name\\n      optional {\\n        streak\\n        __typename\\n      }\\n      __typename\\n    }\\n    sub {\\n      name\\n      userId\\n      moderated\\n      meMuteSub\\n      meSubscription\\n      __typename\\n    }\\n    __typename\\n  }\\n  forwards {\\n    userId\\n    pct\\n    user {\\n      name\\n      __typename\\n    }\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment InviteFields on Invite {\\n  id\\n  createdAt\\n  invitees {\\n    id\\n    name\\n    __typename\\n  }\\n  gift\\n  limit\\n  revoked\\n  user {\\n    id\\n    name\\n    optional {\\n      streak\\n      __typename\\n    }\\n    __typename\\n  }\\n  poor\\n  __typename\\n}\\n\\nfragment SubFields on Sub {\\n  name\\n  createdAt\\n  postTypes\\n  allowFreebies\\n  rankingType\\n  billingType\\n  billingCost\\n  billingAutoRenew\\n  billedLastAt\\n  billPaidUntil\\n  baseCost\\n  userId\\n  desc\\n  status\\n  moderated\\n  moderatedCount\\n  meMuteSub\\n  meSubscription\\n  nsfw\\n  __typename\\n}\\n\\nquery Notifications(\$cursor: String, \$inc: String) {\\n  notifications(cursor: \$cursor, inc: \$inc) {\\n    cursor\\n    lastChecked\\n    notifications {\\n      __typename\\n      ... on Mention {\\n        id\\n        sortTime\\n        mention\\n        item {\\n          ...ItemFullFields\\n          text\\n          __typename\\n        }\\n        __typename\\n      }\\n      ... on ItemMention {\\n        id\\n        sortTime\\n        item {\\n          ...ItemFullFields\\n          text\\n          __typename\\n        }\\n        __typename\\n      }\\n      ... on Votification {\\n        id\\n        sortTime\\n        earnedSats\\n        item {\\n          ...ItemFullFields\\n          text\\n          __typename\\n        }\\n        __typename\\n      }\\n      ... on Revenue {\\n        id\\n        sortTime\\n        earnedSats\\n        subName\\n        __typename\\n      }\\n      ... on ForwardedVotification {\\n        id\\n        sortTime\\n        earnedSats\\n        item {\\n          ...ItemFullFields\\n          text\\n          __typename\\n        }\\n        __typename\\n      }\\n      ... on Streak {\\n        id\\n        sortTime\\n        days\\n        __typename\\n      }\\n      ... on Earn {\\n        id\\n        sortTime\\n        minSortTime\\n        earnedSats\\n        sources {\\n          posts\\n          comments\\n          tipPosts\\n          tipComments\\n          __typename\\n        }\\n        __typename\\n      }\\n      ... on Referral {\\n        id\\n        sortTime\\n        __typename\\n      }\\n      ... on Reply {\\n        id\\n        sortTime\\n        item {\\n          ...ItemFullFields\\n          text\\n          __typename\\n        }\\n        __typename\\n      }\\n      ... on FollowActivity {\\n        id\\n        sortTime\\n        item {\\n          ...ItemFullFields\\n          text\\n          __typename\\n        }\\n        __typename\\n      }\\n      ... on TerritoryPost {\\n        id\\n        sortTime\\n        item {\\n          ...ItemFullFields\\n          text\\n          __typename\\n        }\\n        __typename\\n      }\\n      ... on TerritoryTransfer {\\n        id\\n        sortTime\\n        sub {\\n          ...SubFields\\n          __typename\\n        }\\n        __typename\\n      }\\n      ... on Invitification {\\n        id\\n        sortTime\\n        invite {\\n          ...InviteFields\\n          __typename\\n        }\\n        __typename\\n      }\\n      ... on JobChanged {\\n        id\\n        sortTime\\n        item {\\n          ...ItemFields\\n          __typename\\n        }\\n        __typename\\n      }\\n      ... on SubStatus {\\n        id\\n        sortTime\\n        sub {\\n          ...SubFields\\n          __typename\\n        }\\n        __typename\\n      }\\n      ... on InvoicePaid {\\n        id\\n        sortTime\\n        earnedSats\\n        invoice {\\n          id\\n          nostr\\n          comment\\n          lud18Data\\n          __typename\\n        }\\n        __typename\\n      }\\n      ... on WithdrawlPaid {\\n        id\\n        sortTime\\n        earnedSats\\n        withdrawl {\\n          autoWithdraw\\n          __typename\\n        }\\n        __typename\\n      }\\n      ... on Reminder {\\n        id\\n        sortTime\\n        item {\\n          ...ItemFullFields\\n          __typename\\n        }\\n        __typename\\n      }\\n    }\\n    __typename\\n  }\\n}"}';
+      return jsonEncode(
+        GqlBody(
+          operationName: 'Notifications',
+          variables: {
+            'cursor': cursor,
+          },
+          query: '''
+            fragment ItemFields on Item {
+              id
+              parentId
+              createdAt
+              deletedAt
+              title
+              url
+              user {
+                id
+                name
+                optional {
+                  streak
+                  __typename
+                }
+                meMute
+                __typename
+              }
+              sub {
+                name
+                userId
+                meMuteSub
+                meSubscription
+                nsfw
+                __typename
+              }
+              otsHash
+              position
+              sats
+              boost
+              bounty
+              bountyPaidTo
+              noteId
+              path
+              upvotes
+              meSats
+              meDontLikeSats
+              meBookmark
+              meSubscription
+              meForward
+              freebie
+              bio
+              ncomments
+              commentSats
+              lastCommentAt
+              isJob
+              company
+              location
+              remote
+              subName
+              pollCost
+              pollExpiresAt
+              status
+              uploadId
+              mine
+              imgproxyUrls
+              rel
+              apiKey
+              __typename
+            }
+
+            fragment ItemFullFields on Item {
+              ...ItemFields
+              text
+              root {
+                id
+                title
+                bounty
+                bountyPaidTo
+                subName
+                user {
+                  id
+                  name
+                  optional {
+                    streak
+                    __typename
+                  }
+                  __typename
+                }
+                sub {
+                  name
+                  userId
+                  meMuteSub
+                  meSubscription
+                  __typename
+                }
+                __typename
+              }
+              forwards {
+                userId
+                pct
+                user {
+                  name
+                  __typename
+                }
+                __typename
+              }
+              __typename
+            }
+
+            fragment InviteFields on Invite {
+              id
+              createdAt
+              invitees {
+                id
+                name
+                __typename
+              }
+              gift
+              limit
+              revoked
+              user {
+                id
+                name
+                optional {
+                  streak
+                  __typename
+                }
+                __typename
+              }
+              poor
+              __typename
+            }
+
+            fragment SubFields on Sub {
+              name
+              createdAt
+              postTypes
+              allowFreebies
+              rankingType
+              billingType
+              billingCost
+              billingAutoRenew
+              billedLastAt
+              billPaidUntil
+              baseCost
+              userId
+              desc
+              status
+              meMuteSub
+              meSubscription
+              nsfw
+              __typename
+            }
+
+            query Notifications(\$cursor: String, \$inc: String) {
+              notifications(cursor: \$cursor, inc: \$inc) {
+                cursor
+                lastChecked
+                notifications {
+                  __typename
+                  ... on Mention {
+                    id
+                    sortTime
+                    mention
+                    item {
+                      ...ItemFullFields
+                      text
+                      __typename
+                    }
+                    __typename
+                  }
+                  ... on ItemMention {
+                    id
+                    sortTime
+                    item {
+                      ...ItemFullFields
+                      text
+                      __typename
+                    }
+                    __typename
+                  }
+                  ... on Votification {
+                    id
+                    sortTime
+                    earnedSats
+                    item {
+                      ...ItemFullFields
+                      text
+                      __typename
+                    }
+                    __typename
+                  }
+                  ... on Revenue {
+                    id
+                    sortTime
+                    earnedSats
+                    subName
+                    __typename
+                  }
+                  ... on ForwardedVotification {
+                    id
+                    sortTime
+                    earnedSats
+                    item {
+                      ...ItemFullFields
+                      text
+                      __typename
+                    }
+                    __typename
+                  }
+                  ... on Streak {
+                    id
+                    sortTime
+                    days
+                    __typename
+                  }
+                  ... on Earn {
+                    id
+                    sortTime
+                    minSortTime
+                    earnedSats
+                    sources {
+                      posts
+                      comments
+                      tipPosts
+                      tipComments
+                      __typename
+                    }
+                    __typename
+                  }
+                  ... on Referral {
+                    id
+                    sortTime
+                    __typename
+                  }
+                  ... on Reply {
+                    id
+                    sortTime
+                    item {
+                      ...ItemFullFields
+                      text
+                      __typename
+                    }
+                    __typename
+                  }
+                  ... on FollowActivity {
+                    id
+                    sortTime
+                    item {
+                      ...ItemFullFields
+                      text
+                      __typename
+                    }
+                    __typename
+                  }
+                  ... on TerritoryPost {
+                    id
+                    sortTime
+                    item {
+                      ...ItemFullFields
+                      text
+                      __typename
+                    }
+                    __typename
+                  }
+                  ... on TerritoryTransfer {
+                    id
+                    sortTime
+                    sub {
+                      ...SubFields
+                      __typename
+                    }
+                    __typename
+                  }
+                  ... on Invitification {
+                    id
+                    sortTime
+                    invite {
+                      ...InviteFields
+                      __typename
+                    }
+                    __typename
+                  }
+                  ... on JobChanged {
+                    id
+                    sortTime
+                    item {
+                      ...ItemFields
+                      __typename
+                    }
+                    __typename
+                  }
+                  ... on SubStatus {
+                    id
+                    sortTime
+                    sub {
+                      ...SubFields
+                      __typename
+                    }
+                    __typename
+                  }
+                  ... on InvoicePaid {
+                    id
+                    sortTime
+                    earnedSats
+                    invoice {
+                      id
+                      nostr
+                      comment
+                      lud18Data
+                      __typename
+                    }
+                    __typename
+                  }
+                  ... on WithdrawlPaid {
+                    id
+                    sortTime
+                    earnedSats
+                    withdrawl {
+                      autoWithdraw
+                      __typename
+                    }
+                    __typename
+                  }
+                  ... on Reminder {
+                    id
+                    sortTime
+                    item {
+                      ...ItemFullFields
+                      __typename
+                    }
+                    __typename
+                  }
+                }
+                __typename
+              }
+            }
+          ''',
+        ),
+      );
     }
 
-    // TODO: Use GqlBody and keep only the required fields
-    return '{"operationName":"SubItems","variables":{"includeComments":false,"sub":"${postType.name}","cursor":"$cursor"},"query":"fragment SubFields on Sub {\\n  name\\n  postTypes\\n  allowFreebies\\n  rankingType\\n  billingType\\n  billingCost\\n  billingAutoRenew\\n  billedLastAt\\n  billPaidUntil\\n  baseCost\\n  userId\\n  desc\\n  status\\n  moderated\\n  moderatedCount\\n  meMuteSub\\n  meSubscription\\n  nsfw\\n  __typename\\n}\\n\\nfragment SubFullFields on Sub {\\n  ...SubFields\\n  user {\\n    name\\n    id\\n    optional {\\n      streak\\n      __typename\\n    }\\n    __typename\\n  }\\n  __typename\\n}\\n\\nfragment ItemFields on Item {\\n  id\\n  parentId\\n  createdAt\\n  deletedAt\\n  title\\n  url\\n  user {\\n    id\\n    name\\n    optional {\\n      streak\\n      __typename\\n    }\\n    meMute\\n    __typename\\n  }\\n  sub {\\n    name\\n    userId\\n    moderated\\n    meMuteSub\\n    meSubscription\\n    nsfw\\n    __typename\\n  }\\n  otsHash\\n  position\\n  sats\\n  boost\\n  bounty\\n  bountyPaidTo\\n  noteId\\n  path\\n  upvotes\\n  meSats\\n  meDontLikeSats\\n  meBookmark\\n  meSubscription\\n  meForward\\n  outlawed\\n  freebie\\n  bio\\n  ncomments\\n  commentSats\\n  lastCommentAt\\n  isJob\\n  company\\n  location\\n  remote\\n  subName\\n  pollCost\\n  pollExpiresAt\\n  status\\n  uploadId\\n  mine\\n  imgproxyUrls\\n  rel\\n  __typename\\n}\\n\\nfragment CommentItemExtFields on Item {\\n  text\\n  root {\\n    id\\n    title\\n    bounty\\n    bountyPaidTo\\n    subName\\n    sub {\\n      name\\n      userId\\n      moderated\\n      meMuteSub\\n      __typename\\n    }\\n    user {\\n      name\\n      optional {\\n        streak\\n        __typename\\n      }\\n      id\\n      __typename\\n    }\\n    __typename\\n  }\\n  __typename\\n}\\n\\nquery SubItems(\$sub: String, \$sort: String, \$cursor: String, \$type: String, \$name: String, \$when: String, \$from: String, \$to: String, \$by: String, \$limit: Limit, \$includeComments: Boolean = false) {\\n  sub(name: \$sub) {\\n    ...SubFullFields\\n    __typename\\n  }\\n  items(\\n    sub: \$sub\\n    sort: \$sort\\n    cursor: \$cursor\\n    type: \$type\\n    name: \$name\\n    when: \$when\\n    from: \$from\\n    to: \$to\\n    by: \$by\\n    limit: \$limit\\n  ) {\\n    cursor\\n    items {\\n      ...ItemFields\\n      ...CommentItemExtFields @include(if: \$includeComments)\\n      position\\n      __typename\\n    }\\n    pins {\\n      ...ItemFields\\n      ...CommentItemExtFields @include(if: \$includeComments)\\n      position\\n      __typename\\n    }\\n    __typename\\n  }\\n}"}';
+    return jsonEncode(
+      GqlBody(
+        operationName: 'SubItems',
+        variables: {
+          'includeComments': false,
+          'sub': postType.name,
+          'cursor': cursor,
+        },
+        query: '''
+          fragment SubFields on Sub {
+            name
+            postTypes
+            allowFreebies
+            rankingType
+            billingType
+            billingCost
+            billingAutoRenew
+            billedLastAt
+            billPaidUntil
+            baseCost
+            userId
+            desc
+            status
+            meMuteSub
+            meSubscription
+            nsfw
+            __typename
+          }
+
+          fragment SubFullFields on Sub {
+            ...SubFields
+            user {
+              name
+              id
+              optional {
+                streak
+                __typename
+              }
+              __typename
+            }
+            __typename
+          }
+
+          fragment ItemFields on Item {
+            id
+            parentId
+            createdAt
+            deletedAt
+            title
+            url
+            user {
+              id
+              name
+              optional {
+                streak
+                __typename
+              }
+              meMute
+              __typename
+            }
+            sub {
+              name
+              userId
+              meMuteSub
+              meSubscription
+              nsfw
+              __typename
+            }
+            otsHash
+            position
+            sats
+            boost
+            bounty
+            bountyPaidTo
+            noteId
+            path
+            upvotes
+            meSats
+            meDontLikeSats
+            meBookmark
+            meSubscription
+            meForward
+            freebie
+            bio
+            ncomments
+            commentSats
+            lastCommentAt
+            isJob
+            company
+            location
+            remote
+            subName
+            pollCost
+            pollExpiresAt
+            status
+            uploadId
+            mine
+            imgproxyUrls
+            rel
+            __typename
+          }
+
+          fragment CommentItemExtFields on Item {
+            text
+            root {
+              id
+              title
+              bounty
+              bountyPaidTo
+              subName
+              sub {
+                name
+                userId
+                meMuteSub
+                __typename
+              }
+              user {
+                name
+                optional {
+                  streak
+                  __typename
+                }
+                id
+                __typename
+              }
+              __typename
+            }
+            __typename
+          }
+
+          query SubItems(\$sub: String, \$sort: String, \$cursor: String, \$type: String, \$name: String, \$when: String, \$from: String, \$to: String, \$by: String, \$limit: Limit, \$includeComments: Boolean = false) {
+            sub(name: \$sub) {
+              ...SubFullFields
+              __typename
+            }
+            items(
+              sub: \$sub
+              sort: \$sort
+              cursor: \$cursor
+              type: \$type
+              name: \$name
+              when: \$when
+              from: \$from
+              to: \$to
+              by: \$by
+              limit: \$limit
+            ) {
+              cursor
+              items {
+                ...ItemFields
+                ...CommentItemExtFields @include(if: \$includeComments)
+                position
+                __typename
+              }
+              pins {
+                ...ItemFields
+                ...CommentItemExtFields @include(if: \$includeComments)
+                position
+                __typename
+              }
+              __typename
+            }
+          }
+        ''',
+      ),
+    );
   }
 
   Future<void> _fetchAndSaveCurrBuildId() async {
@@ -246,8 +908,73 @@ final class SNApiClient {
   Future<User?> fetchMe() async {
     final response = await _dio.post(
       '$baseUrl/api/graphql',
-      data: // TODO: Use GqlBody and keep only the required fields
-          '{"variables":{},"query":"{\\n  me {\\n    id\\n    name\\n    bioId\\n    photoId\\n    privates {\\n      autoDropBolt11s\\n      diagnostics\\n      noReferralLinks\\n      fiatCurrency\\n      greeterMode\\n      hideCowboyHat\\n      hideFromTopUsers\\n      hideGithub\\n      hideNostr\\n      hideTwitter\\n      hideInvoiceDesc\\n      hideIsContributor\\n      hideWalletBalance\\n      hideWelcomeBanner\\n      imgproxyOnly\\n      lastCheckedJobs\\n      nostrCrossposting\\n      noteAllDescendants\\n      noteCowboyHat\\n      noteDeposits\\n      noteWithdrawals\\n      noteEarning\\n      noteForwardedSats\\n      noteInvites\\n      noteItemSats\\n      noteJobIndicator\\n      noteMentions\\n      noteItemMentions\\n      sats\\n      tipDefault\\n      tipPopover\\n      turboTipping\\n      zapUndos\\n      upvotePopover\\n      wildWestMode\\n      withdrawMaxFeeDefault\\n      lnAddr\\n      autoWithdrawMaxFeePercent\\n      autoWithdrawThreshold\\n      __typename\\n    }\\n    optional {\\n      isContributor\\n      stacked\\n      streak\\n      githubId\\n      nostrAuthPubkey\\n      twitterId\\n      __typename\\n    }\\n    __typename\\n  }\\n}"}',
+      data: jsonEncode(
+        GqlBody(
+          variables: {},
+          query: '''
+            {
+              me {
+                id
+                name
+                bioId
+                photoId
+                privates {
+                  autoDropBolt11s
+                  diagnostics
+                  noReferralLinks
+                  fiatCurrency
+                  greeterMode
+                  hideCowboyHat
+                  hideFromTopUsers
+                  hideGithub
+                  hideNostr
+                  hideTwitter
+                  hideInvoiceDesc
+                  hideIsContributor
+                  hideWalletBalance
+                  hideWelcomeBanner
+                  imgproxyOnly
+                  lastCheckedJobs
+                  nostrCrossposting
+                  noteAllDescendants
+                  noteCowboyHat
+                  noteDeposits
+                  noteWithdrawals
+                  noteEarning
+                  noteForwardedSats
+                  noteInvites
+                  noteItemSats
+                  noteJobIndicator
+                  noteMentions
+                  noteItemMentions
+                  sats
+                  tipDefault
+                  tipPopover
+                  turboTipping
+                  zapUndos
+                  upvotePopover
+                  wildWestMode
+                  withdrawMaxFeeDefault
+                  lnAddr
+                  autoWithdrawMaxFeePercent
+                  autoWithdrawThreshold
+                  __typename
+                }
+                optional {
+                  isContributor
+                  stacked
+                  streak
+                  githubId
+                  nostrAuthPubkey
+                  twitterId
+                  __typename
+                }
+                __typename
+              }
+            }
+          ''',
+        ),
+      ),
     );
 
     if (response.statusCode != 200) {
@@ -492,7 +1219,16 @@ final class SNApiClient {
 
     final response = await _dio.post(
       '$baseUrl/api/graphql',
-      data: '{"variables":{},"query":"{\\n  hasNewNotes\\n}\\n"}', // TODO: Use GqlBody
+      data: jsonEncode(
+        GqlBody(
+          variables: {},
+          query: '''
+            {
+              hasNewNotes
+            }
+          ''',
+        ),
+      ),
     );
 
     if (response.statusCode == 200) {
@@ -570,8 +1306,43 @@ final class SNApiClient {
 
     final response = await _dio.post(
       '$baseUrl/api/graphql',
-      data: // TODO: Use GqlBody and keep only the required fields
-          '{"operationName":"upsertDiscussion","variables":{"sub":"$sub","title":"$title","text":"$text","forward":[]},"query":"mutation upsertDiscussion(\$sub: String, \$id: ID, \$title: String!, \$text: String, \$boost: Int, \$forward: [ItemForwardInput], \$hash: String, \$hmac: String) {\\n  upsertDiscussion(\\n    sub: \$sub\\n    id: \$id\\n    title: \$title\\n    text: \$text\\n    boost: \$boost\\n    forward: \$forward\\n    hash: \$hash\\n    hmac: \$hmac\\n  ) {\\n    id\\n    __typename\\n  }\\n}"}',
+      data: jsonEncode(
+        GqlBody(
+          operationName: 'upsertDiscussion',
+          variables: {
+            'sub': sub,
+            'title': title,
+            'text': text,
+            'forward': [],
+          },
+          query: '''
+            mutation upsertDiscussion(
+              \$sub: String
+              \$id: ID
+              \$title: String!
+              \$text: String
+              \$boost: Int
+              \$forward: [ItemForwardInput]
+              \$hash: String
+              \$hmac: String
+            ) {
+              upsertDiscussion(
+                sub: \$sub
+                id: \$id
+                title: \$title
+                text: \$text
+                boost: \$boost
+                forward: \$forward
+                hash: \$hash
+                hmac: \$hmac
+              ) {
+                id
+                __typename
+              }
+            }
+          ''',
+        ),
+      ),
     );
 
     if (response.statusCode == 200) {
