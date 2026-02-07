@@ -17,12 +17,11 @@ class _MaybeNewPostFabState extends State<MaybeNewPostFab> {
       future: Utils.getSession(),
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data is Session) {
-          return FloatingActionButton.extended(
+          return FloatingActionButton.small(
             onPressed: () {
               Navigator.pushNamed(context, NewPostPage.id);
             },
-            icon: const Icon(Icons.add),
-            label: const Text('New Post'),
+            child: const Icon(Icons.add),
           );
         }
 

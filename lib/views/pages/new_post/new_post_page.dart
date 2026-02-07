@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stacker_news/data/models/post_type.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/new_post/new_discussion_page.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
@@ -14,6 +15,8 @@ class NewPostPage extends StatefulWidget {
 
 class _NewPostPageState extends State<NewPostPage> {
   String? _selectedSub;
+
+  List<String> get _postTypes => PostType.values.where((p) => p != PostType.notifications).map((t) => t.title).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +35,7 @@ class _NewPostPageState extends State<NewPostPage> {
                 _selectedSub = val;
               });
             },
-            items: ['Bitcoin', 'Nostr', 'Tech', 'Meta', 'Jobs']
+            items: _postTypes
                 .map(
                   (e) => DropdownMenuItem(
                     value: e,

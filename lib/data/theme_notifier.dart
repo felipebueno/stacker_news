@@ -26,6 +26,10 @@ class ThemeNotifier with ChangeNotifier {
         backgroundColor: SNColors.primary,
       ),
     ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      foregroundColor: Colors.black,
+      backgroundColor: SNColors.primary,
+    ),
   );
 
   final lightTheme = ThemeData.light().copyWith(

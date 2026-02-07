@@ -149,6 +149,7 @@ class GenericPageScaffold extends StatelessWidget {
       body: Center(child: mainBody ?? body),
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: fab,
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniCenterFloat,
     );
   }
 }
