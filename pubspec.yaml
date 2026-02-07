@@ -54,24 +54,6 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   flutter_native_splash: ^2.4.6
 
-flutter_icons:
-  android: "ic_launcher"
-  ios: false
-  remove_alpha_ios: true
-  image_path: "assets/icons/icon_512x_512.png"
-  web:
-    generate: true
-    image_path: "assets/icons/icon_512x_512.png"
-    background_color: "#FFFFFF"
-    theme_color: "#4181D6"
-  windows:
-    generate: false
-    image_path: "assets/icons/icon_512x_512.png"
-    icon_size: 48
-  macos:
-    generate: false
-    image_path: "assets/icons/icon_512x_512.png"
-
 flutter:
   uses-material-design: true
 
