@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:markdown/markdown.dart' as md;
-import 'package:markdown/src/util.dart';
 import 'package:stacker_news/colors.dart';
 import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/utils.dart';
@@ -120,9 +119,14 @@ class SNAutolinkExtensionSyntax extends md.InlineSyntax {
 
   @override
   bool onMatch(md.InlineParser parser, Match match) {
-    final consumeLength = match.match.length;
+    final m = match[0];
+    if (m == null) {
+      return false;
+    }
 
-    final text = match.match.substring(0, consumeLength);
+    final consumeLength = m.length;
+
+    final text = m.substring(0, consumeLength);
 
     final destination = '$baseUrl/${text.replaceAll('@', '')}?isUser=true';
 

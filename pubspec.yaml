@@ -25,14 +25,12 @@ dependencies:
   timeago: ^3.7.1
   url_launcher: ^6.3.2
   dio: ^5.8.0+1
-  flutter_markdown: ^0.7.7+1
   shared_preferences: ^2.5.3
   qr_flutter: ^4.1.0
   in_app_update: ^4.2.3
   flutter_svg: ^2.2.0
   cached_network_image: ^3.4.1
   package_info_plus: ^9.0.0
-  markdown: ^7.3.0
   get_it: ^8.0.3
   cookie_jar: ^4.0.8
   dio_cookie_manager: ^3.2.0
@@ -43,13 +41,11 @@ dependencies:
   font_awesome_flutter: ^10.8.0
   flutter_cached_pdfview: ^0.4.3
   share_plus: ^12.0.0
+  flutter_markdown_plus: ^1.0.7
+  markdown: ^7.3.0
 
 dependency_overrides:
-  flutter_pdfview: 1.4.1
-# Downgrade markdown to 7.0.2 to fix issue with flutter_markdown footnotes
-# https://github.com/flutter/flutter/issues/127425
-# TODO: Remove this when the above issue fixed
-# markdown: 7.0.2
+  flutter_pdfview: 1.4.1 # TODO: explain why are we overriding this
 
 dev_dependencies:
   flutter_test:
