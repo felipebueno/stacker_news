@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:stacker_news/colors.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 import 'package:stacker_news/views/widgets/sn_logo.dart';
@@ -16,45 +14,40 @@ class AboutPage extends StatelessWidget {
     return GenericPageScaffold(
       title: 'About',
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SNLogo(
-            showEndpointVersion: true,
-            full: true,
-          ),
-          TextButton.icon(
-            icon: const Icon(Icons.bug_report),
-            label: const Text('Source Code'),
-            onPressed: () {
-              Utils.launchURL('https://github.com/felipebueno/stacker_news/');
-            },
-          ),
-          const SizedBox(height: 32),
-          Builder(builder: (context) {
-            const addr =
-                'lnurl1dp68gurn8ghj7um5v93kketj9ehx2amn9uh8wetvdskkkmn0wahz7mrww4excup0vejkc6tsv5u9ue0w';
-
-            return InkWell(
-              onTap: () {
-                Utils.launchURL('lightning:$addr');
-              },
-              splashColor: SNColors.primary,
-              child: Card(
-                child: QrImageView(
-                  data: addr,
-                  version: QrVersions.auto,
-                  size: 256,
-                  backgroundColor: Colors.white,
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const SNLogo(
+                  showEndpointVersion: true,
+                  full: true,
                 ),
-              ),
-            );
-          }),
-          const SizedBox(height: 24),
-          const Text('Tap or scan the QR code to send a tip!'),
-          const SizedBox(height: 24),
-          const StackButton(
-            'felipe',
-            navigateToProfile: true,
+                const SizedBox(height: 8),
+                const Text('by'),
+                const StackButton(
+                  'felipe',
+                  navigateToProfile: true,
+                ),
+                TextButton.icon(
+                  icon: const Icon(Icons.bug_report),
+                  label: const Text('Source Code'),
+                  onPressed: () {
+                    Utils.launchURL('https://github.com/felipebueno/stacker_news/');
+                  },
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              '"The fear of the Lord is the beginning of wisdom, and the knowledge of the Holy One is insight."\n\nProverbs 9:10 (ESV)',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
           ),
         ],
       ),

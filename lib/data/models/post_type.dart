@@ -360,7 +360,7 @@ enum PostType {
       case PostType.askSN:
         return Icons.help_outline;
       case PostType.bitcoin:
-        return Icons.monetization_on;
+        return Icons.currency_bitcoin;
       case PostType.bitcoinBeginners:
         return Icons.school;
       case PostType.bitcoinMining:
@@ -378,7 +378,7 @@ enum PostType {
       case PostType.constructionAndEngineering:
         return Icons.construction;
       case PostType.crypto:
-        return Icons.currency_bitcoin;
+        return Icons.monetization_on;
       case PostType.design:
         return Icons.design_services;
       case PostType.devs:
