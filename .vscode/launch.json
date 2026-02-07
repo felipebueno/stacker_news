@@ -11,6 +11,11 @@
             ],
         },
         {
+            "name": "ios",
+            "request": "launch",
+            "type": "dart",
+        },
+        {
             "name": "local",
             "request": "launch",
             "type": "dart",
