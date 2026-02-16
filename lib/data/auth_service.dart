@@ -9,7 +9,7 @@ Future<void> login({
   required String magicCode,
 }) async {
   try {
-    // TODO: Show busy indicator while logging in
+    // TODO:
     // Utils.showBusyModal(
     //   context: context,
     //   message: 'Logging in...',

@@ -3,17 +3,8 @@ import 'package:stacker_news/data/models/post.dart';
 import 'package:stacker_news/data/models/session.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/about/about_page.dart';
-import 'package:stacker_news/views/pages/auth/check_email_page.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_page.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
-import 'package:stacker_news/views/pages/new_post/new_bounty_page.dart';
-import 'package:stacker_news/views/pages/new_post/new_discussion_page.dart';
-import 'package:stacker_news/views/pages/new_post/new_job_page.dart';
-import 'package:stacker_news/views/pages/new_post/new_link_page.dart';
-import 'package:stacker_news/views/pages/new_post/new_poll_page.dart';
-import 'package:stacker_news/views/pages/new_post/new_post_page.dart';
-import 'package:stacker_news/views/pages/notifications/notifications_page.dart';
-import 'package:stacker_news/views/pages/pdf_reader/pdf_reader_page.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
 import 'package:stacker_news/views/pages/settings/settings_page.dart';
@@ -55,28 +46,14 @@ class GenericPageScaffold extends StatelessWidget {
     final route = ModalRoute.of(context)?.settings.name;
 
     return Scaffold(
-      appBar: appBar ??
+      appBar:
+          appBar ??
           AppBar(
             centerTitle: true,
-            // TODO: Refactor this to be more generic
-            leading: ((route != PostPage.id &&
-                        route != ProfilePage.id &&
-                        route != CheckEmailPage.id &&
-                        route != NotificationsPage.id &&
-                        route != SettingsPage.id &&
-                        route != NewPostPage.id &&
-                        route != NewLinkPage.id &&
-                        route != NewDiscussionPage.id &&
-                        route != NewPollPage.id &&
-                        route != NewBountyPage.id &&
-                        route != NewJobPage.id &&
-                        route != PdfReaderPage.id) ||
-                    title == 'FAQ')
-                ? null
-                : IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => Navigator.pop(context),
-                  ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => Navigator.pop(context),
+            ),
             title: SNLogo(
               text: title,
               heroTag: _getHeroTag(route),

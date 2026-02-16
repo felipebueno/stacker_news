@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 enum PostType {
   home,
@@ -20,6 +21,7 @@ enum PostType {
   builders,
   cartalk,
   chartsAndMaps,
+  christianity,
   constructionAndEngineering,
   crypto,
   design,
@@ -117,6 +119,8 @@ enum PostType {
         return 'Cartalk';
       case PostType.chartsAndMaps:
         return 'charts_and_maps';
+      case PostType.christianity:
+        return 'christianity';
       case PostType.constructionAndEngineering:
         return 'Construction_and_Engineering';
       case PostType.crypto:
@@ -246,6 +250,8 @@ enum PostType {
         return 'Car Talk';
       case PostType.chartsAndMaps:
         return 'Charts & Maps';
+      case PostType.christianity:
+        return 'Christianity';
       case PostType.constructionAndEngineering:
         return 'Construction & Engineering';
       case PostType.crypto:
@@ -375,6 +381,8 @@ enum PostType {
         return Icons.directions_car;
       case PostType.chartsAndMaps:
         return Icons.analytics;
+      case PostType.christianity:
+        return FontAwesomeIcons.cross;
       case PostType.constructionAndEngineering:
         return Icons.construction;
       case PostType.crypto:
