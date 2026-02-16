@@ -19,7 +19,7 @@ enum PostType {
   booksAndArticles,
   builders,
   cartalk,
-  chartsAndNumbers,
+  chartsAndMaps,
   constructionAndEngineering,
   crypto,
   design,
@@ -115,8 +115,8 @@ enum PostType {
         return 'builders';
       case PostType.cartalk:
         return 'Cartalk';
-      case PostType.chartsAndNumbers:
-        return 'charts_and_numbers';
+      case PostType.chartsAndMaps:
+        return 'charts_and_maps';
       case PostType.constructionAndEngineering:
         return 'Construction_and_Engineering';
       case PostType.crypto:
@@ -244,8 +244,8 @@ enum PostType {
         return 'Builders';
       case PostType.cartalk:
         return 'Car Talk';
-      case PostType.chartsAndNumbers:
-        return 'Charts & Numbers';
+      case PostType.chartsAndMaps:
+        return 'Charts & Maps';
       case PostType.constructionAndEngineering:
         return 'Construction & Engineering';
       case PostType.crypto:
@@ -373,7 +373,7 @@ enum PostType {
         return Icons.handyman_sharp;
       case PostType.cartalk:
         return Icons.directions_car;
-      case PostType.chartsAndNumbers:
+      case PostType.chartsAndMaps:
         return Icons.analytics;
       case PostType.constructionAndEngineering:
         return Icons.construction;
