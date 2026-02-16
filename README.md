@@ -110,7 +110,7 @@ Get the latest APK from the [Releases Section](https://github.com/felipebueno/st
 
   - [ ] More more subs (territories)
 
-  - [ ] Filters (hot, recent, top)
+  - [ ] Filters (hot, new, top)
 
 - [ ] Releases
 

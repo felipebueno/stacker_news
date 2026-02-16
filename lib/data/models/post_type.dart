@@ -68,7 +68,7 @@ enum PostType {
     if (this == PostType.top) {
       return 'top/posts/day.json?when=day';
     } else if (this == PostType.recent) {
-      return 'recent.json';
+      return 'new.json';
     } else if (this == PostType.home) {
       return 'index.json';
     } else if (this == PostType.notifications) {
@@ -84,7 +84,7 @@ enum PostType {
       case PostType.home:
         return 'index';
       case PostType.recent:
-        return 'recent';
+        return 'new';
       case PostType.agora:
         return 'AGORA';
       case PostType.ai:
@@ -213,7 +213,7 @@ enum PostType {
       case PostType.home:
         return 'Home';
       case PostType.recent:
-        return 'Recent';
+        return 'New';
       case PostType.agora:
         return 'Agora';
       case PostType.ai:
