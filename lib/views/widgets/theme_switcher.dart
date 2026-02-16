@@ -18,7 +18,7 @@ class ThemeSwitcher extends StatelessWidget {
               return;
             }
 
-            theme.setThemeMode(val);
+            await theme.setThemeMode(val);
           },
           items: ['System', 'Light', 'Dark']
               .map(

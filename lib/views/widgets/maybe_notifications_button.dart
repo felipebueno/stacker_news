@@ -13,8 +13,7 @@ class MaybeNotificationsButton extends StatefulWidget {
   const MaybeNotificationsButton({super.key});
 
   @override
-  State<MaybeNotificationsButton> createState() =>
-      _MaybeNotificationsButtonState();
+  State<MaybeNotificationsButton> createState() => _MaybeNotificationsButtonState();
 }
 
 class _MaybeNotificationsButtonState extends State<MaybeNotificationsButton> {
@@ -63,16 +62,14 @@ class _MaybeNotificationsButtonState extends State<MaybeNotificationsButton> {
                   );
                 },
                 icon: Icon(
-                  _hasNewNotes
-                      ? Icons.notifications_active
-                      : Icons.notifications,
+                  _hasNewNotes ? Icons.notifications_active : Icons.notifications,
                   color: _hasNewNotes ? Colors.green : null,
                 ),
               ),
               TextButton(
                 child: Text('@${session.user?.name}'),
                 onPressed: () async {
-                  Navigator.pushNamed(
+                  await Navigator.pushNamed(
                     context,
                     ProfilePage.id,
                     arguments: session.user?.name,
@@ -86,7 +83,7 @@ class _MaybeNotificationsButtonState extends State<MaybeNotificationsButton> {
         return IconButton(
           icon: const Icon(Icons.login),
           onPressed: () async {
-            Navigator.pushNamed(context, SignInPage.id);
+            await Navigator.pushNamed(context, SignInPage.id);
           },
         );
       },

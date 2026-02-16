@@ -26,7 +26,7 @@ class ThemeNotifier with ChangeNotifier {
         backgroundColor: SNColors.primary,
       ),
     ),
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
       foregroundColor: Colors.black,
       backgroundColor: SNColors.primary,
     ),
@@ -85,7 +85,7 @@ class ThemeNotifier with ChangeNotifier {
       default:
         _themeData = ThemeMode.dark;
     }
-    SharedPrefsManager.set('theme-mode', themeMode);
+    await SharedPrefsManager.set('theme-mode', themeMode);
 
     notifyListeners();
   }

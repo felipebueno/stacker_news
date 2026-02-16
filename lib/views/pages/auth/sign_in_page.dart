@@ -72,7 +72,7 @@ class _SignInFormState extends State<SignInForm> {
                 _busy.value = false;
 
                 if (ret && context.mounted) {
-                  Navigator.pushNamed(
+                  await Navigator.pushNamed(
                     context,
                     CheckEmailPage.id,
                     arguments: {

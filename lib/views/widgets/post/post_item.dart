@@ -41,10 +41,10 @@ class _PostItemState extends State<PostItem> {
     return InkWell(
       onTap: widget.isCommentsPage
           ? item.url != null && item.url != ''
-              ? () {
-                  Utils.launchURL(item.url!);
-                }
-              : null
+                ? () {
+                    Utils.launchURL(item.url!);
+                  }
+                : null
           : () {
               Navigator.of(context).pushNamed(
                 PostPage.id,
@@ -54,13 +54,11 @@ class _PostItemState extends State<PostItem> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 4.0),
         // Add color to special items (Stacker Saloon, for example)
-        color: item.position == null
-            ? null
-            : SNColors.primary.withValues(alpha: .27),
+        color: item.position == null ? null : SNColors.primary.withValues(alpha: .27),
         child: Row(
           children: [
             if (item.position != null)
-              SizedBox(
+              const SizedBox(
                 width: 32.0,
                 child: Icon(
                   FontAwesomeIcons.thumbtack,
@@ -133,10 +131,7 @@ class _PostItemState extends State<PostItem> {
                         Utils.launchURL(item.url!);
                       },
                     ),
-                  if (widget.isCommentsPage &&
-                      item.text != null &&
-                      item.text != '')
-                    MarkdownItem(item.text),
+                  if (widget.isCommentsPage && item.text != null && item.text != '') MarkdownItem(item.text),
                   const SizedBox(height: 8.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -144,9 +139,7 @@ class _PostItemState extends State<PostItem> {
                       if (item.position == null)
                         Flexible(
                           child: Text(
-                            item.isJob == true
-                                ? '${item.company}'
-                                : '${item.sats} sats',
+                            item.isJob == true ? '${item.company}' : '${item.sats} sats',
                             style: label,
                           ),
                         ),
@@ -160,7 +153,7 @@ class _PostItemState extends State<PostItem> {
                         item.timeAgo,
                         style: label,
                         textAlign: TextAlign.end,
-                      )
+                      ),
                     ],
                   ),
                   SizedBox(
@@ -185,15 +178,13 @@ class _PostItemState extends State<PostItem> {
 
     switch (_post.typeName) {
       case 'FollowActivity':
-        txt =
-            'a stacker you subscribe to ${_post.item?.parentId != null ? 'commented' : 'posted'}';
+        txt = 'a stacker you subscribe to ${_post.item?.parentId != null ? 'commented' : 'posted'}';
 
         color = SNColors.info;
 
         break;
       case 'Votification':
-        txt =
-            'your ${_post.item?.title == null ? 'comment' : 'post'} stacked ${_post.earnedSats} sats';
+        txt = 'your ${_post.item?.title == null ? 'comment' : 'post'} stacked ${_post.earnedSats} sats';
 
         color = SNColors.success;
 
@@ -228,17 +219,13 @@ class _PostItemState extends State<PostItem> {
           ),
         ),
         if (_post.item != null)
-          _post.item != null && _post.item!.title == null
-              ? CommentItem(_post.item!)
-              : _buildNormalItem(showIdx: false),
+          _post.item != null && _post.item!.title == null ? CommentItem(_post.item!) : _buildNormalItem(showIdx: false),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.postType == PostType.notifications
-        ? _buildNotificationItem()
-        : _buildNormalItem();
+    return widget.postType == PostType.notifications ? _buildNotificationItem() : _buildNormalItem();
   }
 }

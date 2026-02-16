@@ -35,7 +35,7 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
           const SizedBox(height: 8),
           Text(
             'A magic code has been sent to your email address ($_email}',
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
@@ -62,7 +62,7 @@ class _CheckEmailPageState extends State<CheckEmailPage> {
 
                 if (session != null) {
                   if (context.mounted) {
-                    Navigator.pushReplacementNamed(context, HomePage.id);
+                    await Navigator.pushReplacementNamed(context, HomePage.id);
                   } else {
                     Utils.showError(
                       'Error going to home page. Context is not mounted',

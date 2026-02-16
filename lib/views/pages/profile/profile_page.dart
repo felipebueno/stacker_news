@@ -35,13 +35,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   await SharedPrefsManager.clear();
 
                   if (context.mounted) {
-                    Navigator.pushReplacementNamed(
+                    await Navigator.pushReplacementNamed(
                       context,
                       HomePage.id,
                     );
                   }
                 },
-              )
+              ),
             ],
             body: const Center(child: CircularProgressIndicator()),
           );
@@ -66,13 +66,13 @@ class _ProfilePageState extends State<ProfilePage> {
                 await SharedPrefsManager.clear();
 
                 if (context.mounted) {
-                  Navigator.pushReplacementNamed(
+                  await Navigator.pushReplacementNamed(
                     context,
                     HomePage.id,
                   );
                 }
               },
-            )
+            ),
           ],
           body: RefreshIndicator(
             onRefresh: () async {

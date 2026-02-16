@@ -30,7 +30,7 @@ Future<void> login({
       }
 
       if (ctx.mounted) {
-        Navigator.pushReplacementNamed(ctx, HomePage.id);
+        await Navigator.pushReplacementNamed(ctx, HomePage.id);
       } else {
         Utils.showError('Error going home. Context is not mounted');
       }

@@ -28,6 +28,7 @@ linter:
   rules:
     # avoid_print: false  # Uncomment to disable the `avoid_print` rule
     # require_trailing_commas: true
+    require_trailing_commas: true
     prefer_single_quotes: true
     always_declare_return_types: true
     avoid_unused_constructor_parameters: true
@@ -39,6 +40,11 @@ linter:
     invalid_case_patterns: true
     prefer_void_to_null: true
     unnecessary_statements: true
+    unawaited_futures: true
+    await_only_futures: true
+    avoid_function_literals_in_foreach_calls: true
+    prefer_const_constructors: true
+    curly_braces_in_flow_control_structures: true
     # prefer_final_parameters: true
     # Make constructors the first thing in every class
     # sort_constructors_first: true

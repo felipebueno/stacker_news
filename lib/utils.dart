@@ -37,7 +37,7 @@ class Utils {
 
     try {
       if (url.endsWith('.pdf')) {
-        Navigator.of(context).pushNamed(PdfReaderPage.id, arguments: url);
+        await Navigator.of(context).pushNamed(PdfReaderPage.id, arguments: url);
 
         return;
       }
@@ -53,7 +53,7 @@ class Utils {
         return;
       }
 
-      Navigator.of(context).pushNamed(PostPage.id, arguments: Post(id: id));
+      await Navigator.of(context).pushNamed(PostPage.id, arguments: Post(id: id));
 
       return;
     }
@@ -61,7 +61,7 @@ class Utils {
     if (url.contains(snUrl) && url.contains('?isUser=true')) {
       final userName = url.split('/').last.split('?').first;
 
-      Navigator.of(context).pushNamed(ProfilePage.id, arguments: userName);
+      await Navigator.of(context).pushNamed(ProfilePage.id, arguments: userName);
 
       return;
     }
