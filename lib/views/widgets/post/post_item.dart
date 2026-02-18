@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:stacker_news/colors.dart';
 import 'package:stacker_news/data/models/post.dart';
-import 'package:stacker_news/data/models/post_type.dart';
+import 'package:stacker_news/data/models/sub.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/widgets/markdown_item.dart';
@@ -15,13 +15,13 @@ class PostItem extends StatefulWidget {
   final Post post;
   final int? idx;
   final bool isCommentsPage;
-  final PostType? postType;
+  final Sub? sub;
 
   const PostItem(
     this.post, {
     super.key,
     this.idx,
-    this.postType,
+    this.sub,
     this.isCommentsPage = false,
   });
 
@@ -226,6 +226,6 @@ class _PostItemState extends State<PostItem> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.postType == PostType.notifications ? _buildNotificationItem() : _buildNormalItem();
+    return widget.sub?.name == 'notifications' ? _buildNotificationItem() : _buildNormalItem();
   }
 }

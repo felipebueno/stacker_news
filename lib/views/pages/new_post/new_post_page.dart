@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/models/post_type.dart';
+import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/new_post/new_discussion_page.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
+import 'package:stacker_news/views/widgets/sub_select.dart';
 
 class NewPostPage extends StatefulWidget {
   static const String id = 'new_post';
@@ -16,8 +17,6 @@ class NewPostPage extends StatefulWidget {
 class _NewPostPageState extends State<NewPostPage> {
   String? _selectedSub;
 
-  List<String> get _postTypes => PostType.values.where((p) => p != PostType.notifications).map((t) => t.title).toList();
-
   @override
   Widget build(BuildContext context) {
     return GenericPageScaffold(
@@ -26,23 +25,14 @@ class _NewPostPageState extends State<NewPostPage> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          DropdownButton<String>(
-            value: _selectedSub,
-            hint: const Text('pick territory'),
-            isExpanded: true,
-            onChanged: (String? val) {
+          SubSelect(
+            apiClient: SNApiClient(),
+            initialSub: _selectedSub,
+            onChanged: (selectedSubName) {
               setState(() {
-                _selectedSub = val;
+                _selectedSub = selectedSubName;
               });
             },
-            items: _postTypes
-                .map(
-                  (e) => DropdownMenuItem(
-                    value: e,
-                    child: Text(e),
-                  ),
-                )
-                .toList(),
           ),
           const SizedBox(height: 16),
           const Text(

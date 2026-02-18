@@ -4,14 +4,15 @@ import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_failed_page.dart';
 
 import './models/post.dart';
-import './models/post_type.dart';
 import './models/session.dart';
+import './models/sub.dart';
 import './models/user.dart';
 import './shared_prefs_manager.dart' show SharedPrefsManager;
 
@@ -28,6 +29,13 @@ final class SNApiClient {
 
     _dio.interceptors.add(
       InterceptorsWrapper(
+        onRequest: (options, handler) {
+          if (kDebugMode) {
+            debugPrint('[API] Request: ${options.method} ${options.uri}');
+            debugPrint('[API] Request Data: ${options.data}');
+          }
+          return handler.next(options);
+        },
         onError: (error, handler) {
           final statusCode = error.response?.statusCode;
 
@@ -58,7 +66,7 @@ final class SNApiClient {
             if (error.requestOptions.data != null) {
               debugPrint('Request Data: ${error.requestOptions.data}');
             }
-   
+
             handler.next(error);
           }
         },
@@ -68,10 +76,8 @@ final class SNApiClient {
 
   final Dio _dio = Dio(
     BaseOptions(
-      // TODO: Keep only the necessary values
       baseUrl: '$baseUrl/_next/data',
       headers: {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:126.0) Gecko/20100101 Firefox/126.0',
         'Accept': '*/*',
         'Accept-Language': 'en-US,en;q=0.5',
         'Content-Type': 'application/json',
@@ -90,34 +96,109 @@ final class SNApiClient {
   }
 
   // #region Posts
-  Future<List<Post>> fetchInitialPosts(PostType postType) async {
+  Map<String, dynamic> _getSortVariables(
+    String sortType, {
+    String? type,
+    String? by,
+    String? when,
+    DateTime? from,
+    DateTime? to,
+  }) {
+    switch (sortType.toUpperCase()) {
+      case 'NEW':
+        return {'sort': 'new'};
+      case 'TOP':
+        final vars = {
+          'sort': 'top',
+          'type': type ?? 'posts',
+          'when': when ?? 'day',
+        };
+        // Add custom date range if provided
+        if (when == 'custom' && from != null && to != null) {
+          vars['from'] = from.toIso8601String();
+          vars['to'] = to.toIso8601String();
+        }
+        return vars;
+      case 'LIT':
+      default:
+        return {};
+    }
+  }
+
+  Future<List<Post>> fetchInitialPosts(
+    String subName, {
+    String sort = 'LIT',
+    String? type,
+    String? by,
+    String? when,
+    DateTime? from,
+    DateTime? to,
+  }) async {
     try {
-      final endpoint = postType.endpoint;
+      // Special handling for 'home' - it doesn't filter by sub in the same way
+      if (subName == 'home') {
+        return await _fetchHomeTimeline(
+          sort: sort,
+          type: type,
+          by: by,
+          when: when,
+          from: from,
+          to: to,
+        );
+      } else if (subName == 'notifications') {
+        return await _fetchNotifications();
+      }
 
-      String? currCommit = await _getCurrBuildId();
+      final sortVars = _getSortVariables(sort, type: type, by: by, when: when, from: from, to: to);
+      final body = jsonDecode(
+        jsonEncode(
+          GqlBody(
+            operationName: 'SubItems',
+            variables: {
+              'includeComments': false,
+              'sub': subName,
+              ...sortVars,
+            },
+            query:
+                '''\n            fragment SubFields on Sub {\n              name\n              postTypes\n              allowFreebies\n              rankingType\n              billingType\n              billingCost\n              billingAutoRenew\n              billedLastAt\n              billPaidUntil\n              baseCost\n              userId\n              desc\n              status\n              meMuteSub\n              meSubscription\n              nsfw\n              __typename\n            }\n\n            fragment SubFullFields on Sub {\n              ...SubFields\n              user {\n                name\n                id\n                optional {\n                  streak\n                  __typename\n                }\n                __typename\n              }\n              __typename\n            }\n\n            fragment ItemFields on Item {\n              id\n              parentId\n              createdAt\n              deletedAt\n              title\n              url\n              user {\n                id\n                name\n                optional {\n                  streak\n                  __typename\n                }\n                meMute\n                __typename\n              }\n              sub {\n                name\n                userId\n                meMuteSub\n                meSubscription\n                nsfw\n                __typename\n              }\n              otsHash\n              position\n              sats\n              boost\n              bounty\n              bountyPaidTo\n              noteId\n              path\n              upvotes\n              meSats\n              meDontLikeSats\n              meBookmark\n              meSubscription\n              meForward\n              freebie\n              bio\n              ncomments\n              commentSats\n              lastCommentAt\n              isJob\n              company\n              location\n              remote\n              subName\n              pollCost\n              pollExpiresAt\n              status\n              uploadId\n              mine\n              imgproxyUrls\n              rel\n              __typename\n            }\n\n            fragment CommentItemExtFields on Item {\n              text\n              root {\n                id\n                title\n                bounty\n                bountyPaidTo\n                subName\n                sub {\n                  name\n                  userId\n                  meMuteSub\n                  __typename\n                }\n                user {\n                  name\n                  optional {\n                    streak\n                    __typename\n                  }\n                  id\n                  __typename\n                }\n                __typename\n              }\n              __typename\n            }\n\n            query SubItems(\$sub: String, \$sort: String, \$cursor: String, \$type: String, \$name: String, \$when: String, \$from: String, \$to: String, \$by: String, \$limit: Limit, \$includeComments: Boolean = false) {\n              sub(name: \$sub) {\n                ...SubFullFields\n                __typename\n              }\n              items(\n                sub: \$sub\n                sort: \$sort\n                cursor: \$cursor\n                type: \$type\n                name: \$name\n                when: \$when\n                from: \$from\n                to: \$to\n                by: \$by\n                limit: \$limit\n              ) {\n                cursor\n                items {\n                  ...ItemFields\n                  ...CommentItemExtFields @include(if: \$includeComments)\n                  position\n                  __typename\n                }\n                pins {\n                  ...ItemFields\n                  ...CommentItemExtFields @include(if: \$includeComments)\n                  position\n                  __typename\n                }\n                __typename\n              }\n            }\n          ''',
+          ),
+        ),
+      );
 
-      final response = await _dio.get('/$currCommit/$endpoint');
+      if (kDebugMode) {
+        debugPrint('[API] POST $baseUrl/api/graphql');
+        debugPrint('[API] Request body: ${jsonEncode(body)}');
+      }
+
+      final response = await _dio.post(
+        '$baseUrl/api/graphql',
+        data: body,
+      );
+
+      if (kDebugMode) {
+        debugPrint('[API] Response status: ${response.statusCode}');
+        debugPrint('[API] Response data: ${jsonEncode(response.data)}');
+      }
 
       if (response.statusCode == 200) {
-        return await _parsePosts(response.data, postType);
-      }
-
-      if (response.statusCode == 404) {
-        await _fetchAndSaveCurrBuildId();
-
-        currCommit = await _getCurrBuildId();
-
-        final retryResponse = await _dio.get('/$currCommit/$endpoint');
-
-        if (retryResponse.statusCode == 200) {
-          return await _parsePosts(retryResponse.data, postType);
-        } else {
-          throw Exception('Error fetching posts');
+        // Check for GraphQL errors
+        final errors = response.data?['errors'];
+        if (errors != null && errors is List && errors.isNotEmpty) {
+          final errorMsg = errors[0]?['message'] ?? 'Unknown GraphQL error';
+          if (kDebugMode) {
+            debugPrint('[API] GraphQL Error: $errorMsg');
+          }
+          throw Exception('GraphQL Error: $errorMsg');
         }
+
+        return await _parsePostsForSub(response.data, subName);
       } else {
-        throw Exception('Error parsing build id');
+        throw Exception('Error fetching posts: ${response.statusCode}');
       }
     } catch (e, st) {
+      if (kDebugMode) {
+        debugPrint('[API] Error: $e');
+      }
       debugPrint(e.toString());
       debugPrintStack(stackTrace: st);
       Utils.showException(e.toString(), st);
@@ -126,286 +207,95 @@ final class SNApiClient {
     }
   }
 
-  Future<List<Post>> _parsePosts(
+  Future<List<Post>> _parsePostsForSub(
     dynamic responseData,
-    PostType postType,
+    String subName,
   ) async {
-    final response = (responseData['pageProps'] ?? responseData);
-    final data = response['ssrData'] ?? response['data'];
+    if (kDebugMode) {
+      debugPrint('[API] Parsing response for sub: $subName');
+      debugPrint('[API] Response structure: ${responseData.runtimeType}');
+    }
 
-    final itemsMap = (data['items'] ?? data['topItems'] ?? data['notifications']);
-    final List items = itemsMap['items'] ?? itemsMap['notifications'];
+    // Handle GraphQL response structure
+    final data = responseData['data'];
+    if (data == null) {
+      if (kDebugMode) {
+        debugPrint('[API] ERROR: Missing data field. Full response: ${jsonEncode(responseData)}');
+      }
+      throw Exception('Invalid response: missing data field');
+    }
 
-    if (postType == PostType.home) {
-      // TODO: Temporary solution to get Stacker Saloon on the list
-      final List? pins = itemsMap['pins'];
+    final itemsData = data['items'];
+    if (itemsData == null) {
+      if (kDebugMode) {
+        debugPrint('[API] ERROR: Missing items field. Data keys: ${data.keys}');
+      }
+      throw Exception('Invalid response: missing items field');
+    }
+
+    if (kDebugMode) {
+      debugPrint('[API] Items data keys: ${itemsData.keys}');
+      debugPrint('[API] Items data: ${jsonEncode(itemsData)}');
+    }
+
+    final List items = itemsData['items'] ?? [];
+
+    if (kDebugMode) {
+      debugPrint('[API] Extracted ${items.length} items for sub: $subName');
+    }
+
+    // Handle pins for home sub
+    if (subName == 'home') {
+      final List? pins = itemsData['pins'];
       if (pins != null && pins.isNotEmpty) {
         for (final pin in pins) {
-          items.insert(pin['position'], pin);
+          final position = pin['position'] as int?;
+          if (position != null && position < items.length) {
+            items.insert(position, pin);
+          }
         }
       }
     }
 
-    final cursor = itemsMap['cursor'];
+    // Save cursor for pagination
+    final cursor = itemsData['cursor'];
     if (cursor != null) {
       await SharedPrefsManager.set(
-        '${postType.name}-cursor',
+        '$subName-cursor',
         cursor,
       );
     }
 
     return items.map((item) {
-      return Post.fromJson(item);
+      return Post.fromJson(item as Map<String, dynamic>);
     }).toList();
   }
 
-  String _getGraphQLBodyFor(
-    PostType postType, {
-    required String cursor,
-  }) {
-    if (postType == PostType.top || postType == PostType.home || postType == PostType.recent) {
-      return jsonEncode(
-        GqlBody(
-          operationName: 'SubItems',
-          variables: {
-            'includeComments': false,
-            'cursor': cursor,
-          },
-          query: '''
-            fragment SubFields on Sub {
-              name
-              postTypes
-              allowFreebies
-              rankingType
-              billingType
-              billingCost
-              billingAutoRenew
-              billedLastAt
-              billPaidUntil
-              baseCost
-              userId
-              desc
-              status
-              meMuteSub
-              meSubscription
-              nsfw
-              __typename
-            }
-
-            fragment SubFullFields on Sub {
-              ...SubFields
-              user {
-                name
+  Future<List<Post>> _fetchHomeTimeline({
+    String sort = 'LIT',
+    String? type,
+    String? by,
+    String? when,
+    DateTime? from,
+    DateTime? to,
+  }) async {
+    try {
+      final sortVars = _getSortVariables(sort, type: type, by: by, when: when, from: from, to: to);
+      final body = jsonDecode(
+        jsonEncode(
+          GqlBody(
+            operationName: 'TopItems',
+            variables: {
+              ...sortVars,
+            },
+            query: '''
+              fragment ItemFields on Item {
                 id
-                optional {
-                  streak
-                  __typename
-                }
-                __typename
-              }
-              __typename
-            }
-
-            fragment ItemFields on Item {
-              id
-              parentId
-              createdAt
-              deletedAt
-              title
-              url
-              user {
-                id
-                name
-                optional {
-                  streak
-                  __typename
-                }
-                meMute
-                __typename
-              }
-              sub {
-                name
-                userId
-                meMuteSub
-                meSubscription
-                nsfw
-                __typename
-              }
-              otsHash
-              position
-              sats
-              boost
-              bounty
-              bountyPaidTo
-              noteId
-              path
-              upvotes
-              meSats
-              meDontLikeSats
-              meBookmark
-              meSubscription
-              meForward
-              freebie
-              bio
-              ncomments
-              commentSats
-              lastCommentAt
-              isJob
-              company
-              location
-              remote
-              subName
-              pollCost
-              pollExpiresAt
-              status
-              uploadId
-              mine
-              imgproxyUrls
-              rel
-              __typename
-            }
-
-            fragment CommentItemExtFields on Item {
-              text
-              root {
-                id
+                parentId
+                createdAt
+                deletedAt
                 title
-                bounty
-                bountyPaidTo
-                subName
-                sub {
-                  name
-                  userId
-                  meMuteSub
-                  __typename
-                }
-                user {
-                  name
-                  optional {
-                    streak
-                    __typename
-                  }
-                  id
-                  __typename
-                }
-                __typename
-              }
-              __typename
-            }
-
-            query SubItems(\$sub: String, \$sort: String, \$cursor: String, \$type: String, \$name: String, \$when: String, \$from: String, \$to: String, \$by: String, \$limit: Limit, \$includeComments: Boolean = false) {
-              sub(name: \$sub) {
-                ...SubFullFields
-                __typename
-              }
-              items(
-                sub: \$sub
-                sort: \$sort
-                cursor: \$cursor
-                type: \$type
-                name: \$name
-                when: \$when
-                from: \$from
-                to: \$to
-                by: \$by
-                limit: \$limit
-              ) {
-                cursor
-                items {
-                  ...ItemFields
-                  ...CommentItemExtFields @include(if: \$includeComments)
-                  position
-                  __typename
-                }
-                pins {
-                  ...ItemFields
-                  ...CommentItemExtFields @include(if: \$includeComments)
-                  position
-                  __typename
-                }
-                __typename
-              }
-            }
-          ''',
-        ),
-      );
-    } else if (postType == PostType.notifications) {
-      return jsonEncode(
-        GqlBody(
-          operationName: 'Notifications',
-          variables: {
-            'cursor': cursor,
-          },
-          query: '''
-            fragment ItemFields on Item {
-              id
-              parentId
-              createdAt
-              deletedAt
-              title
-              url
-              user {
-                id
-                name
-                optional {
-                  streak
-                  __typename
-                }
-                meMute
-                __typename
-              }
-              sub {
-                name
-                userId
-                meMuteSub
-                meSubscription
-                nsfw
-                __typename
-              }
-              otsHash
-              position
-              sats
-              boost
-              bounty
-              bountyPaidTo
-              noteId
-              path
-              upvotes
-              meSats
-              meDontLikeSats
-              meBookmark
-              meSubscription
-              meForward
-              freebie
-              bio
-              ncomments
-              commentSats
-              lastCommentAt
-              isJob
-              company
-              location
-              remote
-              subName
-              pollCost
-              pollExpiresAt
-              status
-              uploadId
-              mine
-              imgproxyUrls
-              rel
-              apiKey
-              __typename
-            }
-
-            fragment ItemFullFields on Item {
-              ...ItemFields
-              text
-              root {
-                id
-                title
-                bounty
-                bountyPaidTo
-                subName
+                url
                 user {
                   id
                   name
@@ -413,6 +303,7 @@ final class SNApiClient {
                     streak
                     __typename
                   }
+                  meMute
                   __typename
                 }
                 sub {
@@ -420,421 +311,108 @@ final class SNApiClient {
                   userId
                   meMuteSub
                   meSubscription
+                  nsfw
                   __typename
                 }
+                otsHash
+                position
+                sats
+                boost
+                bounty
+                bountyPaidTo
+                noteId
+                path
+                upvotes
+                meSats
+                meDontLikeSats
+                meBookmark
+                meSubscription
+                meForward
+                freebie
+                bio
+                ncomments
+                commentSats
+                lastCommentAt
+                isJob
+                company
+                location
+                remote
+                subName
+                pollCost
+                pollExpiresAt
+                status
+                uploadId
+                mine
+                imgproxyUrls
+                rel
                 __typename
               }
-              forwards {
-                userId
-                pct
-                user {
-                  name
+              
+              query TopItems(\$sort: String, \$cursor: String, \$type: String, \$limit: Limit) {
+                items(
+                  sort: \$sort
+                  cursor: \$cursor
+                  type: \$type
+                  limit: \$limit
+                ) {
+                  cursor
+                  items {
+                    ...ItemFields
+                    __typename
+                  }
+                  pins {
+                    ...ItemFields
+                    position
+                    __typename
+                  }
                   __typename
                 }
-                __typename
               }
-              __typename
-            }
-
-            fragment InviteFields on Invite {
-              id
-              createdAt
-              invitees {
-                id
-                name
-                __typename
-              }
-              gift
-              limit
-              revoked
-              user {
-                id
-                name
-                optional {
-                  streak
-                  __typename
-                }
-                __typename
-              }
-              poor
-              __typename
-            }
-
-            fragment SubFields on Sub {
-              name
-              createdAt
-              postTypes
-              allowFreebies
-              rankingType
-              billingType
-              billingCost
-              billingAutoRenew
-              billedLastAt
-              billPaidUntil
-              baseCost
-              userId
-              desc
-              status
-              meMuteSub
-              meSubscription
-              nsfw
-              __typename
-            }
-
-            query Notifications(\$cursor: String, \$inc: String) {
-              notifications(cursor: \$cursor, inc: \$inc) {
-                cursor
-                lastChecked
-                notifications {
-                  __typename
-                  ... on Mention {
-                    id
-                    sortTime
-                    mention
-                    item {
-                      ...ItemFullFields
-                      text
-                      __typename
-                    }
-                    __typename
-                  }
-                  ... on ItemMention {
-                    id
-                    sortTime
-                    item {
-                      ...ItemFullFields
-                      text
-                      __typename
-                    }
-                    __typename
-                  }
-                  ... on Votification {
-                    id
-                    sortTime
-                    earnedSats
-                    item {
-                      ...ItemFullFields
-                      text
-                      __typename
-                    }
-                    __typename
-                  }
-                  ... on Revenue {
-                    id
-                    sortTime
-                    earnedSats
-                    subName
-                    __typename
-                  }
-                  ... on ForwardedVotification {
-                    id
-                    sortTime
-                    earnedSats
-                    item {
-                      ...ItemFullFields
-                      text
-                      __typename
-                    }
-                    __typename
-                  }
-                  ... on Streak {
-                    id
-                    sortTime
-                    days
-                    __typename
-                  }
-                  ... on Earn {
-                    id
-                    sortTime
-                    minSortTime
-                    earnedSats
-                    sources {
-                      posts
-                      comments
-                      tipPosts
-                      tipComments
-                      __typename
-                    }
-                    __typename
-                  }
-                  ... on Referral {
-                    id
-                    sortTime
-                    __typename
-                  }
-                  ... on Reply {
-                    id
-                    sortTime
-                    item {
-                      ...ItemFullFields
-                      text
-                      __typename
-                    }
-                    __typename
-                  }
-                  ... on FollowActivity {
-                    id
-                    sortTime
-                    item {
-                      ...ItemFullFields
-                      text
-                      __typename
-                    }
-                    __typename
-                  }
-                  ... on TerritoryPost {
-                    id
-                    sortTime
-                    item {
-                      ...ItemFullFields
-                      text
-                      __typename
-                    }
-                    __typename
-                  }
-                  ... on TerritoryTransfer {
-                    id
-                    sortTime
-                    sub {
-                      ...SubFields
-                      __typename
-                    }
-                    __typename
-                  }
-                  ... on Invitification {
-                    id
-                    sortTime
-                    invite {
-                      ...InviteFields
-                      __typename
-                    }
-                    __typename
-                  }
-                  ... on JobChanged {
-                    id
-                    sortTime
-                    item {
-                      ...ItemFields
-                      __typename
-                    }
-                    __typename
-                  }
-                  ... on SubStatus {
-                    id
-                    sortTime
-                    sub {
-                      ...SubFields
-                      __typename
-                    }
-                    __typename
-                  }
-                  ... on InvoicePaid {
-                    id
-                    sortTime
-                    earnedSats
-                    invoice {
-                      id
-                      nostr
-                      comment
-                      lud18Data
-                      __typename
-                    }
-                    __typename
-                  }
-                  ... on WithdrawlPaid {
-                    id
-                    sortTime
-                    earnedSats
-                    withdrawl {
-                      autoWithdraw
-                      __typename
-                    }
-                    __typename
-                  }
-                  ... on Reminder {
-                    id
-                    sortTime
-                    item {
-                      ...ItemFullFields
-                      __typename
-                    }
-                    __typename
-                  }
-                }
-                __typename
-              }
-            }
-          ''',
+            ''',
+          ),
         ),
       );
+
+      if (kDebugMode) {
+        debugPrint('[API] POST $baseUrl/api/graphql (home timeline)');
+        debugPrint('[API] Request body: ${jsonEncode(body)}');
+      }
+
+      final response = await _dio.post(
+        '$baseUrl/api/graphql',
+        data: body,
+      );
+
+      if (kDebugMode) {
+        debugPrint('[API] Response status: ${response.statusCode}');
+        debugPrint('[API] Response data: ${jsonEncode(response.data)}');
+      }
+
+      if (response.statusCode == 200) {
+        // Check for GraphQL errors
+        final errors = response.data?['errors'];
+        if (errors != null && errors is List && errors.isNotEmpty) {
+          final errorMsg = errors[0]?['message'] ?? 'Unknown GraphQL error';
+          if (kDebugMode) {
+            debugPrint('[API] GraphQL Error: $errorMsg');
+          }
+          throw Exception('GraphQL Error: $errorMsg');
+        }
+
+        return await _parsePostsForSub(response.data, 'home');
+      } else {
+        throw Exception('Error fetching home timeline: ${response.statusCode}');
+      }
+    } catch (e, st) {
+      if (kDebugMode) {
+        debugPrint('[API] Error fetching home timeline: $e');
+      }
+      debugPrint(e.toString());
+      debugPrintStack(stackTrace: st);
+      Utils.showException(e.toString(), st);
+
+      rethrow;
     }
-
-    return jsonEncode(
-      GqlBody(
-        operationName: 'SubItems',
-        variables: {
-          'includeComments': false,
-          'sub': postType.name,
-          'cursor': cursor,
-        },
-        query: '''
-          fragment SubFields on Sub {
-            name
-            postTypes
-            allowFreebies
-            rankingType
-            billingType
-            billingCost
-            billingAutoRenew
-            billedLastAt
-            billPaidUntil
-            baseCost
-            userId
-            desc
-            status
-            meMuteSub
-            meSubscription
-            nsfw
-            __typename
-          }
-
-          fragment SubFullFields on Sub {
-            ...SubFields
-            user {
-              name
-              id
-              optional {
-                streak
-                __typename
-              }
-              __typename
-            }
-            __typename
-          }
-
-          fragment ItemFields on Item {
-            id
-            parentId
-            createdAt
-            deletedAt
-            title
-            url
-            user {
-              id
-              name
-              optional {
-                streak
-                __typename
-              }
-              meMute
-              __typename
-            }
-            sub {
-              name
-              userId
-              meMuteSub
-              meSubscription
-              nsfw
-              __typename
-            }
-            otsHash
-            position
-            sats
-            boost
-            bounty
-            bountyPaidTo
-            noteId
-            path
-            upvotes
-            meSats
-            meDontLikeSats
-            meBookmark
-            meSubscription
-            meForward
-            freebie
-            bio
-            ncomments
-            commentSats
-            lastCommentAt
-            isJob
-            company
-            location
-            remote
-            subName
-            pollCost
-            pollExpiresAt
-            status
-            uploadId
-            mine
-            imgproxyUrls
-            rel
-            __typename
-          }
-
-          fragment CommentItemExtFields on Item {
-            text
-            root {
-              id
-              title
-              bounty
-              bountyPaidTo
-              subName
-              sub {
-                name
-                userId
-                meMuteSub
-                __typename
-              }
-              user {
-                name
-                optional {
-                  streak
-                  __typename
-                }
-                id
-                __typename
-              }
-              __typename
-            }
-            __typename
-          }
-
-          query SubItems(\$sub: String, \$sort: String, \$cursor: String, \$type: String, \$name: String, \$when: String, \$from: String, \$to: String, \$by: String, \$limit: Limit, \$includeComments: Boolean = false) {
-            sub(name: \$sub) {
-              ...SubFullFields
-              __typename
-            }
-            items(
-              sub: \$sub
-              sort: \$sort
-              cursor: \$cursor
-              type: \$type
-              name: \$name
-              when: \$when
-              from: \$from
-              to: \$to
-              by: \$by
-              limit: \$limit
-            ) {
-              cursor
-              items {
-                ...ItemFields
-                ...CommentItemExtFields @include(if: \$includeComments)
-                position
-                __typename
-              }
-              pins {
-                ...ItemFields
-                ...CommentItemExtFields @include(if: \$includeComments)
-                position
-                __typename
-              }
-              __typename
-            }
-          }
-        ''',
-      ),
-    );
   }
 
   Future<void> _fetchAndSaveCurrBuildId() async {
@@ -859,28 +437,91 @@ final class SNApiClient {
     return await SharedPrefsManager.get('build-id');
   }
 
-  Future<List<Post>> fetchMorePosts(PostType postType) async {
-    final cursor = await SharedPrefsManager.get('${postType.name}-cursor');
+  Future<List<Post>> fetchMorePostsBySub(
+    String subName, {
+    String sort = 'LIT',
+    String? type,
+    String? by,
+    String? when,
+    DateTime? from,
+    DateTime? to,
+  }) async {
+    final cursor = await SharedPrefsManager.get('$subName-cursor');
 
     if (cursor == null) {
       throw Exception('Error fetching more');
     }
 
+    if (subName == 'notifications') {
+      return await _fetchNotifications(cursor: cursor);
+    }
+
     try {
-      final graphBody = _getGraphQLBodyFor(
-        postType,
-        cursor: cursor,
+      final sortVars = _getSortVariables(sort, type: type, by: by, when: when, from: from, to: to);
+      final body = jsonDecode(
+        jsonEncode(
+          GqlBody(
+            operationName: 'SubItems',
+            variables: {
+              'sub': subName == 'home' ? null : subName,
+              'cursor': cursor,
+              ...sortVars,
+            },
+            query: '''
+              query SubItems(\$sub: String, \$sort: String, \$cursor: String, \$type: String, \$name: String, \$when: String, \$from: String, \$to: String, \$by: String, \$limit: Limit) {
+                items(
+                  sub: \$sub
+                  sort: \$sort
+                  cursor: \$cursor
+                  type: \$type
+                  name: \$name
+                  when: \$when
+                  from: \$from
+                  to: \$to
+                  by: \$by
+                  limit: \$limit
+                ) {
+                  cursor
+                  items {
+                    id
+                    title
+                    url
+                    user { id name }
+                    sub { name }
+                    sats
+                    ncomments
+                    __typename
+                  }
+                  __typename
+                }
+              }
+            ''',
+          ),
+        ),
       );
-      final body = jsonDecode(graphBody);
+
+      if (kDebugMode) {
+        debugPrint('[API] POST $baseUrl/api/graphql (pagination)');
+        debugPrint('[API] Request body: ${jsonEncode(body)}');
+      }
+
       final response = await _dio.post(
         '$baseUrl/api/graphql',
         data: body,
       );
 
+      if (kDebugMode) {
+        debugPrint('[API] Response status: ${response.statusCode}');
+        debugPrint('[API] Response data: ${jsonEncode(response.data)}');
+      }
+
       if (response.statusCode == 200) {
-        return await _parsePosts(response.data, postType);
+        return await _parsePostsForSub(response.data, subName);
       }
     } catch (e, st) {
+      if (kDebugMode) {
+        debugPrint('[API] Error: $e');
+      }
       debugPrint(e.toString());
       debugPrintStack(stackTrace: st);
 
@@ -894,11 +535,24 @@ final class SNApiClient {
   }
 
   Future<Post?> fetchPostDetails(String id) async {
-    final currCommit = await _getCurrBuildId();
+    String? currCommit = await _getCurrBuildId();
+
     final response = await _dio.get('/$currCommit/items/$id.json');
     // print(response);
     if (response.statusCode != 200) {
-      throw Exception('Error fetching comments');
+      if (response.statusCode == 404) {
+        await _fetchAndSaveCurrBuildId();
+
+        currCommit = await _getCurrBuildId();
+
+        final retryResponse = await _dio.get('/$currCommit/items/$id.json');
+
+        if (retryResponse.statusCode != 200) {
+          throw Exception('Error fetching post details');
+        }
+      } else {
+        throw Exception('Error parsing build id');
+      }
     }
 
     final props = response.data['pageProps'];
@@ -1013,9 +667,7 @@ final class SNApiClient {
 
     if (response.statusCode == 200) {
       return _parseProfile(response.data);
-    }
-
-    if (response.statusCode == 404) {
+    } else if (response.statusCode == 404) {
       await _fetchAndSaveCurrBuildId();
 
       currCommit = await _getCurrBuildId();
@@ -1250,6 +902,64 @@ final class SNApiClient {
 
     return false;
   }
+
+  Future<List<Post>> _fetchNotifications({String? cursor}) async {
+    String? buildId = await _getCurrBuildId();
+    if (buildId == null) {
+      await _fetchAndSaveCurrBuildId();
+      buildId = await _getCurrBuildId();
+    }
+
+    final url = '/$buildId/notifications.json${cursor != null ? '?cursor=$cursor' : ''}';
+
+    if (kDebugMode) {
+      debugPrint('[API] GET $url');
+    }
+
+    final response = await _dio.get(url);
+
+    if (response.statusCode == 200) {
+      return await _parseNotifications(response.data);
+    } else if (response.statusCode == 404) {
+      await _fetchAndSaveCurrBuildId();
+      buildId = await _getCurrBuildId();
+      final retryUrl = '/$buildId/notifications.json${cursor != null ? '?cursor=$cursor' : ''}';
+      final retryResponse = await _dio.get(retryUrl);
+
+      if (retryResponse.statusCode == 200) {
+        return await _parseNotifications(retryResponse.data);
+      }
+    }
+
+    throw Exception('Error fetching notifications: ${response.statusCode}');
+  }
+
+  Future<List<Post>> _parseNotifications(dynamic responseData) async {
+    final props = responseData['pageProps'];
+    final data = (props['ssrData'] ?? props['data'])['notifications'];
+
+    if (data == null) {
+      if (kDebugMode) {
+        debugPrint('[API] ERROR: Missing notifications field.');
+      }
+      throw Exception('Invalid response: missing notifications field');
+    }
+
+    final List items = data['notifications'] ?? [];
+    final cursor = data['cursor']?.toString();
+
+    if (kDebugMode) {
+      debugPrint('[API] Extracted ${items.length} notifications');
+    }
+
+    if (cursor != null) {
+      await SharedPrefsManager.set('notifications-cursor', cursor);
+    }
+
+    return items.map((item) {
+      return Post.fromJson(item as Map<String, dynamic>);
+    }).toList();
+  }
   // #endregion Notifications
 
   // #region Zap Things
@@ -1414,6 +1124,65 @@ final class SNApiClient {
   }
 
   // #endregion Items & Comments
+
+  // #region Subs
+  Future<List<Sub>> fetchActiveSubs() async {
+    try {
+      final requestBody = GqlBody(
+        operationName: 'ActiveSubs',
+        variables: {},
+        query: '''
+          query ActiveSubs {
+            activeSubs {
+              name
+              desc
+              nsfw
+              meMuteSub
+            }
+          }
+        ''',
+      );
+
+      if (kDebugMode) {
+        debugPrint('[API] POST $baseUrl/api/graphql (fetchActiveSubs)');
+        debugPrint('[API] Request: ${jsonEncode(requestBody.toJson())}');
+      }
+
+      final response = await _dio.post(
+        '$baseUrl/api/graphql',
+        data: jsonEncode(requestBody),
+      );
+
+      if (kDebugMode) {
+        debugPrint('[API] Response status: ${response.statusCode}');
+        debugPrint('[API] Response data: ${jsonEncode(response.data)}');
+      }
+
+      if (response.statusCode != 200) {
+        debugPrint('Error fetching active subs: ${response.statusCode}');
+        return [];
+      }
+
+      final errors = (response.data['errors'] ?? []) as List;
+      if (errors.isNotEmpty) {
+        debugPrint('GraphQL error: ${errors[0]?['message']}');
+        return [];
+      }
+
+      final subsData = response.data['data']?['activeSubs'] as List?;
+      if (subsData == null) {
+        return [];
+      }
+
+      return subsData.map((sub) => Sub.fromJson(sub as Map<String, dynamic>)).toList();
+    } catch (e, st) {
+      debugPrint('Error fetching active subs: $e');
+      debugPrintStack(stackTrace: st);
+      return [];
+    }
+  }
+
+  // #endregion Subs
 }
 
 class GqlBody {

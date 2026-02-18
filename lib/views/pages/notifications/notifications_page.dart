@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/post.dart';
-import 'package:stacker_news/data/models/post_type.dart';
+import 'package:stacker_news/data/models/sub.dart';
 import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
@@ -18,13 +18,14 @@ class NotificationsPage extends StatefulWidget {
 
 class _NotificationsPageState extends State<NotificationsPage> {
   final _api = locator<SNApiClient>();
+  final Sub _notificationsSub = const Sub(name: 'notifications');
 
   @override
   Widget build(BuildContext context) {
     return GenericPageScaffold(
       title: 'Notifications',
       body: FutureBuilder(
-        future: _api.fetchInitialPosts(PostType.notifications),
+        future: _api.fetchInitialPosts('notifications'),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             final err = snapshot.error.toString();
@@ -46,7 +47,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                         ? const Center(child: Text('No notifications found'))
                         : PostList(
                             posts,
-                            postType: PostType.notifications,
+                            sub: _notificationsSub,
                           ),
                   ),
                 ),
