@@ -2,8 +2,8 @@ name: Android Release
 
 on:
   push:
-    branch:
-      - 'DISABLED_FOR_NOW'
+    tags:
+      - '*'
 
   workflow_dispatch:
 
