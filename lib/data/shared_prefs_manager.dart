@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stacker_news/utils/log_service.dart';
 
 class SharedPrefsManager {
   static Future<void> set(String key, dynamic value) async {
@@ -15,7 +16,7 @@ class SharedPrefsManager {
     } else if (value is List<String>) {
       await prefs.setStringList(key, value);
     } else {
-      print(
+      LogService().error(
         'SharedPrefsManager.set error: value => $value for key => $key has unexpected type.',
       );
     }

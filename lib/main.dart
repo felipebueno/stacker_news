@@ -23,6 +23,7 @@ import 'package:stacker_news/views/pages/pdf_reader/pdf_reader_page.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
 import 'package:stacker_news/views/pages/settings/settings_page.dart';
+import 'package:stacker_news/views/pages/debug/debug_page.dart';
 
 import 'data/theme_notifier.dart';
 
@@ -148,6 +149,7 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
               NewBountyPage.id: (context) => const NewBountyPage(),
               NewJobPage.id: (context) => const NewJobPage(),
               PdfReaderPage.id: (context) => const PdfReaderPage(),
+              DebugPage.id: (context) => const DebugPage(),
             },
             home: const HomePage(),
           );

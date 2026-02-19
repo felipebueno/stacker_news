@@ -12,6 +12,7 @@ import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/views/pages/pdf_reader/pdf_reader_page.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
+import 'package:stacker_news/utils/log_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Utils {
@@ -135,7 +136,7 @@ class Utils {
   }
 
   static void showInfo(String message) {
-    debugPrint(message);
+    LogService().info(message);
     scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
 
     scaffoldMessengerKey.currentState?.showSnackBar(
@@ -144,7 +145,7 @@ class Utils {
   }
 
   static void showWarning(String message) {
-    debugPrint(message);
+    LogService().warning(message);
     scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
 
     scaffoldMessengerKey.currentState?.showSnackBar(
@@ -152,20 +153,19 @@ class Utils {
     );
   }
 
-  static void showError(String message) {
-    debugPrint(message);
+  static void showError(String message, [Object? error, StackTrace? st]) {
+    LogService().error(message, error, st);
     scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
 
     try {
       scaffoldMessengerKey.currentState?.showSnackBar(
-        SnackBar(content: Text(message), backgroundColor: Colors.red),
+        SnackBar(content: Text('$message $error'), backgroundColor: Colors.red),
       );
     } catch (_) {}
   }
 
   static void showException(String message, StackTrace st) {
-    debugPrint(message);
-    debugPrintStack(label: message, stackTrace: st);
+    LogService().error(message, null, st);
     scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
 
     try {
@@ -186,8 +186,7 @@ class Utils {
         await InAppUpdate.performImmediateUpdate();
       }
     } catch (e, st) {
-      debugPrintStack(label: e.toString(), stackTrace: st);
-      // TODO: Do something with this error
+      LogService().error('Check for update failed', e, st);
     }
   }
 

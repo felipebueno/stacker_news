@@ -5,6 +5,7 @@ import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 import 'package:stacker_news/views/widgets/theme_switcher.dart';
+import 'package:stacker_news/views/pages/debug/debug_page.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -46,6 +47,11 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 const SizedBox(height: 16),
                 const ThemeSwitcher(),
+                const SizedBox(height: 16),
+                TextButton(
+                  onPressed: () => Navigator.pushNamed(context, DebugPage.id),
+                  child: const Text('View Logs'),
+                ),
                 TextButton(
                   onPressed: () {
                     Utils.showInfo('Saving settings not implemented yet');

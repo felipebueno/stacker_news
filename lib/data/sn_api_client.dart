@@ -14,6 +14,7 @@ import './models/post.dart';
 import './models/session.dart';
 import './models/sub.dart';
 import './models/user.dart';
+import 'package:stacker_news/utils/log_service.dart';
 import './shared_prefs_manager.dart' show SharedPrefsManager;
 
 const String baseUrl = String.fromEnvironment(
@@ -30,10 +31,8 @@ final class SNApiClient {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          if (kDebugMode) {
-            debugPrint('[API] Request: ${options.method} ${options.uri}');
-            debugPrint('[API] Request Data: ${options.data}');
-          }
+          LogService().info('[API] Request: ${options.method} ${options.uri}');
+          LogService().debug('[API] Request Data: ${options.data}');
           return handler.next(options);
         },
         onError: (error, handler) {
@@ -51,20 +50,19 @@ final class SNApiClient {
           } else {
             final requestUrl = error.requestOptions.uri.toString();
             final requestMethod = error.requestOptions.method;
-
-            debugPrint('=== DIO Error Interceptor ===');
-            debugPrint('Status Code: $statusCode');
-            debugPrint('Request: $requestMethod $requestUrl');
-            debugPrint('Error Message: ${error.message}');
-
-            // Log response body/data for debugging GraphQL errors
+            if (kDebugMode) {
+              LogService().debug('=== DIO Error Interceptor ===');
+              LogService().debug('Status Code: $statusCode');
+              LogService().info('Request: $requestMethod $requestUrl');
+              LogService().error('Error Message: ${error.message}');
+            } // Log response body/data for debugging GraphQL errors
             if (error.response?.data != null) {
-              debugPrint('Response Data: ${error.response!.data}');
+              LogService().debug('Response Data: ${error.response!.data}');
             }
 
             // Log request data if available (for debugging what was sent)
             if (error.requestOptions.data != null) {
-              debugPrint('Request Data: ${error.requestOptions.data}');
+              LogService().debug('Request Data: ${error.requestOptions.data}');
             }
 
             handler.next(error);
@@ -166,8 +164,8 @@ final class SNApiClient {
       );
 
       if (kDebugMode) {
-        debugPrint('[API] POST $baseUrl/api/graphql');
-        debugPrint('[API] Request body: ${jsonEncode(body)}');
+        LogService().info('[API] POST $baseUrl/api/graphql');
+        LogService().debug('[API] Request body: ${jsonEncode(body)}');
       }
 
       final response = await _dio.post(
@@ -176,8 +174,8 @@ final class SNApiClient {
       );
 
       if (kDebugMode) {
-        debugPrint('[API] Response status: ${response.statusCode}');
-        debugPrint('[API] Response data: ${jsonEncode(response.data)}');
+        LogService().info('[API] Response status: ${response.statusCode}');
+        LogService().debug('[API] Response data: ${jsonEncode(response.data)}');
       }
 
       if (response.statusCode == 200) {
@@ -186,7 +184,7 @@ final class SNApiClient {
         if (errors != null && errors is List && errors.isNotEmpty) {
           final errorMsg = errors[0]?['message'] ?? 'Unknown GraphQL error';
           if (kDebugMode) {
-            debugPrint('[API] GraphQL Error: $errorMsg');
+            LogService().error('[API] GraphQL Error: $errorMsg');
           }
           throw Exception('GraphQL Error: $errorMsg');
         }
@@ -196,11 +194,7 @@ final class SNApiClient {
         throw Exception('Error fetching posts: ${response.statusCode}');
       }
     } catch (e, st) {
-      if (kDebugMode) {
-        debugPrint('[API] Error: $e');
-      }
-      debugPrint(e.toString());
-      debugPrintStack(stackTrace: st);
+      LogService().error('[API] Error: $e', e, st);
       Utils.showException(e.toString(), st);
 
       rethrow;
@@ -212,15 +206,15 @@ final class SNApiClient {
     String subName,
   ) async {
     if (kDebugMode) {
-      debugPrint('[API] Parsing response for sub: $subName');
-      debugPrint('[API] Response structure: ${responseData.runtimeType}');
+      LogService().debug('[API] Parsing response for sub: $subName');
+      LogService().debug('[API] Response structure: ${responseData.runtimeType}');
     }
 
     // Handle GraphQL response structure
     final data = responseData['data'];
     if (data == null) {
       if (kDebugMode) {
-        debugPrint('[API] ERROR: Missing data field. Full response: ${jsonEncode(responseData)}');
+        LogService().error('[API] ERROR: Missing data field. Full response: ${jsonEncode(responseData)}');
       }
       throw Exception('Invalid response: missing data field');
     }
@@ -228,20 +222,20 @@ final class SNApiClient {
     final itemsData = data['items'];
     if (itemsData == null) {
       if (kDebugMode) {
-        debugPrint('[API] ERROR: Missing items field. Data keys: ${data.keys}');
+        LogService().error('[API] ERROR: Missing items field. Data keys: ${data.keys}');
       }
       throw Exception('Invalid response: missing items field');
     }
 
     if (kDebugMode) {
-      debugPrint('[API] Items data keys: ${itemsData.keys}');
-      debugPrint('[API] Items data: ${jsonEncode(itemsData)}');
+      LogService().debug('[API] Items data keys: ${itemsData.keys}');
+      LogService().debug('[API] Items data: ${jsonEncode(itemsData)}');
     }
 
     final List items = itemsData['items'] ?? [];
 
     if (kDebugMode) {
-      debugPrint('[API] Extracted ${items.length} items for sub: $subName');
+      LogService().info('[API] Extracted ${items.length} items for sub: $subName');
     }
 
     // Handle pins for home sub
@@ -374,8 +368,8 @@ final class SNApiClient {
       );
 
       if (kDebugMode) {
-        debugPrint('[API] POST $baseUrl/api/graphql (home timeline)');
-        debugPrint('[API] Request body: ${jsonEncode(body)}');
+        LogService().info('[API] POST $baseUrl/api/graphql (home timeline)');
+        LogService().debug('[API] Request body: ${jsonEncode(body)}');
       }
 
       final response = await _dio.post(
@@ -384,8 +378,8 @@ final class SNApiClient {
       );
 
       if (kDebugMode) {
-        debugPrint('[API] Response status: ${response.statusCode}');
-        debugPrint('[API] Response data: ${jsonEncode(response.data)}');
+        LogService().info('[API] Response status: ${response.statusCode}');
+        LogService().debug('[API] Response data: ${jsonEncode(response.data)}');
       }
 
       if (response.statusCode == 200) {
@@ -394,7 +388,7 @@ final class SNApiClient {
         if (errors != null && errors is List && errors.isNotEmpty) {
           final errorMsg = errors[0]?['message'] ?? 'Unknown GraphQL error';
           if (kDebugMode) {
-            debugPrint('[API] GraphQL Error: $errorMsg');
+            LogService().error('[API] GraphQL Error: $errorMsg');
           }
           throw Exception('GraphQL Error: $errorMsg');
         }
@@ -404,11 +398,7 @@ final class SNApiClient {
         throw Exception('Error fetching home timeline: ${response.statusCode}');
       }
     } catch (e, st) {
-      if (kDebugMode) {
-        debugPrint('[API] Error fetching home timeline: $e');
-      }
-      debugPrint(e.toString());
-      debugPrintStack(stackTrace: st);
+      LogService().error('[API] Error fetching home timeline', e, st);
       Utils.showException(e.toString(), st);
 
       rethrow;
@@ -501,8 +491,8 @@ final class SNApiClient {
       );
 
       if (kDebugMode) {
-        debugPrint('[API] POST $baseUrl/api/graphql (pagination)');
-        debugPrint('[API] Request body: ${jsonEncode(body)}');
+        LogService().info('[API] POST $baseUrl/api/graphql (pagination)');
+        LogService().debug('[API] Request body: ${jsonEncode(body)}');
       }
 
       final response = await _dio.post(
@@ -511,19 +501,15 @@ final class SNApiClient {
       );
 
       if (kDebugMode) {
-        debugPrint('[API] Response status: ${response.statusCode}');
-        debugPrint('[API] Response data: ${jsonEncode(response.data)}');
+        LogService().info('[API] Response status: ${response.statusCode}');
+        LogService().debug('[API] Response data: ${jsonEncode(response.data)}');
       }
 
       if (response.statusCode == 200) {
         return await _parsePostsForSub(response.data, subName);
       }
     } catch (e, st) {
-      if (kDebugMode) {
-        debugPrint('[API] Error: $e');
-      }
-      debugPrint(e.toString());
-      debugPrintStack(stackTrace: st);
+      LogService().error('[API] Error: $e', e, st);
 
       final msg = ((e is DioException) ? e.response?.data.toString() : e.toString()) ?? '';
       Utils.showException(msg, st);
@@ -564,9 +550,7 @@ final class SNApiClient {
     try {
       post = Post.fromJson(data);
     } catch (e, st) {
-      // TODO
-      print(e);
-      print(st);
+      LogService().error('Error parsing post details', e, st);
 
       throw Exception(e);
     }
@@ -639,15 +623,16 @@ final class SNApiClient {
     );
 
     if (response.statusCode != 200) {
-      Utils.showError('ERRN01 Error fetching profile');
+      Utils.showError('ERRN01 Error fetching profile', response.data);
 
       return null;
     }
 
+    // FIX: sometimes the response.data?['data']?['me'] is null. Why?
     final me = response.data?['data']?['me'];
 
     if (me == null) {
-      Utils.showError('ERRN02 Error fetching profile');
+      Utils.showError('ERRN02 Error fetching profile', response.data);
 
       return null;
     }
@@ -743,7 +728,7 @@ final class SNApiClient {
       // Handle redirect location
       final location = callbackResponse.headers.value(HttpHeaders.locationHeader);
       if (location == null) {
-        Utils.showError('Error validating token: No redirect location');
+        Utils.showError('Error validating token: No redirect location', callbackResponse.headers);
         return null;
       }
 
@@ -803,7 +788,7 @@ final class SNApiClient {
       }
 
       if (sessionResponse.data == null || sessionResponse.data.isEmpty) {
-        Utils.showError('Error validating token: Empty session data');
+        Utils.showError('Error validating token: Empty session data', sessionResponse.data);
         return null;
       }
 
@@ -815,7 +800,7 @@ final class SNApiClient {
 
       return Session.fromJson(sessionResponse.data);
     } catch (e) {
-      Utils.showError('Login failed: ${e.toString()}');
+      Utils.showError('Login failed: ${e.toString()}', e);
       return null;
     }
   }
@@ -862,9 +847,8 @@ final class SNApiClient {
         validateStatus: (status) => status != null && status < 500,
       ),
     );
-
     if (response.statusCode != 200 && response.statusCode != 302) {
-      Utils.showError('Failed with status: ${response.statusCode}');
+      Utils.showError('Failed with status: ${response.statusCode}', response.data);
       return false;
     }
 
@@ -874,7 +858,7 @@ final class SNApiClient {
 
   // #region Notifications
   Future<bool> hasNewNotes() async {
-    debugPrint('fetching hasNewNotes');
+    LogService().debug('fetching hasNewNotes');
 
     final response = await _dio.post(
       '$baseUrl/api/graphql',
@@ -893,12 +877,12 @@ final class SNApiClient {
     if (response.statusCode == 200) {
       final ret = response.data['data']?['hasNewNotes'] as bool?;
 
-      debugPrint('hasNewNotes: $ret');
+      LogService().debug('hasNewNotes: $ret');
 
       return ret == true;
     }
 
-    debugPrint('hasNewNotes: false, statusCode: ${response.statusCode}');
+    LogService().debug('hasNewNotes: false, statusCode: ${response.statusCode}');
 
     return false;
   }
@@ -913,7 +897,7 @@ final class SNApiClient {
     final url = '/$buildId/notifications.json${cursor != null ? '?cursor=$cursor' : ''}';
 
     if (kDebugMode) {
-      debugPrint('[API] GET $url');
+      LogService().info('[API] GET $url');
     }
 
     final response = await _dio.get(url);
@@ -940,7 +924,7 @@ final class SNApiClient {
 
     if (data == null) {
       if (kDebugMode) {
-        debugPrint('[API] ERROR: Missing notifications field.');
+        LogService().error('[API] ERROR: Missing notifications field.');
       }
       throw Exception('Invalid response: missing notifications field');
     }
@@ -949,7 +933,7 @@ final class SNApiClient {
     final cursor = data['cursor']?.toString();
 
     if (kDebugMode) {
-      debugPrint('[API] Extracted ${items.length} notifications');
+      LogService().debug('[API] Extracted ${items.length} notifications');
     }
 
     if (cursor != null) {
@@ -999,7 +983,7 @@ final class SNApiClient {
       final error = errors.isEmpty ? null : errors[0]?['message'];
 
       if (error != null) {
-        Utils.showError(error);
+        Utils.showError(error, response.data['errors']);
 
         return null;
       }
@@ -1066,7 +1050,7 @@ final class SNApiClient {
       final error = errors.isEmpty ? null : errors[0]?['message'];
 
       if (error != null) {
-        Utils.showError(error);
+        Utils.showError(error, response.data['errors']);
 
         throw Exception(error);
       }
@@ -1113,7 +1097,7 @@ final class SNApiClient {
       final error = errors.isEmpty ? null : errors[0]?['message'];
 
       if (error != null) {
-        Utils.showError(error);
+        Utils.showError(error, response.data['errors']);
         throw Exception(error);
       }
 
@@ -1144,8 +1128,8 @@ final class SNApiClient {
       );
 
       if (kDebugMode) {
-        debugPrint('[API] POST $baseUrl/api/graphql (fetchActiveSubs)');
-        debugPrint('[API] Request: ${jsonEncode(requestBody.toJson())}');
+        LogService().info('[API] POST $baseUrl/api/graphql (fetchActiveSubs)');
+        LogService().debug('[API] Request: ${jsonEncode(requestBody.toJson())}');
       }
 
       final response = await _dio.post(
@@ -1154,18 +1138,18 @@ final class SNApiClient {
       );
 
       if (kDebugMode) {
-        debugPrint('[API] Response status: ${response.statusCode}');
-        debugPrint('[API] Response data: ${jsonEncode(response.data)}');
+        LogService().info('[API] Response status: ${response.statusCode}');
+        LogService().debug('[API] Response data: ${jsonEncode(response.data)}');
       }
 
       if (response.statusCode != 200) {
-        debugPrint('Error fetching active subs: ${response.statusCode}');
+        LogService().error('Error fetching active subs: ${response.statusCode}');
         return [];
       }
 
       final errors = (response.data['errors'] ?? []) as List;
       if (errors.isNotEmpty) {
-        debugPrint('GraphQL error: ${errors[0]?['message']}');
+        LogService().error('GraphQL error: ${errors[0]?['message']}');
         return [];
       }
 
@@ -1176,8 +1160,7 @@ final class SNApiClient {
 
       return subsData.map((sub) => Sub.fromJson(sub as Map<String, dynamic>)).toList();
     } catch (e, st) {
-      debugPrint('Error fetching active subs: $e');
-      debugPrintStack(stackTrace: st);
+      LogService().error('Error fetching active subs', e, st);
       return [];
     }
   }

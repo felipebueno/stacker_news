@@ -16,9 +16,9 @@ class MaybeZapButton extends StatefulWidget {
     int? meSats,
     void Function(int)? onZapped,
     super.key,
-  })  : _id = id,
-        _meSats = meSats,
-        _onZapped = onZapped;
+  }) : _id = id,
+       _meSats = meSats,
+       _onZapped = onZapped;
 
   @override
   State<MaybeZapButton> createState() => _MaybeZapButtonState();
@@ -42,8 +42,7 @@ class _MaybeZapButtonState extends State<MaybeZapButton> {
                   onPressed: () async {
                     try {
                       _busy.value = true;
-                      final amount =
-                          await locator<SNApiClient>().zapPost(widget._id);
+                      final amount = await locator<SNApiClient>().zapPost(widget._id);
 
                       if (amount == null) return;
 
@@ -81,7 +80,7 @@ class _MaybeZapButtonState extends State<MaybeZapButton> {
                       ),
                     );
                   },
-                )
+                ),
               ],
             ),
           );
