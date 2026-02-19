@@ -17,7 +17,7 @@ class _DebugPageState extends State<DebugPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Logs de Debug'),
+        title: const Text('Debug Logs'),
         actions: [
           IconButton(
             icon: const Icon(Icons.delete),
