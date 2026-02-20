@@ -3,7 +3,7 @@ name: Android Release
 on:
   push:
     tags:
-      - '*'
+      - 'DISABLED_FOR_NOW'
 
   workflow_dispatch:
 
