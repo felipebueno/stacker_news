@@ -11,6 +11,8 @@ class ThemeNotifier with ChangeNotifier {
     ),
     appBarTheme: const AppBarTheme(
       foregroundColor: SNColors.primary,
+      surfaceTintColor: Colors.black,
+      backgroundColor: Colors.black,
     ),
     tabBarTheme: const TabBarThemeData(
       labelColor: SNColors.primary,
@@ -29,6 +31,10 @@ class ThemeNotifier with ChangeNotifier {
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       foregroundColor: Colors.black,
       backgroundColor: SNColors.primary,
+    ),
+    drawerTheme: const DrawerThemeData(
+      backgroundColor: Colors.black,
+      surfaceTintColor: Colors.black,
     ),
   );
 

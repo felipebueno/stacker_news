@@ -144,6 +144,7 @@ class _SubSelectState extends State<SubSelect> {
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
           ),
+          backgroundColor: Colors.black,
           builder: (BuildContext context) {
             return SubSelectionSheet(
               subs: _filteredSubs,
@@ -264,7 +265,7 @@ class _SubSelectionSheetState extends State<SubSelectionSheet> {
         children: [
           // Header
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
