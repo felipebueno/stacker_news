@@ -21,7 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final Sub _homeSub = const Sub(name: 'home');
-  late Sub _selectedSub;
+  late Sub _selectedSub = _homeSub;
   late String _sortType = 'LIT';
   late String _topType = 'posts';
   late String _topBy = 'sats';
@@ -29,12 +29,6 @@ class _HomePageState extends State<HomePage> {
   DateTime? _customStartDate;
   DateTime? _customEndDate;
   final SNApiClient _api = SNApiClient();
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedSub = _homeSub;
-  }
 
   Future<List<Post>> _fetchPostsForSub() async {
     return await _api.fetchInitialPosts(

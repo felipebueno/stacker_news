@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:stacker_news/data/lightning_provider.dart';
 import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/about/about_page.dart';
@@ -24,6 +25,7 @@ import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
 import 'package:stacker_news/views/pages/settings/settings_page.dart';
 import 'package:stacker_news/views/pages/debug/debug_page.dart';
+import 'package:stacker_news/views/widgets/lightning_bolt.dart';
 
 import 'data/theme_notifier.dart';
 
@@ -38,8 +40,13 @@ void main() {
   locator.registerLazySingleton(SNApiClient.new);
 
   runApp(
-    ChangeNotifierProvider<ThemeNotifier>(
-      create: (_) => ThemeNotifier(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<ThemeNotifier>(create: (_) => ThemeNotifier()),
+        ChangeNotifierProvider<LightningProvider>(
+          create: (_) => LightningProvider(),
+        ),
+      ],
       child: const StackerNewsApp(),
     ),
   );
@@ -124,34 +131,56 @@ class _StackerNewsAppState extends State<StackerNewsApp> {
     return SafeArea(
       child: Consumer<ThemeNotifier>(
         builder: (context, theme, _) {
-          return MaterialApp(
-            navigatorKey: Utils.navigatorKey,
-            scaffoldMessengerKey: Utils.scaffoldMessengerKey,
-            title: 'Stacker News',
-            themeMode: theme.themeMode,
-            theme: theme.lightTheme,
-            darkTheme: theme.darkTheme,
-            initialRoute: HomePage.id,
-            routes: {
-              HomePage.id: (context) => const HomePage(),
-              PostPage.id: (context) => const PostPage(),
-              SettingsPage.id: (context) => const SettingsPage(),
-              ProfilePage.id: (context) => const ProfilePage(),
-              AboutPage.id: (context) => const AboutPage(),
-              SignInPage.id: (context) => const SignInPage(),
-              CheckEmailPage.id: (context) => const CheckEmailPage(),
-              LoginFailedPage.id: (context) => const LoginFailedPage(),
-              NotificationsPage.id: (context) => const NotificationsPage(),
-              NewPostPage.id: (context) => const NewPostPage(),
-              NewLinkPage.id: (context) => const NewLinkPage(),
-              NewDiscussionPage.id: (context) => const NewDiscussionPage(),
-              NewPollPage.id: (context) => const NewPollPage(),
-              NewBountyPage.id: (context) => const NewBountyPage(),
-              NewJobPage.id: (context) => const NewJobPage(),
-              PdfReaderPage.id: (context) => const PdfReaderPage(),
-              DebugPage.id: (context) => const DebugPage(),
-            },
-            home: const HomePage(),
+          return Directionality(
+            textDirection: TextDirection.ltr,
+            child: Stack(
+              children: [
+                MaterialApp(
+                  navigatorKey: Utils.navigatorKey,
+                  scaffoldMessengerKey: Utils.scaffoldMessengerKey,
+                  title: 'Stacker News',
+                  themeMode: theme.themeMode,
+                  theme: theme.lightTheme,
+                  darkTheme: theme.darkTheme,
+                  initialRoute: HomePage.id,
+                  routes: {
+                    HomePage.id: (context) => const HomePage(),
+                    PostPage.id: (context) => const PostPage(),
+                    SettingsPage.id: (context) => const SettingsPage(),
+                    ProfilePage.id: (context) => const ProfilePage(),
+                    AboutPage.id: (context) => const AboutPage(),
+                    SignInPage.id: (context) => const SignInPage(),
+                    CheckEmailPage.id: (context) => const CheckEmailPage(),
+                    LoginFailedPage.id: (context) => const LoginFailedPage(),
+                    NotificationsPage.id: (context) => const NotificationsPage(),
+                    NewPostPage.id: (context) => const NewPostPage(),
+                    NewLinkPage.id: (context) => const NewLinkPage(),
+                    NewDiscussionPage.id: (context) => const NewDiscussionPage(),
+                    NewPollPage.id: (context) => const NewPollPage(),
+                    NewBountyPage.id: (context) => const NewBountyPage(),
+                    NewJobPage.id: (context) => const NewJobPage(),
+                    PdfReaderPage.id: (context) => const PdfReaderPage(),
+                    DebugPage.id: (context) => const DebugPage(),
+                  },
+                  home: const HomePage(),
+                ),
+                // Lightning overlay: renders on top of entire app
+                Consumer<LightningProvider>(
+                  builder: (context, lightning, _) {
+                    return Stack(
+                      children: lightning.activeBoltIds
+                          .map(
+                            (id) => LightningBolt(
+                              key: ValueKey(id),
+                              onDone: () => lightning.unstrike(id),
+                            ),
+                          )
+                          .toList(),
+                    );
+                  },
+                ),
+              ],
+            ),
           );
         },
       ),

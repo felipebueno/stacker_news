@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacker_news/colors.dart';
+import 'package:stacker_news/data/lightning_provider.dart';
 import 'package:stacker_news/data/models/session.dart';
 import 'package:stacker_news/data/sn_api_client.dart';
 import 'package:stacker_news/main.dart';
@@ -44,11 +45,15 @@ class _MaybeZapButtonState extends State<MaybeZapButton> {
                       _busy.value = true;
                       final amount = await locator<SNApiClient>().zapPost(widget._id);
 
-                      if (amount == null) return;
+                      if (amount == null) {
+                        return;
+                      }
 
                       Utils.showInfo('Zapped $amount sats');
 
                       widget._onZapped?.call(amount);
+
+                      LightningProvider.of(context).strike();
                     } catch (e, st) {
                       Utils.showException('Error zapping $e', st);
                     } finally {
