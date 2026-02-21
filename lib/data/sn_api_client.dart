@@ -26,8 +26,6 @@ final class SNApiClient {
   SNApiClient() {
     assert(baseUrl.isNotEmpty);
 
-    _cookieJar();
-
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {
@@ -83,7 +81,7 @@ final class SNApiClient {
     ),
   );
 
-  Future<void> _cookieJar() async {
+  Future<void> init() async {
     final appDocDir = await getApplicationDocumentsDirectory();
     final String appDocPath = appDocDir.path;
     final jar = PersistCookieJar(

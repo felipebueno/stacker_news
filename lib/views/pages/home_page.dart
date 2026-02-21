@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/models/sub.dart';
 import 'package:stacker_news/data/sn_api_client.dart';
+import 'package:stacker_news/main.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 import 'package:stacker_news/views/widgets/maybe_new_post_button.dart';
 import 'package:stacker_news/views/widgets/maybe_notifications_button.dart';
@@ -28,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   late String _topWhen = 'day';
   DateTime? _customStartDate;
   DateTime? _customEndDate;
-  final SNApiClient _api = SNApiClient();
+  final SNApiClient _api = locator<SNApiClient>();
 
   Future<List<Post>> _fetchPostsForSub() async {
     return await _api.fetchInitialPosts(
@@ -245,7 +246,7 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               height: 48,
               child: SubSelect(
-                apiClient: SNApiClient(),
+                apiClient: locator<SNApiClient>(),
                 initialSub: _selectedSub.name,
                 onChanged: (selectedSubName) {
                   setState(() {

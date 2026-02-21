@@ -32,12 +32,12 @@ import 'data/theme_notifier.dart';
 final locator = GetIt.instance;
 bool _initialUriAlreadyHandled = false;
 
-void main() {
-  if (!kIsWeb) {
-    WidgetsFlutterBinding.ensureInitialized();
-  }
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-  locator.registerLazySingleton(SNApiClient.new);
+  final apiClient = SNApiClient();
+  await apiClient.init();
+  locator.registerSingleton<SNApiClient>(apiClient);
 
   runApp(
     MultiProvider(
