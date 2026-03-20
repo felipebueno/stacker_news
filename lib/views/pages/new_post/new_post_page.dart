@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stacker_news/data/sn_api_client.dart';
+import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/new_post/new_discussion_page.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
@@ -26,7 +27,7 @@ class _NewPostPageState extends State<NewPostPage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           SubSelect(
-            apiClient: SNApiClient(),
+            apiClient: locator<SNApiClient>(),
             initialSub: _selectedSub,
             onChanged: (selectedSubName) {
               setState(() {
