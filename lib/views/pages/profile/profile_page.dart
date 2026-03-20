@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/models/user.dart';
 import 'package:stacker_news/data/shared_prefs_manager.dart';
-import 'package:stacker_news/data/sn_api_client.dart';
+import 'package:sn_api/sn_api.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/views/pages/home_page.dart';
 import 'package:stacker_news/views/pages/profile/bio_detail.dart';

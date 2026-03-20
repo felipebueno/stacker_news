@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/models/sub.dart';
-import 'package:stacker_news/data/sn_api_client.dart';
+import 'package:sn_api/sn_api.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/views/widgets/generic_page_scaffold.dart';
 import 'package:stacker_news/views/widgets/maybe_new_post_button.dart';
@@ -9,7 +8,6 @@ import 'package:stacker_news/views/widgets/sn_logo.dart';
 import 'package:stacker_news/views/widgets/sub_select.dart';
 import 'package:stacker_news/views/widgets/post/post_list.dart';
 import 'package:stacker_news/views/widgets/post/post_list_error.dart';
-import 'package:stacker_news/data/models/post.dart';
 
 class HomePage extends StatefulWidget {
   static const String id = 'home';

@@ -1,9 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:sn_api/sn_api.dart';
 import 'package:stacker_news/colors.dart';
-import 'package:stacker_news/data/models/post.dart';
-import 'package:stacker_news/data/models/user.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/post/post_page.dart';
 import 'package:stacker_news/views/widgets/cowboy_streak.dart';

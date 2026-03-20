@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/models/session.dart';
+import 'package:sn_api/sn_api.dart';
 import 'package:stacker_news/utils.dart';
 import 'package:stacker_news/views/pages/new_post/new_post_page.dart';
 

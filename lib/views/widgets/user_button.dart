@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/models/user.dart';
+import 'package:sn_api/sn_api.dart';
 import 'package:stacker_news/views/pages/profile/profile_page.dart';
 import 'package:stacker_news/views/widgets/cowboy_streak.dart';
 

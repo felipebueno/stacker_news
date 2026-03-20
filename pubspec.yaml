@@ -1,5 +1,6 @@
 name: stacker_news
 description: A new Flutter project.
+publish_to: none
 
 repository: https://github.com/felipebueno/stacker_news
 
@@ -22,9 +23,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  timeago: ^3.7.1
+  sn_api:
+    git:
+      url: https://github.com/felipebueno/sn_api
+      ref: master
   url_launcher: ^6.3.2
-  dio: ^5.8.0+1
   shared_preferences: ^2.5.3
   qr_flutter: ^4.1.0
   in_app_update: ^4.2.3
@@ -32,11 +35,8 @@ dependencies:
   cached_network_image: ^3.4.1
   package_info_plus: ^9.0.0
   get_it: ^9.2.0
-  cookie_jar: ^4.0.8
-  dio_cookie_manager: ^3.2.0
   path_provider: ^2.1.5
   provider: ^6.1.5
-  intl: ^0.20.2
   app_links: ^7.0.0
   font_awesome_flutter: ^10.8.0
   flutter_cached_pdfview: ^0.4.3

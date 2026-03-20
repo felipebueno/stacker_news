@@ -146,7 +146,7 @@ packages:
     source: hosted
     version: "1.19.1"
   cookie_jar:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cookie_jar
       sha256: a6ac027d3ed6ed756bfce8f3ff60cb479e266f3b0fdabd6242b804b6765e52de
@@ -178,7 +178,7 @@ packages:
     source: hosted
     version: "1.0.2"
   dio:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: dio
       sha256: b9d46faecab38fc8cc286f80bc4d61a3bb5d4ac49e51ed877b4d6706efe57b25
@@ -186,7 +186,7 @@ packages:
     source: hosted
     version: "5.9.1"
   dio_cookie_manager:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: dio_cookie_manager
       sha256: d39c16abcc711c871b7b29bd51c6b5f3059ef39503916c6a9df7e22c4fc595e0
@@ -393,7 +393,7 @@ packages:
     source: hosted
     version: "4.2.5"
   intl:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: intl
       sha256: "3df61194eb431efc39c4ceba583b95633a403f46c9fd341e550ce0bfa50e9aa5"
@@ -460,10 +460,10 @@ packages:
     dependency: transitive
     description:
       name: matcher
-      sha256: "12956d0ad8390bbcc63ca2e1469c0619946ccb52809807067a7020d57e647aa6"
+      sha256: dc0b7dc7651697ea4ff3e69ef44b0407ea32c487a39fff6a4004fa585e901861
       url: "https://pub.dev"
     source: hosted
-    version: "0.12.18"
+    version: "0.12.19"
   material_color_utilities:
     dependency: transitive
     description:
@@ -749,6 +749,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  sn_api:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "4e9f71a5066c6c7dfb420d7aa46b562a1a870e92"
+      url: "https://github.com/felipebueno/sn_api"
+    source: git
+    version: "0.1.0"
   source_span:
     dependency: transitive
     description:
@@ -841,12 +850,12 @@ packages:
     dependency: transitive
     description:
       name: test_api
-      sha256: "93167629bfc610f71560ab9312acdda4959de4df6fac7492c89ff0d3886f6636"
+      sha256: "8161c84903fd860b26bfdefb7963b3f0b68fee7adea0f59ef805ecca346f0c7a"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.9"
+    version: "0.7.10"
   timeago:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: timeago
       sha256: b05159406a97e1cbb2b9ee4faa9fb096fe0e2dfcd8b08fcd2a00553450d3422e

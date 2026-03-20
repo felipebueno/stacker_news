@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stacker_news/data/models/sub.dart';
-import 'package:stacker_news/data/sn_api_client.dart';
+import 'package:sn_api/sn_api.dart';
 import 'package:stacker_news/views/widgets/markdown_item.dart';
 
 typedef SubSelectCallback = void Function(String? selectedSub);

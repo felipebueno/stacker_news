@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:stacker_news/colors.dart';
 import 'package:stacker_news/data/lightning_provider.dart';
-import 'package:stacker_news/data/models/session.dart';
-import 'package:stacker_news/data/sn_api_client.dart';
+import 'package:sn_api/sn_api.dart';
 import 'package:stacker_news/main.dart';
 import 'package:stacker_news/utils.dart';
 

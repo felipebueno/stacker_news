@@ -4,10 +4,13 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:stacker_news/data/lightning_provider.dart';
-import 'package:stacker_news/data/sn_api_client.dart';
+import 'package:stacker_news/data/shared_prefs_manager.dart';
+import 'package:sn_api/sn_api.dart';
 import 'package:stacker_news/utils.dart';
+import 'package:stacker_news/utils/log_service.dart';
 import 'package:stacker_news/views/pages/about/about_page.dart';
 import 'package:stacker_news/views/pages/auth/check_email_page.dart';
 import 'package:stacker_news/views/pages/auth/sign_in_failed_page.dart';
@@ -35,8 +38,26 @@ bool _initialUriAlreadyHandled = false;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final apiClient = SNApiClient();
-  await apiClient.init();
+  final appDocDir = await getApplicationDocumentsDirectory();
+  final apiClient = SNApiClient(
+    storage: SharedPrefsStorage(),
+    logger: SnLogger(
+      debugMode: kDebugMode,
+      onLog: (level, message, {error, stackTrace}) {
+        switch (level) {
+          case 'DEBUG':
+            LogService().debug(message);
+          case 'INFO':
+            LogService().info(message);
+          case 'WARNING':
+            LogService().warning(message);
+          case 'ERROR':
+            LogService().error(message, error, stackTrace);
+        }
+      },
+    ),
+  );
+  await apiClient.init(cookiesPath: '${appDocDir.path}/.cookies/');
   locator.registerSingleton<SNApiClient>(apiClient);
 
   runApp(
